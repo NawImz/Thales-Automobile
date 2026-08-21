@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# [À COMPLÉTER] domaine réel
+Sitemap: https://example.com/sitemap-index.xml

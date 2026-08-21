@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+// [À COMPLÉTER EN PHASE 5] : reprendre le ton et la charte du site.
+---
+
+<Base title="Page introuvable" description="Cette page n'existe pas ou plus.">
+  <main id="contenu" class="mx-auto flex min-h-[70svh] max-w-2xl flex-col justify-center px-6">
+    <p class="text-xs uppercase tracking-widest opacity-60">Erreur 404</p>
+    <h1 class="mt-4 text-3xl font-bold">Cette page n'existe pas.</h1>
+    <p class="mt-4 text-base opacity-80">
+      Le lien est peut-être ancien, ou l'adresse comporte une faute.
+    </p>
+    <p class="mt-8">
+      <a
+        href="/"
+        class="group inline-flex items-center gap-2 underline underline-offset-4"
+      >
+        <Icon name="arrow-left" class="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+        Revenir à l'accueil
+      </a>
+    </p>
+  </main>
+</Base>

@@ -1,0 +1,71 @@
+/* ⚠️ Les @import (Fontsource) doivent PRÉCÉDER les directives @tailwind.
+   [À COMPLÉTER EN PHASE 2] — ex. :
+   @import '@fontsource/<display>/700.css';
+   @import '@fontsource/<sans>/400.css';
+   @import '@fontsource/<sans>/600.css';                                    */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: auto; /* Lenis pilote le scroll, pas le navigateur */
+  }
+
+  body {
+    @apply text-base antialiased;
+  }
+
+  /* Focus clavier : DOUBLE anneau (clair + foncé).
+     Une couleur unique disparaît sur l'un des deux fonds. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px #fff,
+      0 0 0 4px #111;
+    border-radius: 2px;
+  }
+
+  /* Zones tactiles >= 44px */
+  @media (pointer: coarse) {
+    :where(a[href], button, [role='button'], summary) {
+      min-height: 44px;
+    }
+  }
+}
+
+@layer utilities {
+  /* Masque de révélation ligne par ligne (hero orchestré) */
+  .line-mask {
+    overflow: hidden;
+    display: block;
+  }
+}
+
+/* État initial des reveals : posé en CSS pour éviter tout flash
+   avant que GSAP ne prenne la main. Neutralisé si JS absent. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+}
+html.no-js [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
