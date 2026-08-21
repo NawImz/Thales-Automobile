@@ -1,21 +1,43 @@
-/* ⚠️ Les @import (Fontsource) doivent PRÉCÉDER les directives @tailwind.
+/* ⚠️ Tous les @import doivent précéder toute autre règle (spec CSS).
+   Les polices Fontsource d'abord, Tailwind ensuite.
    [À COMPLÉTER EN PHASE 2] — ex. :
    @import '@fontsource/<display>/700.css';
-   @import '@fontsource/<sans>/400.css';
-   @import '@fontsource/<sans>/600.css';                                    */
+   @import '@fontsource/<sans>/400.css';                                   */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+/* ─────────────────────────────────────────────────────────────────────
+   THÈME — Tailwind 4 : le thème vit ici, plus dans tailwind.config.mjs.
+   Chaque variable @theme génère les utilitaires correspondants.
+   PALETTE + TYPO : [À COMPLÉTER EN PHASE 2]
+   La palette s'extrait du logo au pixel près (histogramme sharp), ou du
+   réel du métier. Chaque paire texte/fond vérifiée en WCAG AA (4,5:1)
+   AVANT d'écrire le moindre markup.
+   ───────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Échelle typographique du starter (corps >= 16px sur mobile) */
+  --text-xs: 0.875rem;        /* 14 */
+  --text-xs--line-height: 1.5;
+  --text-base: 1rem;          /* 16 */
+  --text-base--line-height: 1.65;
+  --text-lg: 1.25rem;         /* 20 */
+  --text-lg--line-height: 1.55;
+  --text-xl: 1.5rem;          /* 24 */
+  --text-xl--line-height: 1.35;
+  --text-2xl: 2rem;           /* 32 */
+  --text-2xl--line-height: 1.2;
+  --text-3xl: 3rem;           /* 48 */
+  --text-3xl--line-height: 1.08;
+  --text-4xl: 3.5rem;         /* 56 — hero desktop */
+  --text-4xl--line-height: 1.04;
+  --text-5xl: 4rem;           /* 64 — hero desktop */
+  --text-5xl--line-height: 1;
+}
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: auto; /* Lenis pilote le scroll, pas le navigateur */
-  }
-
-  body {
-    @apply text-base antialiased;
   }
 
   /* Focus clavier : DOUBLE anneau (clair + foncé).
@@ -36,12 +58,10 @@
   }
 }
 
-@layer utilities {
-  /* Masque de révélation ligne par ligne (hero orchestré) */
-  .line-mask {
-    overflow: hidden;
-    display: block;
-  }
+/* Tailwind 4 : les utilitaires maison passent par @utility, pas @layer. */
+@utility line-mask {
+  overflow: hidden;
+  display: block;
 }
 
 /* État initial des reveals : posé en CSS pour éviter tout flash

@@ -45,10 +45,22 @@ Scan de sécurité passé à l'installation : aucun `subprocess`, `exec()`,
 Le seul script non-test (`ui-ux-pro-max/scripts/validate_data.py`) n'utilise
 `urllib.parse` que pour du parsing de chaîne.
 
-**Base de projet déjà en place** : Astro statique + Tailwind + GSAP/ScrollTrigger
-+ Lenis + lucide-static + Fontsource, `npm run build` vérifié. Le socle est
-volontairement **neutre** : aucune palette, aucune typo, aucun contenu n'a été
-décidé — tout cela sort de la Phase 1 et de la Phase 2.
+**Base de projet déjà en place** : Astro 7 (statique) + Tailwind 4 via
+`@tailwindcss/vite` + GSAP/ScrollTrigger + Lenis + Three.js + postprocessing
++ lucide-static, `npm run build` vérifié et page contrôlée dans Chromium en
+375/768/1440 (zéro erreur console, aucun débordement, reduced-motion conforme).
+Le socle est volontairement **neutre** : aucune palette, aucune typo, aucun
+contenu n'a été décidé — tout cela sort de la Phase 1 et de la Phase 2.
+
+**Décisions de brief déjà arbitrées par le client** (Phase 1, à ne pas
+re-questionner) : garage / réparation automobile · conversion n°1 = **appeler**
+· niveau d'ambition = **Spectacle** (WebGL, Phase 4bis).
+
+⚠️ **Tension assumée du projet** : Spectacle et « faire sonner le téléphone »
+tirent dans deux directions. Règle non négociable qui en découle — le numéro
+et le bouton d'appel sont peints **avant** le canvas et ne dépendent jamais de
+lui. Le WebGL est une couche de fond ; s'il ne se charge pas, le site reste
+entièrement fonctionnel.
 
 ### 0.1 Les skills (référence)
 
@@ -105,12 +117,13 @@ Tu dois **voir** ce que tu produis. Deux voies, la première suffit :
      reconnu`). Lanceur fiable : `node node_modules/astro/astro.js dev`.
    - npm bloque les scripts d'install natifs : `npm approve-scripts esbuild sharp`
      puis re-`npm install`, et vérifier que `require('sharp')` passe.
-   - Tailwind résout sa config depuis le **cwd** : passer `configFile` en chemin
-     absolu (`fileURLToPath(new URL('./tailwind.config.mjs', import.meta.url))`)
-     dans `astro.config.mjs`.
-   - **Toute modification de `tailwind.config.mjs` exige un redémarrage du
-     serveur dev** — pas de hot reload sur la config. Sinon tu débogues des
-     couleurs fantômes pendant une heure (vécu).
+   - *(Historique, Tailwind 3 : la config se résolvait depuis le **cwd**, d'où
+     un `configFile` en chemin absolu, et toute modif de `tailwind.config.mjs`
+     imposait un redémarrage du serveur dev — sinon on déboguait des couleurs
+     fantômes pendant une heure. Ce projet est en Tailwind 4 : plus de
+     `tailwind.config.mjs`, le thème vit dans `@theme` au sein de
+     `src/styles/global.css` et suit le hot reload. Le piège disparaît, mais
+     il resurgit sur tout projet resté en v3.)*
    - Port bloqué : `netstat -ano | grep :4321` puis
      `powershell Stop-Process -Id <PID> -Force`.
 4. **Serveur de dev périmé** = bugs fantômes (CSS obsolète, layouts effondrés).
@@ -226,8 +239,10 @@ refonte. Ne passe en Phase 4 qu'une fois ce prompt validé.
 ## Phase 4 — Construction (mobile-first, vérifiée, autocritiquée)
 
 **Stack par défaut** (vitrines, landings, portfolios, one-pages) :
-Astro statique + Tailwind + GSAP/ScrollTrigger + Lenis + `lucide-static` +
-Fontsource. Contenu dans `src/data/*.json` (services, avis, horaires, tarifs,
+Astro statique + Tailwind 4 (plugin `@tailwindcss/vite`, thème en `@theme`,
+scan des sources automatique — ni `content`, ni `tailwind.config.mjs`) +
+GSAP/ScrollTrigger + Lenis + `lucide-static` + Fontsource.
+Contenu dans `src/data/*.json` (services, avis, horaires, tarifs,
 villes…) : **modifiable par le client sans toucher au code**. Pas de React sauf
 îlot réellement nécessaire. Pas de CMS en v1.
 
@@ -401,7 +416,13 @@ finaux et aucune boucle. Les animations CSS ont leur bloc
   classe avec `raw.replace(/class="[^"]*"/, …)`. Un `replace('<svg ', …)`
   échoue **silencieusement** : aucune classe appliquée, toutes les tailles et
   couleurs d'icônes cassées, zéro erreur console (vécu, long à trouver).
-- **Les `@import` (Fontsource) doivent précéder** `@tailwind base/components/utilities`.
+- **Tous les `@import` doivent précéder toute autre règle** (spec CSS) : les
+  `@import` Fontsource se placent en tête, avant `@import 'tailwindcss'`. En
+  Tailwind 3 la règle s'énonçait « avant `@tailwind base/components/utilities` » ;
+  la contrainte est la même, seule la directive a changé.
+- **Tailwind 4 : les utilitaires maison passent par `@utility`**, pas par
+  `@layer utilities`. Un `.ma-classe` écrit dans `@layer utilities` n'est plus
+  pris en compte comme utilitaire.
 - **Ne jamais mettre `relative` en valeur par défaut** d'une prop `class` de
   composant qui peut aussi recevoir `absolute` de l'appelant : séparer la boîte
   externe (positionnée par l'appelant) du rendu interne.
