@@ -46,34 +46,44 @@ Le seul script non-test (`ui-ux-pro-max/scripts/validate_data.py`) n'utilise
 `urllib.parse` que pour du parsing de chaîne.
 
 **Base de projet déjà en place** : Astro 7 (statique) + Tailwind 4 via
-`@tailwindcss/vite` + GSAP/ScrollTrigger + Lenis + Three.js + postprocessing
-+ lucide-static, `npm run build` vérifié et page contrôlée dans Chromium en
-375/768/1440 (zéro erreur console, aucun débordement, reduced-motion conforme).
-Le socle est volontairement **neutre** : aucune palette, aucune typo, aucun
-contenu n'a été décidé — tout cela sort de la Phase 1 et de la Phase 2.
+`@tailwindcss/vite` + GSAP/ScrollTrigger + Lenis, `npm run build` vérifié et page
+contrôlée dans Chromium en 375/768/1440 (zéro erreur console, aucun débordement,
+reduced-motion conforme). Le socle est volontairement **neutre**.
 
-**Décisions de brief déjà arbitrées par le client** (Phase 1, à ne pas
-re-questionner) : garage / réparation automobile · conversion n°1 = **appeler**
-· niveau d'ambition = **Spectacle** (WebGL, Phase 4bis).
+⚠️ **`three` et `postprocessing` sont encore installés mais doivent être retirés** :
+le brief de production écarte le WebGL. `lucide-static` part aussi — les icônes
+sont dessinées à la main. À faire au premier pas de la Phase 3.
 
-**Où en est le projet** : Phase 2 proposée, **en attente de validation**. La
-proposition « Ambre et Fonte » est versionnée dans
-`design/phase-2-direction-artistique.html` (palette atelier/fonte/acier/métal/
-ambre avec contrastes AA mesurés, Archivo + IBM Plex Sans, élément signature =
-l'arc de jauge, concept « le scroll fait tourner l'aiguille »). **Ne pas
-entamer la Phase 3 ni la Phase 4 sans OK explicite du client.**
+**Où en est le projet — état au dernier tour.**
 
-**Neuf informations manquent encore**, dont trois bloquantes : le nom exact à
-afficher, le numéro de téléphone et la ville/zone desservie. Puis : logo
-source, photos, preuves chiffrées, spécialités, horaires et tarifs, une
-référence visuelle. Rien ne s'invente — placeholder `[À COMPLÉTER]` visible et
-récapitulatif en fin de session.
+Le client a fourni un **brief de production complet** qui fait autorité et remplace
+les arbitrages précédents. Points qui ont changé :
 
-⚠️ **Tension assumée du projet** : Spectacle et « faire sonner le téléphone »
-tirent dans deux directions. Règle non négociable qui en découle — le numéro
-et le bouton d'appel sont peints **avant** le canvas et ne dépendent jamais de
-lui. Le WebGL est une couche de fond ; s'il ne se charge pas, le site reste
-entièrement fonctionnel.
+| Avant | Maintenant |
+|---|---|
+| « garage / réparation auto » | **auto ET nautique** — hors-bord, in-board, jet-ski. Le nautique est l'angle stratégique : aucun des cinq concurrents ne le touche. |
+| ambition « Spectacle » (WebGL) | **WebGL écarté.** Une seule séquence d'arrivée ≤ 900 ms, un seul type de révélation au scroll. |
+| DA « Ambre et Fonte » (proposée par moi) | **caduque.** La DA vient de la façade réelle : tôle crème, lettrage bleu marine, panneau Yamaha rouge. |
+| élément signature = arc de jauge | **le bon d'atelier** — l'estimateur traité en bon de commande papier. |
+| one-page | **multi-pages**, le SEO local exige des pages à intention unique. |
+
+`design/phase-2-direction-artistique.html` est conservé comme trace, **mais ne
+décrit plus le projet**.
+
+**Les documents qui font foi désormais** :
+- `DESIGN-PLAN.md` — tokens vérifiés, wireframes, arborescence, et la critique du
+  plan. **En attente du feu vert client ; la Phase 3 ne démarre pas avant.**
+- `TODO-CLIENT.md` — tout ce que Nabil doit fournir, classé bloquant / important /
+  confort.
+
+**Deux corrections de palette à ne pas défaire** : `--beton` passe de `#8C8C86` à
+`#595955` (il était à 2,67:1 sur le fond crème alors qu'il porte le texte
+secondaire) et `--beton-clair: #9F9F9A` est ajouté, parce qu'aucune encre du brief
+ne passait sur le fond `--bleu-port` du pôle nautique. Détail chiffré en §2.1 du
+plan.
+
+**Une seule question technique reste ouverte** : Astro 7 (installé) ou Astro 5
+(demandé au brief). Voir §1.1 du plan.
 
 ### 0.1 Les skills (référence)
 
