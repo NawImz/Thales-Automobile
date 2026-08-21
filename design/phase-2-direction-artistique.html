@@ -1,0 +1,766 @@
+<title>Ambre et Fonte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:wght@400;600&display=swap">
+
+<style>
+  /* ───────────────────────────────────────────────────────────────
+     Direction « Ambre et Fonte ».
+     Parti pris mono-thème assumé : l'atelier se regarde de nuit, et
+     la scène WebGL du site vivra sur ce fond. Toutes les couleurs
+     sont peintes explicitement — la page tient sur n'importe quel
+     fond hôte.
+     ─────────────────────────────────────────────────────────────── */
+  :root {
+    --atelier: #0D1117;
+    --fonte:   #1A2128;
+    --fonte-2: #232C35;
+    --acier:   #8B959F;
+    --metal:   #E6EAEE;
+    --ambre:   #F5A524;
+    --ambre-8: rgba(245, 165, 36, 0.08);
+    --ambre-2: rgba(245, 165, 36, 0.22);
+
+    --display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+    --corps: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    --mesure: 62ch;
+    --gouttiere: clamp(1.25rem, 5vw, 4rem);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--atelier);
+    color: var(--metal);
+    font-family: var(--corps);
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :where(a, button, summary, [tabindex]):focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--atelier), 0 0 0 4px var(--ambre);
+    border-radius: 3px;
+  }
+
+  .enveloppe {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding-inline: var(--gouttiere);
+  }
+
+  /* ── Typographie ──────────────────────────────────────────────── */
+  h1, h2, h3, .display {
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 118, 'wght' 800;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h1 { font-size: clamp(2.6rem, 8vw, 6rem); }
+  h2 { font-size: clamp(1.75rem, 4vw, 3rem); }
+  h3 {
+    font-size: 1.125rem;
+    font-variation-settings: 'wdth' 112, 'wght' 700;
+    letter-spacing: 0;
+  }
+  p { margin: 0; max-width: var(--mesure); }
+
+  .kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--corps);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ambre);
+    margin: 0 0 1.25rem;
+  }
+  /* L'élément signature fait le travail structurel : chaque section
+     est un cran de l'arc de jauge, pas un numéro décoratif. */
+  .cran { flex: none; }
+
+  .sourdine { color: var(--acier); }
+  .chiffres { font-variant-numeric: tabular-nums; }
+
+  /* ── Rythme ───────────────────────────────────────────────────── */
+  section { padding-block: clamp(3.5rem, 9vw, 7rem); }
+  section + section { border-top: 1px solid var(--fonte-2); }
+  .pile { display: flex; flex-direction: column; gap: 1.25rem; }
+  .pile-large { display: flex; flex-direction: column; gap: 2.5rem; }
+
+  /* ── Hero ─────────────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    min-height: 78svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    border-top: 0;
+  }
+  #jauge {
+    position: absolute;
+    inset: 0;
+    /* ⚠️ inset:0 n'étire PAS un <canvas> : c'est un élément remplacé,
+       il garde sa taille intrinsèque 300×150 sans erreur ni avertissement.
+       width/height explicites obligatoires. */
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.3;
+  }
+  /* En desktop la jauge est bornée à la colonne de droite : elle ne peut
+     plus empiéter sur le texte, quel que soit le rayon calculé. */
+  @media (min-width: 64rem) {
+    #jauge { left: 54%; width: 46%; opacity: 0.85; }
+  }
+  .hero-contenu { position: relative; }
+  .hero-contenu > * { max-width: min(100%, 40rem); }
+  @media (min-width: 64rem) { .hero-contenu > * { max-width: 34rem; } }
+  .hero h1 > span { display: block; }
+  .hero h1 .fin { color: var(--ambre); }
+  .hero-pied {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+  .etiquette {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid var(--fonte-2);
+    border-radius: 999px;
+    color: var(--acier);
+    background: var(--fonte);
+  }
+  .etiquette strong { color: var(--metal); font-weight: 600; }
+
+  /* ── Palette ──────────────────────────────────────────────────── */
+  .nuancier {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 1px;
+    background: var(--fonte-2);
+    border: 1px solid var(--fonte-2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .nuance { padding: 0; background: var(--atelier); }
+  .nuance .aplat { height: 7rem; }
+  .nuance .legende { padding: 0.9rem 1rem 1.1rem; }
+  .nuance .nom {
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 112, 'wght' 700;
+    font-size: 0.9375rem;
+  }
+  .nuance .hex {
+    font-size: 0.8125rem;
+    color: var(--acier);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+  .nuance .role { font-size: 0.8125rem; color: var(--acier); margin-top: 0.4rem; }
+
+  /* ── Tableaux ─────────────────────────────────────────────────── */
+  .cadre { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 0.9375rem; }
+  caption { text-align: left; color: var(--acier); font-size: 0.875rem; padding-bottom: 0.75rem; }
+  th, td { text-align: left; padding: 0.7rem 1rem 0.7rem 0; border-bottom: 1px solid var(--fonte-2); }
+  th {
+    font-family: var(--corps);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--acier);
+  }
+  td.ratio { font-variant-numeric: tabular-nums; color: var(--metal); }
+  .verdict {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    background: var(--ambre-8);
+    color: var(--ambre);
+    border: 1px solid var(--ambre-2);
+  }
+
+  /* ── Spécimen typo ────────────────────────────────────────────── */
+  .specimen {
+    display: grid;
+    gap: 1px;
+    background: var(--fonte-2);
+    border: 1px solid var(--fonte-2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  @media (min-width: 62rem) { .specimen { grid-template-columns: 1fr 1fr; } }
+  .specimen > div { background: var(--atelier); padding: clamp(1.5rem, 3vw, 2.25rem); }
+  .specimen .echantillon {
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 118, 'wght' 800;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1;
+    margin: 1rem 0;
+  }
+  .specimen .echantillon-corps { font-size: 1.0625rem; margin: 1rem 0; max-width: none; }
+  .meta { font-size: 0.8125rem; color: var(--acier); }
+  .meta code {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.8125em;
+    color: var(--metal);
+    background: var(--fonte);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+
+  /* Démonstration du numéro : c'est la conversion n°1 du site. */
+  .numero-demo {
+    font-family: var(--corps);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(1.5rem, 4.5vw, 2.5rem);
+    letter-spacing: 0.02em;
+    color: var(--ambre);
+    white-space: nowrap;
+  }
+
+  /* ── Signature ────────────────────────────────────────────────── */
+  .declinaisons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .declinaison {
+    background: var(--fonte);
+    border: 1px solid var(--fonte-2);
+    border-radius: 4px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .declinaison .scene {
+    height: 5.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .declinaison .titre {
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 112, 'wght' 700;
+    font-size: 0.9375rem;
+  }
+  .declinaison p { font-size: 0.875rem; color: var(--acier); }
+
+  /* ── Encadré de tension ───────────────────────────────────────── */
+  .alerte {
+    border: 1px solid var(--ambre-2);
+    border-left: 3px solid var(--ambre);
+    background: var(--ambre-8);
+    border-radius: 4px;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .alerte h3 { color: var(--ambre); }
+
+  /* ── Manques ──────────────────────────────────────────────────── */
+  .manques { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--fonte-2); border: 1px solid var(--fonte-2); border-radius: 4px; overflow: hidden; }
+  .manque { background: var(--atelier); padding: 1.1rem 1.25rem; display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; align-items: baseline; }
+  .manque .quoi { font-weight: 600; color: var(--metal); }
+  .manque .pourquoi { font-size: 0.875rem; color: var(--acier); flex: 1 1 20rem; }
+  .bloquant {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ambre);
+    border: 1px solid var(--ambre-2);
+    background: var(--ambre-8);
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    flex: none;
+  }
+
+  footer { padding-block: 3rem 4rem; border-top: 1px solid var(--fonte-2); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+
+<main>
+  <header class="hero">
+    <canvas id="jauge" aria-hidden="true"></canvas>
+    <div class="enveloppe hero-contenu">
+      <p class="kicker">
+        <svg class="cran" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+          <path d="M7 1 A6 6 0 0 1 13 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="7" cy="7" r="1.6" fill="currentColor"/>
+        </svg>
+        Phase 2 · Direction artistique · Proposition
+      </p>
+      <h1>
+        <span>Ambre</span>
+        <span>et <span class="fin">Fonte</span></span>
+      </h1>
+      <p style="margin-top: 2rem; font-size: 1.125rem; color: var(--acier);">
+        Une direction pour le site du garage, à valider avant la moindre ligne de
+        code. Rien n'est construit tant que vous n'avez pas dit oui.
+      </p>
+      <div class="hero-pied">
+        <span class="etiquette">Métier · <strong>réparation automobile</strong></span>
+        <span class="etiquette">Conversion n°1 · <strong>appeler</strong></span>
+        <span class="etiquette">Ambition · <strong>Spectacle</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="enveloppe">
+    <div class="pile-large">
+      <div class="pile">
+        <p class="kicker">
+          <svg class="cran" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M7 1 A6 6 0 0 1 13 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="7" cy="7" r="1.6" fill="currentColor"/>
+          </svg>
+          Le concept, en une phrase
+        </p>
+        <h2>Un atelier vu de nuit, et le scroll qui fait tourner l'aiguille.</h2>
+        <p style="font-size: 1.0625rem;">
+          Fond de fonte, une seule source de lumière — l'ambre. Le visiteur descend
+          la page et l'aiguille d'un compteur monte avec lui : chaque section est un
+          régime moteur. Le scroll n'est pas décoré, il est <em>instrumenté</em>.
+          C'est ce qui justifie le niveau Spectacle ici : la scène raconte le métier
+          au lieu de faire joli par-dessus.
+        </p>
+      </div>
+
+      <div class="alerte">
+        <h3>Une tension à trancher tout de suite</h3>
+        <p>
+          Spectacle et « faire sonner le téléphone » tirent en sens inverse. Un
+          automobiliste en panne veut le numéro en deux secondes, pas une scène 3D
+          qui charge.
+        </p>
+        <p>
+          <strong>La règle que je m'impose :</strong> le numéro et le bouton d'appel
+          sont peints <em>avant</em> le canvas et ne dépendent jamais de lui. Si le
+          WebGL ne se charge pas — vieux mobile, GPU absent, mouvement réduit — le
+          site reste entièrement utilisable et le téléphone reste au premier plan.
+          Le spectacle est une couche de fond, jamais un péage.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="enveloppe">
+    <div class="pile-large">
+      <div class="pile">
+        <p class="kicker">
+          <svg class="cran" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M7 1 A6 6 0 0 1 13 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="7" cy="7" r="1.6" fill="currentColor"/>
+          </svg>
+          Palette
+        </p>
+        <h2>Cinq couleurs, tirées de l'atelier réel.</h2>
+        <p>
+          Vous ne m'avez pas encore transmis de logo : la palette ne sort donc pas
+          d'un générateur, mais des matières du métier — fonte, acier brossé,
+          lumière d'établi. Dès que le logo arrive, je réextrais les teintes au
+          pixel près et je recalcule tous les contrastes.
+        </p>
+      </div>
+
+      <div class="nuancier">
+        <div class="nuance">
+          <div class="aplat" style="background: #0D1117;"></div>
+          <div class="legende">
+            <div class="nom">Atelier</div>
+            <div class="hex">#0D1117</div>
+            <div class="role">Fond principal. Un noir froid, pas un noir pur — le gris de la fonte sous néon.</div>
+          </div>
+        </div>
+        <div class="nuance">
+          <div class="aplat" style="background: #1A2128;"></div>
+          <div class="legende">
+            <div class="nom">Fonte</div>
+            <div class="hex">#1A2128</div>
+            <div class="role">Panneaux, cartes, blocs de tarifs. Détache sans casser la nuit.</div>
+          </div>
+        </div>
+        <div class="nuance">
+          <div class="aplat" style="background: #8B959F;"></div>
+          <div class="legende">
+            <div class="nom">Acier</div>
+            <div class="hex">#8B959F</div>
+            <div class="role">Texte secondaire, légendes, méta. Acier brossé.</div>
+          </div>
+        </div>
+        <div class="nuance">
+          <div class="aplat" style="background: #E6EAEE;"></div>
+          <div class="legende">
+            <div class="nom">Métal</div>
+            <div class="hex">#E6EAEE</div>
+            <div class="role">Texte courant et titres. Blanc cassé froid, jamais blanc pur.</div>
+          </div>
+        </div>
+        <div class="nuance">
+          <div class="aplat" style="background: #F5A524;"></div>
+          <div class="legende">
+            <div class="nom">Ambre</div>
+            <div class="hex">#F5A524</div>
+            <div class="role">La seule couleur. Bouton d'appel, aiguille, kickers. Rien d'autre ne l'utilise.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cadre">
+        <table>
+          <caption>Contrastes mesurés par luminance relative, pas estimés à l'œil. Seuil AA texte courant : 4,5:1.</caption>
+          <thead>
+            <tr><th scope="col">Paire</th><th scope="col">Ratio</th><th scope="col">AA</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Métal sur Atelier — texte courant</td><td class="ratio">15,65:1</td><td><span class="verdict">conforme</span></td></tr>
+            <tr><td>Métal sur Fonte — texte sur panneau</td><td class="ratio">13,44:1</td><td><span class="verdict">conforme</span></td></tr>
+            <tr><td>Ambre sur Atelier — accent, kickers</td><td class="ratio">9,27:1</td><td><span class="verdict">conforme</span></td></tr>
+            <tr><td>Atelier sur Ambre — texte du bouton d'appel</td><td class="ratio">9,27:1</td><td><span class="verdict">conforme</span></td></tr>
+            <tr><td>Ambre sur Fonte — accent sur panneau</td><td class="ratio">7,96:1</td><td><span class="verdict">conforme</span></td></tr>
+            <tr><td>Acier sur Atelier — texte secondaire</td><td class="ratio">6,22:1</td><td><span class="verdict">conforme</span></td></tr>
+            <tr><td>Acier sur Fonte — secondaire sur panneau</td><td class="ratio">5,34:1</td><td><span class="verdict">conforme</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="enveloppe">
+    <div class="pile-large">
+      <div class="pile">
+        <p class="kicker">
+          <svg class="cran" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M7 1 A6 6 0 0 1 13 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="7" cy="7" r="1.6" fill="currentColor"/>
+          </svg>
+          Typographie
+        </p>
+        <h2>Une enseigne d'atelier, et des chiffres qu'on lit du premier coup.</h2>
+      </div>
+
+      <div class="specimen">
+        <div>
+          <p class="meta">Titres · <strong style="color: var(--metal);">Archivo</strong>, largeur étendue</p>
+          <p class="echantillon">Vidange<br>Freins<br>Distribution</p>
+          <p class="meta">
+            Archivo est une variable à axe de largeur réel (<code>wdth 62–125</code>) :
+            l'étendue est vraie, pas imitée à coups de <code>letter-spacing</code>.
+            Poussée à 118, elle a la présence d'une enseigne peinte sur un mur
+            d'atelier. Grotesque industrielle, sans nostalgie de course automobile —
+            on vend une réparation, pas un rallye.
+          </p>
+        </div>
+        <div>
+          <p class="meta">Corps · <strong style="color: var(--metal);">IBM Plex Sans</strong></p>
+          <p class="echantillon-corps">
+            Un bruit de frein au démarrage, une révision qui traîne, un voyant qui
+            reste allumé. On regarde, on explique, on chiffre avant de toucher.
+          </p>
+          <p class="meta">
+            Plex a été dessinée pour une entreprise d'ingénierie : elle porte le
+            registre technique sans le jargon, et ses chiffres tabulaires sont
+            excellents. Ça compte plus que d'habitude ici — la conversion n°1
+            <em>est</em> un numéro de téléphone.
+          </p>
+          <p class="numero-demo chiffres" style="margin-top: 1.25rem;">01 23 45 67 89</p>
+          <p class="meta" style="margin-top: 0.5rem;">
+            Exemple de rendu — <strong style="color: var(--ambre);">le vrai numéro reste à fournir</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="enveloppe">
+    <div class="pile-large">
+      <div class="pile">
+        <p class="kicker">
+          <svg class="cran" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M7 1 A6 6 0 0 1 13 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="7" cy="7" r="1.6" fill="currentColor"/>
+          </svg>
+          Élément signature
+        </p>
+        <h2>L'arc de jauge.</h2>
+        <p>
+          Un seul motif, décliné avec parcimonie : l'arc gradué d'un compteur. Il
+          vient du tableau de bord, pas d'une banque d'icônes — et surtout pas de la
+          clé à molette, qu'on voit sur un garage sur deux. Il a l'avantage d'être
+          lisible à 16 px, ce qu'un logo détaillé n'est jamais.
+        </p>
+      </div>
+
+      <ul class="declinaisons">
+        <li class="declinaison">
+          <div class="scene">
+            <svg width="24" height="24" viewBox="0 0 14 14" aria-hidden="true" style="color: var(--ambre);">
+              <path d="M7 1 A6 6 0 0 1 13 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="7" cy="7" r="1.6" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="titre">Puce de kicker</div>
+          <p>Devant chaque intitulé de section. C'est le marqueur que vous voyez sur cette page même.</p>
+        </li>
+        <li class="declinaison">
+          <div class="scene">
+            <svg width="150" height="26" viewBox="0 0 150 26" aria-hidden="true" style="color: var(--acier);">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M2 13h14" opacity="0.35"/>
+                <path d="M24 8v10" opacity="0.5"/><path d="M36 10v6" opacity="0.5"/>
+                <path d="M48 8v10" opacity="0.5"/><path d="M60 10v6" opacity="0.5"/>
+                <path d="M72 6v14" stroke="#F5A524" opacity="1"/>
+                <path d="M84 10v6" opacity="0.5"/><path d="M96 8v10" opacity="0.5"/>
+                <path d="M108 10v6" opacity="0.5"/><path d="M120 8v10" opacity="0.5"/>
+                <path d="M132 13h16" opacity="0.35"/>
+              </g>
+            </svg>
+          </div>
+          <div class="titre">Séparateur gradué</div>
+          <p>Entre deux sections : la graduation du compteur, dépliée à plat. Un seul trait, une seule opacité.</p>
+        </li>
+        <li class="declinaison">
+          <div class="scene">
+            <svg width="96" height="60" viewBox="0 0 96 60" aria-hidden="true" style="color: var(--acier);">
+              <path d="M8 52 A40 40 0 0 1 88 52" fill="none" stroke="currentColor" stroke-width="10" opacity="0.16" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="titre">Filigrane de pied de page</div>
+          <p>Un grand arc très discret, en fond de footer. Jamais un motif répété qui envahit.</p>
+        </li>
+        <li class="declinaison">
+          <div class="scene" style="gap: 1rem;">
+            <span style="width: 16px; height: 16px; display: inline-flex; background: var(--ambre); border-radius: 3px; align-items: center; justify-content: center;">
+              <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true" style="color: var(--atelier);">
+                <path d="M7 1.5 A5.5 5.5 0 0 1 12.5 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span style="width: 40px; height: 40px; display: inline-flex; background: var(--ambre); border-radius: 7px; align-items: center; justify-content: center;">
+              <svg width="28" height="28" viewBox="0 0 14 14" aria-hidden="true" style="color: var(--atelier);">
+                <path d="M7 1.5 A5.5 5.5 0 0 1 12.5 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </div>
+          <div class="titre">Favicon · 16 px et 40 px</div>
+          <p>L'arc seul, en aplat plein. Tient à la taille d'un onglet — le test que la plupart des logos échouent.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="enveloppe">
+    <div class="pile-large">
+      <div class="pile">
+        <p class="kicker">
+          <svg class="cran" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M7 1 A6 6 0 0 1 13 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="7" cy="7" r="1.6" fill="currentColor"/>
+          </svg>
+          Ce qu'il me manque
+        </p>
+        <h2>Neuf informations, et je peux construire.</h2>
+        <p>
+          Je n'invente rien : tout ce qui suit apparaîtra en <strong>[À COMPLÉTER]</strong>
+          visible sur le site tant que vous ne me l'aurez pas donné. Les trois
+          premières bloquent réellement la construction.
+        </p>
+      </div>
+
+      <ul class="manques">
+        <li class="manque">
+          <span class="bloquant">bloquant</span>
+          <span class="quoi">Le nom exact à afficher</span>
+          <span class="pourquoi">« Thales Automobile » vient du nom du dépôt. Je ne le traite pas comme un fait tant que vous ne l'avez pas confirmé, accent et graphie compris.</span>
+        </li>
+        <li class="manque">
+          <span class="bloquant">bloquant</span>
+          <span class="quoi">Le numéro de téléphone</span>
+          <span class="pourquoi">C'est la conversion n°1. Il apparaîtra au moins quatre fois : hero, barre collante mobile, bandeau d'appel, pied de page.</span>
+        </li>
+        <li class="manque">
+          <span class="bloquant">bloquant</span>
+          <span class="quoi">Ville et zone desservie</span>
+          <span class="pourquoi">Détermine le JSON-LD (<code>AutoRepair</code>) et la façon de traiter l'adresse — affichée, ou zone seule si vous préférez ne pas la publier.</span>
+        </li>
+        <li class="manque">
+          <span class="quoi">Le logo, en fichier source</span>
+          <span class="pourquoi">S'il existe, la palette en sort au pixel près et remplace la proposition ci-dessus. Sinon on garde Ambre et Fonte.</span>
+        </li>
+        <li class="manque">
+          <span class="quoi">Photos de l'atelier et des véhicules</span>
+          <span class="pourquoi">Je mesure chaque fichier avant de promettre quoi que ce soit : sous 600 px de large, c'est inutilisable en plein écran. Je ne touche jamais à vos originaux.</span>
+        </li>
+        <li class="manque">
+          <span class="quoi">Vos preuves chiffrées</span>
+          <span class="pourquoi">Note et nombre d'avis, années d'ancienneté, délai de prise en charge, garantie. Ce sont elles qui vendent — pas les adjectifs.</span>
+        </li>
+        <li class="manque">
+          <span class="quoi">Ce que vous faites, et ne faites pas</span>
+          <span class="pourquoi">Marques traitées, spécialités, ce que vous refusez. Deux ou trois faits concrets valent mieux que « savoir-faire d'excellence ».</span>
+        </li>
+        <li class="manque">
+          <span class="quoi">Horaires et tarifs affichables</span>
+          <span class="pourquoi">Iront dans <code>src/data/*.json</code> : vous les modifierez sans toucher au code.</span>
+        </li>
+        <li class="manque">
+          <span class="quoi">Une référence visuelle</span>
+          <span class="pourquoi">Un site que vous aimez, un que vous détestez. Une référence concrète vaut dix adjectifs — et peut faire tomber toute cette proposition, ce qui est très bien à ce stade.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="enveloppe">
+    <p class="sourdine" style="font-size: 0.9375rem;">
+      Proposition de direction artistique — Phase 2. Rien ne part en construction
+      sans votre accord explicite. Si la direction ne vous parle pas, dites-le
+      franchement : la refaire maintenant coûte une heure, la refaire après le
+      build en coûte dix.
+    </p>
+  </footer>
+</main>
+
+<script>
+  // ── Arc de jauge du hero ──────────────────────────────────────────
+  // Démonstration du principe : le scroll fait monter l'aiguille.
+  // Canvas plutôt que SVG à la main — c'est un tracé génératif.
+  (function () {
+    var c = document.getElementById('jauge');
+    if (!c || !c.getContext) return;
+    var ctx = c.getContext('2d');
+    var reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var AMBRE = '#F5A524';
+    var ACIER = '#8B959F';
+    var cible = reduit ? 1 : 0;
+    var lisse = reduit ? 1 : 0;
+
+    function dimensionner() {
+      var dpr = Math.min(devicePixelRatio || 1, 2);
+      var r = c.getBoundingClientRect();
+      c.width = Math.max(1, Math.round(r.width * dpr));
+      c.height = Math.max(1, Math.round(r.height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return r;
+    }
+
+    function dessiner(r) {
+      var w = r.width, h = r.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Jauge contenue dans le quart bas-droit, entièrement visible.
+      // Le rayon se déduit de la place disponible, jamais de max(w,h) :
+      // sinon l'arc sort du cadre et ne laisse voir que des fragments.
+      // Géométrie relative à la boîte du canvas, pas au viewport :
+      // en desktop cette boîte est déjà la colonne de droite.
+      var large = matchMedia('(min-width: 64rem)').matches;
+      var cx = large ? w * 0.48 : w * 0.5;
+      var cy = large ? h * 0.54 : h * 1.02;
+      var rayon = large
+        ? Math.min(w * 0.42, h * 0.4)
+        : Math.min(w * 0.48, h * 0.28);
+      if (rayon < 40) return;
+
+      var debut = Math.PI * 1.08, fin = Math.PI * 1.92;
+
+      // Arc de fond
+      ctx.beginPath();
+      ctx.arc(cx, cy, rayon, debut, fin);
+      ctx.strokeStyle = ACIER;
+      ctx.globalAlpha = 0.18;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Graduation
+      var crans = 32;
+      for (var i = 0; i <= crans; i++) {
+        var t = i / crans;
+        var a = debut + (fin - debut) * t;
+        var majeur = i % 4 === 0;
+        var l = majeur ? rayon * 0.16 : rayon * 0.08;
+        var actif = t <= lisse;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(a) * (rayon - l), cy + Math.sin(a) * (rayon - l));
+        ctx.lineTo(cx + Math.cos(a) * rayon, cy + Math.sin(a) * rayon);
+        ctx.strokeStyle = actif ? AMBRE : ACIER;
+        ctx.globalAlpha = actif ? (majeur ? 0.95 : 0.6) : (majeur ? 0.42 : 0.26);
+        ctx.lineWidth = majeur ? 2 : 1;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      }
+
+      // Arc parcouru, en ambre
+      if (lisse > 0.001) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, rayon * 0.86, debut, debut + (fin - debut) * lisse);
+        ctx.strokeStyle = AMBRE;
+        ctx.globalAlpha = 0.5;
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      }
+
+      // Aiguille + moyeu
+      var aa = debut + (fin - debut) * lisse;
+      ctx.globalAlpha = 0.95;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(aa) * rayon * 0.72, cy + Math.sin(aa) * rayon * 0.72);
+      ctx.strokeStyle = AMBRE;
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+      ctx.fillStyle = AMBRE;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    var rect = dimensionner();
+    dessiner(rect);
+
+    addEventListener('resize', function () { rect = dimensionner(); dessiner(rect); }, { passive: true });
+    matchMedia('(min-width: 64rem)').addEventListener('change', function () { rect = dimensionner(); dessiner(rect); });
+
+    if (reduit) return;
+
+    addEventListener('scroll', function () {
+      var max = document.documentElement.scrollHeight - innerHeight;
+      cible = max > 0 ? Math.min(1, scrollY / max) : 0;
+    }, { passive: true });
+
+    (function boucle() {
+      if (document.hidden) { requestAnimationFrame(boucle); return; }
+      var delta = cible - lisse;
+      if (Math.abs(delta) > 0.0005) { lisse += delta * 0.06; dessiner(rect); }
+      requestAnimationFrame(boucle);
+    })();
+  })();
+</script>

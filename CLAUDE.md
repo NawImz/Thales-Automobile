@@ -56,6 +56,19 @@ contenu n'a été décidé — tout cela sort de la Phase 1 et de la Phase 2.
 re-questionner) : garage / réparation automobile · conversion n°1 = **appeler**
 · niveau d'ambition = **Spectacle** (WebGL, Phase 4bis).
 
+**Où en est le projet** : Phase 2 proposée, **en attente de validation**. La
+proposition « Ambre et Fonte » est versionnée dans
+`design/phase-2-direction-artistique.html` (palette atelier/fonte/acier/métal/
+ambre avec contrastes AA mesurés, Archivo + IBM Plex Sans, élément signature =
+l'arc de jauge, concept « le scroll fait tourner l'aiguille »). **Ne pas
+entamer la Phase 3 ni la Phase 4 sans OK explicite du client.**
+
+**Neuf informations manquent encore**, dont trois bloquantes : le nom exact à
+afficher, le numéro de téléphone et la ville/zone desservie. Puis : logo
+source, photos, preuves chiffrées, spécialités, horaires et tarifs, une
+référence visuelle. Rien ne s'invente — placeholder `[À COMPLÉTER]` visible et
+récapitulatif en fin de session.
+
 ⚠️ **Tension assumée du projet** : Spectacle et « faire sonner le téléphone »
 tirent dans deux directions. Règle non négociable qui en découle — le numéro
 et le bouton d'appel sont peints **avant** le canvas et ne dépendent jamais de
@@ -428,6 +441,22 @@ finaux et aucune boucle. Les animations CSS ont leur bloc
   externe (positionnée par l'appelant) du rendu interne.
 - **Écrire les fichiers générés par script dans le projet**, pas dans `/tmp`
   (chemins Windows non résolus par sharp).
+- **Un `<canvas>` en `position: absolute; inset: 0` ne s'étire PAS.** C'est un
+  élément remplacé : sans `width`/`height` explicites il garde sa taille
+  intrinsèque **300×150**, silencieusement — pas d'erreur console, pas
+  d'avertissement. La scène se dessine dans un timbre-poste coincé dans un coin
+  et on cherche le bug dans le calcul de géométrie (vécu). Toujours
+  `width: 100%; height: 100%` en plus de l'`inset`.
+- **Borner le canvas par le CSS plutôt que par des ratios dans le JS.** Pour
+  qu'un décor n'entre jamais dans une colonne de texte, on lui donne sa propre
+  boîte (`left: 54%; width: 46%`) et on calcule la géométrie relativement à
+  cette boîte. Ajuster des coefficients au jugé contre le viewport ne converge
+  jamais.
+- **`document.fonts.check()` ment.** Il renvoie `true` dès qu'une famille se
+  résout, fallback compris. Pour détecter un fallback muet, **mesurer** la
+  largeur rendue d'un même texte et la comparer à celle obtenue avec une
+  famille volontairement inexistante : largeurs identiques = la police n'est
+  pas chargée.
 
 ---
 
