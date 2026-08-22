@@ -1,34 +1,42 @@
 ---
-import { garage } from '../../lib/garage';
+import { garage, lienTel } from '../../lib/garage';
 import StatutOuverture from './StatutOuverture.astro';
-import BoutonAppel from '../conversion/BoutonAppel.astro';
+import Icone from './Icone.astro';
 
 const liens = [
-  { href: '/entretien-reparation-auto', libelle: 'Auto' },
-  { href: '/bateaux-jet-ski', libelle: 'Bateaux' },
+  { href: '/entretien-reparation-auto', libelle: 'Réparation auto' },
+  { href: '/bateaux-jet-ski', libelle: 'Bateaux et jet-ski' },
   { href: '/tarifs', libelle: 'Tarifs' },
-  { href: '/vehicules-occasion', libelle: 'Occasions' },
+  { href: '/vehicules-occasion', libelle: 'Véhicules d\'occasion' },
+  { href: '/pieces-detachees', libelle: 'Pièces détachées' },
   { href: '/le-garage', libelle: 'Le garage' },
   { href: '/contact', libelle: 'Contact' },
 ];
 const ici = Astro.url.pathname;
+const tel = garage.telephones.principal;
 ---
-<header class="border-b border-cambouis/12 bg-tole">
-  <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4 sm:px-8">
-    <a href="/" class="font-display text-lg leading-none font-extrabold tracking-tight text-bleu-port">
-      {garage.enseigne}
+<header class="sur-sombre relative z-40 bg-cambouis text-tole">
+  <div class="mx-auto flex max-w-7xl items-center gap-4 px-5 py-3.5 sm:px-8">
+    <a href="/" class="shrink-0 leading-none text-tole">
+      <span class="block font-display text-base font-extrabold tracking-tight whitespace-nowrap sm:text-lg">
+        {garage.nomCourt}
+      </span>
+      <span class="donnee mt-1 block text-[0.625rem] font-semibold tracking-[0.18em] whitespace-nowrap text-beton-clair uppercase">
+        Auto · Bateaux
+      </span>
     </a>
 
-    <nav class="order-3 w-full overflow-x-auto lg:order-none lg:w-auto" aria-label="Navigation principale">
-      <ul class="flex items-center gap-x-5 whitespace-nowrap">
-        {liens.map((l) => (
+    <!-- Desktop : navigation déployée -->
+    <nav class="ml-8 hidden lg:block" aria-label="Navigation principale">
+      <ul class="flex items-center gap-x-6">
+        {liens.slice(0, 5).map((l) => (
           <li>
             <a
               href={l.href}
               aria-current={ici === l.href ? 'page' : undefined}
               class:list={[
                 'inline-block py-1 text-sm font-semibold transition-colors',
-                ici === l.href ? 'text-rouge-yamaha' : 'text-cambouis hover:text-bleu-cadran',
+                ici === l.href ? 'text-white underline underline-offset-4' : 'text-beton-clair hover:text-tole',
               ]}
             >
               {l.libelle}
@@ -38,11 +46,95 @@ const ici = Astro.url.pathname;
       </ul>
     </nav>
 
-    <div class="ml-auto flex items-center gap-4">
-      <StatutOuverture />
-      <div class="hidden lg:block">
-        <BoutonAppel variante="nu" contexte="en-tete" class="px-0 py-0" />
+    <div class="ml-auto flex items-center gap-3">
+      <div class="hidden sm:block">
+        <StatutOuverture class="inline-flex" />
       </div>
+      <a
+        href={lienTel(tel.numero)}
+        data-event="appel"
+        data-contexte="en-tete"
+        class="donnee hidden text-sm font-semibold whitespace-nowrap text-tole hover:text-white lg:inline"
+      >
+        {tel.affiche}
+      </a>
+
+      <!-- Mobile : menu en <details>, donc ouvrable sans JavaScript -->
+      <details class="menu-mobile lg:hidden">
+        <summary
+          class="flex size-11 cursor-pointer list-none items-center justify-center border border-tole/30 text-tole"
+          aria-label="Ouvrir le menu"
+        >
+          <span class="barres" aria-hidden="true"></span>
+        </summary>
+
+        <div class="menu-panneau">
+          <nav class="mx-auto max-w-7xl px-5 pt-2 pb-6 sm:px-8" aria-label="Navigation principale">
+            <ul class="flex flex-col">
+              {liens.map((l) => (
+                <li class="border-b border-tole/12">
+                  <a
+                    href={l.href}
+                    aria-current={ici === l.href ? 'page' : undefined}
+                    class:list={[
+                      'flex min-h-[52px] items-center justify-between text-base font-semibold',
+                      ici === l.href ? 'text-white' : 'text-tole',
+                    ]}
+                  >
+                    {l.libelle}
+                    <Icone nom="fleche" class="size-4 text-beton-clair" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div class="mt-5 sm:hidden">
+              <StatutOuverture class="inline-flex" />
+            </div>
+          </nav>
+        </div>
+      </details>
     </div>
   </div>
 </header>
+
+<style>
+  .menu-mobile > summary::-webkit-details-marker { display: none; }
+
+  /* Burger dessiné en CSS : trois traits, pas d'icône importée. */
+  .barres,
+  .barres::before,
+  .barres::after {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 200ms var(--ease-atelier), opacity 120ms linear;
+  }
+  .barres::before,
+  .barres::after {
+    content: '';
+    position: relative;
+  }
+  .barres::before { top: -5.5px; }
+  .barres::after { top: 4px; }
+
+  .menu-mobile[open] .barres { background: transparent; }
+  .menu-mobile[open] .barres::before { top: 0; transform: translateY(0) rotate(45deg); }
+  .menu-mobile[open] .barres::after { top: -1.5px; transform: translateY(0) rotate(-45deg); }
+
+  /* Le panneau sort du flux de l'en-tête pour couvrir toute la largeur. */
+  .menu-panneau {
+    position: absolute;
+    top: 100%;
+    inset-inline: 0;
+    z-index: 40;
+    background: var(--color-cambouis);
+    border-top: 1px solid rgb(233 228 216 / 0.12);
+    max-height: calc(100svh - 5rem);
+    overflow-y: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .barres, .barres::before, .barres::after { transition: none; }
+  }
+</style>

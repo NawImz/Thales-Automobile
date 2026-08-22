@@ -162,6 +162,20 @@
   );
 }
 
+@utility tole-nervuree {
+  /* La tôle ondulée du hangar, en surface et non en séparateur.
+     Deux nervures par pas : un creux large, une arête fine. Très basse
+     amplitude — au-delà, ça devient un motif décoratif envahissant. */
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.03) 0 1px,
+      transparent 1px 3px,
+      rgb(0 0 0 / 0.09) 3px 4px,
+      transparent 4px 30px
+    );
+}
+
 @utility ombre-carbone {
   /* Élévation = décalage plein, comme une copie carbone. Jamais de flou. */
   box-shadow: 3px 3px 0 var(--color-tole-ombre);

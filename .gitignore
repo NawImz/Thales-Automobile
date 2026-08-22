@@ -10,3 +10,5 @@ npm-debug.log*
 .netlify
 .playwright-mcp/
 .apercu/
+*.png
+!public/**/*.png

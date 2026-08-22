@@ -8,21 +8,23 @@ interface Props {
   nom: string;
   ratio?: string;
   numero?: number;
+  sombre?: boolean;
   class?: string;
 }
-const { nom, ratio = '16 / 9', numero, class: classe = '' } = Astro.props;
+const { nom, ratio = '16 / 9', numero, sombre = false, class: classe = '' } = Astro.props;
 ---
 <div
   class:list={[
-    'flex flex-col items-center justify-center gap-2 border border-dashed border-beton/45 bg-tole-ombre p-6 text-center',
+    'flex flex-col items-center justify-center gap-2 border border-dashed p-6 text-center',
+    sombre ? 'border-tole/25 bg-cambouis' : 'border-beton/45 bg-tole-ombre',
     classe,
   ]}
   style={`aspect-ratio: ${ratio}`}
   role="img"
   aria-label={`Emplacement de photo à fournir : ${nom}`}
 >
-  <span class="donnee text-xs font-semibold tracking-widest text-beton">
+  <span class:list={['donnee text-xs font-semibold tracking-widest', sombre ? 'text-beton-clair' : 'text-beton']}>
     PHOTO À FOURNIR{numero ? ` · N° ${numero}` : ''}
   </span>
-  <span class="max-w-[38ch] text-sm text-beton">{nom}</span>
+  <span class:list={['max-w-[38ch] text-sm', sombre ? 'text-beton-clair' : 'text-beton']}>{nom}</span>
 </div>

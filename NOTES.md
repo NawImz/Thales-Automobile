@@ -143,3 +143,76 @@ mesuré et confirmé :
 - **sans JavaScript** : 0 élément invisible, 8 prix lisibles, téléphone présent
 
 Chargement de l'accueil : 137,0 Ko (budget 600).
+
+---
+
+## Phase 3 · Étape 4 — avis réels, ambiance atelier, menu mobile
+
+### Trois avis réels remplacent les emplacements
+
+Reçus du client. Traités selon les règles du brief : aucun extrait ne dépasse
+15 mots (13, 11 et 12), aucun avis inventé.
+
+**Décision de rigueur :** le champ `note` reste `null` quand l'auteur n'annonce
+pas de note dans son texte. Seul Brahh écrit explicitement donner une note
+parfaite — lui seul affiche 5/5. Deviner les deux autres reviendrait à inventer
+une donnée. Consigné dans `TODO-CLIENT.md`.
+
+**Et l'argument que personne n'exploite devient réel :** Pierre F. écrit « ça va
+faire 4 ou 5 ans que j'utilise leurs services ». Sa carte porte donc
+« CLIENT DEPUIS 4 OU 5 ANS » — **ses mots, pas une année calculée à sa place**.
+Les avis sont triés par ancienneté déclarée, et il passe en tête.
+
+Noms réduits au prénom + initiale. Les avis Google sont publics, mais c'est à
+Nabil de décider s'il préfère les noms complets.
+
+### L'ambiance : l'atelier vu de l'intérieur
+
+Demande client : plus « voiture / garage ». Le fond crème seul lisait trop
+éditorial.
+
+**Ce que je n'ai pas fait :** coller une photo de voiture. La vue catalogue
+fournie est une image constructeur détourée sur fond blanc — elle n'a aucune
+ambiance d'atelier, c'est l'inverse. L'ambiance vient du langage visuel.
+
+**Ce que j'ai fait :** le hero et l'en-tête basculent sur `--cambouis` avec une
+nervure de tôle en surface (`@utility tole-nervuree`, deux nervures par pas,
+très basse amplitude). Les sections de contenu gardent le crème. La logique
+tient au bâtiment : on regarde la façade crème depuis la rue, on entre, il fait
+sombre. Contrastes revérifiés sur fond sombre — tole 14,31 · beton-clair 6,83 ·
+blanc sur rouge 5,88.
+
+Première version des nervures trop marquée, elle tirait vers le code-barres.
+Descendue à 0,03 / 0,09 d'opacité et pas élargi à 30 px.
+
+### Menu mobile en `<details>`
+
+La nav qui défilait horizontalement était le point faible du responsive.
+Remplacée par un `<details>`, donc **ouvrable sans JavaScript** et accessible
+au clavier par construction. Burger dessiné en CSS (trois traits, pas d'icône
+importée) qui se transforme en croix. Cibles de 52 px.
+
+### Deux bugs, dont un récidiviste
+
+**1. Le piège de collision de classes est revenu.** Le badge de statut devait
+disparaître sous 640 px : il s'affichait. Son `hidden` reperdait contre le
+`inline-flex` de la classe de base du composant — exactement le bug corrigé à
+l'étape 2 sur `BoutonAppel`.
+**Correction à la racine, cette fois :** plus aucun composant ne pose son
+`display` dans sa classe de base. C'est le conteneur qui le porte. Un correctif
+au cas par cas ne suffisait pas, le piège revenait à chaque nouveau composant.
+
+**2. Le panneau de menu était peint sous le hero.** Il existait bel et bien
+(390 × 452 px, sept liens, `visibility: visible`) mais restait invisible.
+L'en-tête et la section suivante créaient chacun leur contexte d'empilement, et
+à z-index égal c'est l'ordre du DOM qui gagne. `z-40` sur l'en-tête, et le
+panneau ancré en `top: 100%` au lieu de sa position statique.
+Diagnostiqué en mesurant le rectangle et les styles calculés, pas en tâtonnant
+sur des valeurs de z-index.
+
+### La photo de Clio n'a pas pu être récupérée
+
+Elle a été collée dans la conversation, pas déposée en fichier : je la vois mais
+je ne peux pas l'extraire sur le disque. À déposer dans le dépôt pour être
+utilisée. Elle irait dans la future section « véhicules d'occasion » — une Clio
+est justement la « citadine » du barème — et non en ambiance.

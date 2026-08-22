@@ -69,14 +69,28 @@ ratio portant le nom du cliché attendu.
 - [ ] **7. Deux ou trois véhicules du parc**, trois-quarts avant, fond propre
 - [ ] **8. Un détail de texture** : tôle ondulée, établi, clé dynamométrique
 
+⚠️ **La photo de Clio transmise n'a pas pu être récupérée** : collée dans la
+conversation et non déposée en fichier. Il faut la mettre dans le dépôt (ou la
+renvoyer en pièce jointe) pour que je puisse l'utiliser. Réserve : c'est une vue
+catalogue constructeur sur fond blanc — elle convient à une fiche de véhicule
+d'occasion, pas à une ambiance d'atelier, et les droits d'usage d'une image
+Renault sont à vérifier avant mise en ligne.
+
 Format : 3:2 ou 16:9, la plus grande définition disponible (je génère les
 déclinaisons AVIF/WebP en 640/1024/1600/2400). **Photos de téléphone acceptées**
 si elles sont nettes et prises en lumière naturelle — mieux vaut un vrai atelier
 au smartphone qu'une image de banque.
 
 ### Les avis
-- [ ] **Export des 61 avis Google** (auteur, note, date, texte).
-      En attendant, six emplacements `PLACEHOLDER-AVIS` occupent la page.
+- [x] ~~Trois avis réels reçus~~ (Pierre F., Brahh, Sonia A.) — en ligne.
+- [ ] **Export des 58 avis restants** (auteur, note, date, texte).
+- [ ] **Les notes en étoiles de Pierre F. et Sonia A.** Leurs textes n'annoncent
+      pas de note ; le site n'en affiche donc aucune pour eux, plutôt que de la
+      deviner. Seul Brahh écrit explicitement « une note parfaite » et affiche
+      5/5. À compléter depuis l'export Google.
+- [ ] **Noms complets ou prénom + initiale ?** Le site affiche aujourd'hui
+      « Pierre F. », « Sonia A. ». Les avis Google sont publics, donc le nom
+      complet est possible — c'est votre choix.
 - [ ] **L'ancienneté des clients quand elle est connue.** Le plan trie les avis
       par ancienneté et affiche « CLIENT DEPUIS 2014 » — c'est l'argument le plus
       fort du garage et personne dans le coin ne l'exploite. Là où l'avis ne le

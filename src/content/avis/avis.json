@@ -1,14 +1,53 @@
 {
-  "_statut": "PLACEHOLDER-AVIS",
-  "_avertissement": "Ces six entrées sont des emplacements, PAS des avis. Aucun avis n'est inventé, aucun n'est cité mot pour mot au-delà d'une quinzaine de mots. À remplacer par l'export réel des 61 avis Google.",
-  "_tri": "Les avis s'affichent triés par ancienneté du client (champ clientDepuis), pas par date ni par note. C'est la preuve sociale la plus forte du garage et personne dans le coin ne l'exploite. Quand l'ancienneté n'est pas déductible de l'avis, le champ reste null et la mention disparaît — elle n'est pas devinée.",
+  "_statut": "3 AVIS RÉELS · 58 RESTANTS À FOURNIR",
+  "_regles": [
+    "Aucun avis inventé. Aucune citation dépassant une quinzaine de mots.",
+    "Les extraits ci-dessous sont des citations courtes des avis Google réels transmis par le client.",
+    "Le champ note reste null quand l'auteur n'annonce pas de note dans son texte : elle n'est pas devinée. À compléter depuis l'export Google.",
+    "Les noms sont réduits au prénom + initiale par prudence. Les avis Google sont publics : à Nabil de décider s'il préfère le nom complet."
+  ],
+  "_tri": "Affichés par ancienneté de client déclarée, pas par date ni par note. C'est la preuve sociale la plus forte du garage et personne dans le coin ne l'exploite.",
 
   "avis": [
-    { "id": 1, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : honnêteté du devis.", "source": "Google", "misEnAvant": true },
-    { "id": 2, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : fidélité longue.", "source": "Google", "misEnAvant": true },
-    { "id": 3, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : prise en charge le jour même.", "source": "Google", "misEnAvant": true },
-    { "id": 4, "auteur": "PLACEHOLDER-AVIS", "note": 4, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : rapport qualité-prix.", "source": "Google", "misEnAvant": true },
-    { "id": 5, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : compétence sur une panne difficile.", "source": "Google", "misEnAvant": true },
-    { "id": 6, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : accueil et taille humaine.", "source": "Google", "misEnAvant": true }
+    {
+      "id": "pierre-f",
+      "auteur": "Pierre F.",
+      "profil": "Local Guide · 29 avis",
+      "note": null,
+      "_noteACompleter": true,
+      "date": "2025",
+      "ancienneteDite": "Client depuis 4 ou 5 ans",
+      "_ancienneteSource": "Mots de l'auteur : « Ça va faire 4 ou 5 ans que j'utilise leurs services. » Aucune année n'est calculée à sa place.",
+      "extrait": "Je n'ai jamais été déçu. Ni par leurs connaissances ni par leurs tarifs.",
+      "theme": "fidelite",
+      "source": "Google",
+      "misEnAvant": true
+    },
+    {
+      "id": "brahh",
+      "auteur": "Brahh",
+      "profil": "Local Guide · 15 avis",
+      "note": 5,
+      "_noteSource": "L'auteur écrit explicitement donner une note parfaite.",
+      "date": "2025",
+      "ancienneteDite": null,
+      "extrait": "Service rapide et professionnel, le personnel était incroyablement accueillant et compétent.",
+      "theme": "rapidite",
+      "source": "Google",
+      "misEnAvant": true
+    },
+    {
+      "id": "sonia-a",
+      "auteur": "Sonia A.",
+      "profil": "16 avis",
+      "note": null,
+      "_noteACompleter": true,
+      "date": "2026",
+      "ancienneteDite": null,
+      "extrait": "Un garage sérieux, humain et professionnel, avec un vrai sens du service.",
+      "theme": "honnetete",
+      "source": "Google",
+      "misEnAvant": true
+    }
   ]
 }

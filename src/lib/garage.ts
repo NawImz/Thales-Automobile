@@ -117,3 +117,22 @@ export function fourchette(idIntervention: string, idGabarit = 'berline'): Fourc
 export function fourchetteEnTexte(f: Fourchette): string {
   return `${f.bas} – ${f.haut} €`;
 }
+
+// ── Avis ──────────────────────────────────────────────────────────────
+import donneesAvis from '../content/avis/avis.json';
+
+export const avis = donneesAvis;
+
+/**
+ * Tri par ancienneté de client déclarée, pas par date ni par note :
+ * c'est la preuve sociale la plus forte du garage, et aucun concurrent
+ * ne l'exploite. Les avis sans ancienneté déclarée suivent, dans l'ordre
+ * du fichier — elle n'est jamais devinée.
+ */
+export function avisTries() {
+  return [...donneesAvis.avis].sort((a, b) => {
+    const aA = a.ancienneteDite ? 0 : 1;
+    const bA = b.ancienneteDite ? 0 : 1;
+    return aA - bA;
+  });
+}
