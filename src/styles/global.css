@@ -1,82 +1,177 @@
-/* ⚠️ Tous les @import doivent précéder toute autre règle (spec CSS).
-   Les polices Fontsource d'abord, Tailwind ensuite.
-   [À COMPLÉTER EN PHASE 2] — ex. :
-   @import '@fontsource/<display>/700.css';
-   @import '@fontsource/<sans>/400.css';                                   */
-
 @import 'tailwindcss';
 
 /* ─────────────────────────────────────────────────────────────────────
-   THÈME — Tailwind 4 : le thème vit ici, plus dans tailwind.config.mjs.
-   Chaque variable @theme génère les utilitaires correspondants.
-   PALETTE + TYPO : [À COMPLÉTER EN PHASE 2]
-   La palette s'extrait du logo au pixel près (histogramme sharp), ou du
-   réel du métier. Chaque paire texte/fond vérifiée en WCAG AA (4,5:1)
-   AVANT d'écrire le moindre markup.
+   POLICES — auto-hébergées, instanciées et sous-ensemblées au français.
+   Archivo : chasse figée à 118 % (l'« Expanded »), graisse 600–800
+   conservée en variable. 88 Ko → 15,7 Ko.
+   Les flèches, étoiles et cases à cocher ne sont dans AUCUNE de ces
+   polices : ce sont des SVG inline, jamais des caractères.
    ───────────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Archivo Expanded';
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url('/fonts/archivo-expanded.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Instrument Sans';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/instrument-sans.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/plex-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/plex-mono-600.woff2') format('woff2');
+}
+
 @theme {
-  /* Échelle typographique du starter (corps >= 16px sur mobile) */
-  --text-xs: 0.875rem;        /* 14 */
-  --text-xs--line-height: 1.5;
-  --text-base: 1rem;          /* 16 */
-  --text-base--line-height: 1.65;
-  --text-lg: 1.25rem;         /* 20 */
-  --text-lg--line-height: 1.55;
-  --text-xl: 1.5rem;          /* 24 */
-  --text-xl--line-height: 1.35;
-  --text-2xl: 2rem;           /* 32 */
-  --text-2xl--line-height: 1.2;
-  --text-3xl: 3rem;           /* 48 */
-  --text-3xl--line-height: 1.08;
-  --text-4xl: 3.5rem;         /* 56 — hero desktop */
-  --text-4xl--line-height: 1.04;
-  --text-5xl: 4rem;           /* 64 — hero desktop */
-  --text-5xl--line-height: 1;
+  /* ── Couleur ────────────────────────────────────────────────────────
+     Tirée de la façade. Deux valeurs corrigées par rapport au brief,
+     teinte préservée, pour cause d'échec WCAG. Détail en §2.1 du
+     DESIGN-PLAN. Ne pas défaire sans recalculer.                      */
+  --color-bleu-port: #16375f;
+  --color-bleu-cadran: #2b5a94;   /* corrigé depuis #2c5b96 */
+  --color-tole: #e9e4d8;
+  --color-tole-ombre: #d6d0c2;
+  --color-cambouis: #131619;
+  --color-beton: #595955;         /* corrigé depuis #8c8c86 (2,67:1) */
+  --color-beton-clair: #9f9f9a;   /* ajouté : secondaire sur fond sombre */
+  --color-rouge-yamaha: #c8102e;
+
+  /* ── Familles ─────────────────────────────────────────────────────── */
+  --font-display: 'Archivo Expanded', 'Arial Black', 'Helvetica Neue', sans-serif;
+  --font-corps: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ── Échelle typographique fluide (375 → 1440 px) ──────────────────
+     Les ratios (1,25 mobile / 1,333 desktop) ne s'appliquent que vers
+     le haut : sous la base, croissance douce. Aucun cran ne rétrécit. */
+  --text-xs: clamp(0.75rem, 0.728rem + 0.0939vw, 0.8125rem);      /* 12 → 13 */
+  --text-sm: clamp(0.875rem, 0.853rem + 0.0939vw, 0.9375rem);     /* 14 → 15 */
+  --text-base: clamp(1rem, 0.978rem + 0.0939vw, 1.0625rem);       /* 16 → 17 */
+  --text-lg: clamp(1.25rem, 1.184rem + 0.2817vw, 1.4375rem);      /* 20 → 23 */
+  --text-xl: clamp(1.5625rem, 1.4525rem + 0.4695vw, 1.875rem);    /* 25 → 30 */
+  --text-2xl: clamp(1.9375rem, 1.7394rem + 0.8451vw, 2.5rem);     /* 31 → 40 */
+  --text-3xl: clamp(2.4375rem, 2.1074rem + 1.4085vw, 3.375rem);   /* 39 → 54 */
+  --text-4xl: clamp(3.0625rem, 2.5563rem + 2.1596vw, 4.5rem);     /* 49 → 72 */
+  --text-5xl: clamp(3.8125rem, 3.0643rem + 3.1925vw, 5.9375rem);  /* 61 → 95 */
+
+  /* ── Rythme vertical des sections : trois valeurs, pas davantage ─── */
+  --spacing-section-serree: clamp(2.5rem, 6vw, 4rem);
+  --spacing-section-normal: clamp(4rem, 9vw, 7rem);
+  --spacing-section-ample: clamp(5rem, 12vw, 10rem);
+
+  /* ── Rayons : 0 par défaut, deux exceptions justifiées ───────────── */
+  --radius-0: 0;
+  --radius-1: 2px;        /* boutons, champs — arête de pièce estampée */
+  --radius-plaque: 4px;   /* UNIQUEMENT la plaque d'immatriculation    */
+
+  /* ── Mouvement ───────────────────────────────────────────────────── */
+  --ease-atelier: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: auto; /* Lenis pilote le scroll, pas le navigateur */
+    scroll-behavior: auto;              /* Lenis pilote, pas le navigateur */
+    background-color: var(--color-tole);
   }
 
-  /* Focus clavier : DOUBLE anneau (clair + foncé).
+  body {
+    background-color: var(--color-tole);
+    color: var(--color-cambouis);
+    font-family: var(--font-corps);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  /* Longueur de ligne plafonnée à 68 caractères, imposée au brief. */
+  p, li {
+    max-width: 68ch;
+  }
+
+  /* Focus clavier : double anneau, visible sur crème ET sur bleu marine.
      Une couleur unique disparaît sur l'un des deux fonds. */
   :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 2px #fff,
-      0 0 0 4px #111;
-    border-radius: 2px;
+      0 0 0 2px var(--color-tole),
+      0 0 0 4px var(--color-cambouis);
+    border-radius: var(--radius-1);
+  }
+  /* Sur fond sombre, l'anneau intérieur s'inverse pour rester lisible. */
+  :where(.sur-sombre) :where(a, button, input, summary, [tabindex]):focus-visible {
+    box-shadow:
+      0 0 0 2px var(--color-cambouis),
+      0 0 0 4px var(--color-tole);
   }
 
-  /* Zones tactiles >= 44px */
+  /* Cibles tactiles ≥ 44×44 px */
   @media (pointer: coarse) {
-    :where(a[href], button, [role='button'], summary) {
+    :where(a[href], button, [role='button'], summary, label) {
       min-height: 44px;
     }
   }
+
+  /* Toute donnée vérifiable est en mono tabulaire : prix, horaires,
+     téléphones, références. C'est ce qui fait lire un prix comme un
+     relevé et non comme une promesse. */
+  :where(.donnee) {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
 }
 
-/* Tailwind 4 : les utilitaires maison passent par @utility, pas @layer. */
-@utility line-mask {
-  overflow: hidden;
-  display: block;
+/* Tailwind 4 : les utilitaires maison passent par @utility. */
+@utility ondulation {
+  /* Le séparateur de section est l'ondulation de la tôle du hangar. */
+  height: 12px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--color-tole-ombre) 0 1px,
+    transparent 1px 9px
+  );
 }
 
-/* État initial des reveals : posé en CSS pour éviter tout flash
+@utility ombre-carbone {
+  /* Élévation = décalage plein, comme une copie carbone. Jamais de flou. */
+  box-shadow: 3px 3px 0 var(--color-tole-ombre);
+}
+
+/* État initial des révélations, posé en CSS pour éviter tout flash
    avant que GSAP ne prenne la main. Neutralisé si JS absent. */
-[data-reveal] {
+[data-revele] {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(16px);
 }
-html.no-js [data-reveal] {
+html.sans-js [data-revele] {
   opacity: 1;
   transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
+  [data-revele] {
     opacity: 1 !important;
     transform: none !important;
   }

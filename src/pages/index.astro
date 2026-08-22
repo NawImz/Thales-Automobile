@@ -1,27 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import Hero from '../components/contenu/Hero.astro';
+import { garage } from '../lib/garage';
 
-// Socle neutre. Le contenu, la palette, la typo et le rythme de sections
-// sortent des Phases 1 → 3, pas d'ici.
+const titre = `Garage auto et bateaux à ${garage.adresse.ville} — ${garage.nom}`;
+const description = `Réparation auto et moteurs de bateau à ${garage.adresse.ville}. Prix affichés, devis gratuit, ouvert le samedi. ${garage.telephones.principal.affiche}.`;
 ---
-
-<Base
-  title="[À COMPLÉTER] — nom du site"
-  description="[À COMPLÉTER] — description unique de 150 caractères."
->
-  <main id="contenu" class="mx-auto max-w-3xl px-6 py-24">
-    <p class="text-xs uppercase tracking-widest opacity-60">Socle de projet</p>
-    <h1 class="mt-4 text-3xl font-bold">Prêt pour la Phase 1 — le brief.</h1>
-    <p class="mt-6 text-base opacity-80">
-      Astro + Tailwind + GSAP/ScrollTrigger + Lenis sont câblés et le build
-      passe. Aucune décision de design n'a été prise : palette, typographie,
-      sections et contenus se décident au brief, puis en direction artistique.
-    </p>
-    <ul class="mt-8 space-y-2 text-base opacity-80" data-reveal-group>
-      <li data-reveal>Scroll fluide synchronisé (Lenis ⇄ ScrollTrigger)</li>
-      <li data-reveal>Reveals avec filet de sécurité 200 ms</li>
-      <li data-reveal><code>prefers-reduced-motion</code> respecté partout</li>
-      <li data-reveal>Focus clavier à double anneau (fond clair et sombre)</li>
-    </ul>
-  </main>
+<Base titre={titre} description={description}>
+  <Hero />
 </Base>

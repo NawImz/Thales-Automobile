@@ -1,0 +1,28 @@
+---
+/**
+ * Emplacement de photo. Tant que Nabil n'a pas fourni les vrais clichés,
+ * aucune image de banque ni générée : un bloc au bon ratio qui nomme la
+ * photo attendue. La mise en page ne bouge pas quand la vraie arrive.
+ */
+interface Props {
+  nom: string;
+  ratio?: string;
+  numero?: number;
+  class?: string;
+}
+const { nom, ratio = '16 / 9', numero, class: classe = '' } = Astro.props;
+---
+<div
+  class:list={[
+    'flex flex-col items-center justify-center gap-2 border border-dashed border-beton/45 bg-tole-ombre p-6 text-center',
+    classe,
+  ]}
+  style={`aspect-ratio: ${ratio}`}
+  role="img"
+  aria-label={`Emplacement de photo à fournir : ${nom}`}
+>
+  <span class="donnee text-xs font-semibold tracking-widest text-beton">
+    PHOTO À FOURNIR{numero ? ` · N° ${numero}` : ''}
+  </span>
+  <span class="max-w-[38ch] text-sm text-beton">{nom}</span>
+</div>

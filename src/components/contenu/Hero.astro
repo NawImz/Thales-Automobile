@@ -1,0 +1,98 @@
+---
+import { garage } from '../../lib/garage';
+import BoutonAppel from '../conversion/BoutonAppel.astro';
+import Icone from '../socle/Icone.astro';
+import Ondulation from '../socle/Ondulation.astro';
+import PhotoAttendue from '../socle/PhotoAttendue.astro';
+
+const avis = garage.avisGoogle;
+---
+<section class="bg-tole">
+  <div class="mx-auto max-w-7xl px-5 pt-12 pb-14 sm:px-8 sm:pt-16 sm:pb-20">
+    <h1 class="hero-titre max-w-[16ch] font-display text-3xl font-extrabold text-bleu-port sm:max-w-none sm:text-4xl">
+      <span class="ligne"><span>On vous dit ce qu'il faut</span></span>
+      <span class="ligne"><span>réparer, et ce qu'il</span></span>
+      <span class="ligne"><span>ne faut pas.</span></span>
+    </h1>
+
+    <p class="hero-suite mt-7 max-w-[52ch] text-lg text-cambouis" style="--retard: 420ms">
+      {`Garage auto et moteurs de bateau à ${garage.adresse.ville}. ${garage.anneesExperience} ans d'atelier. Devis gratuit, prix affichés.`}
+    </p>
+
+    <div class="hero-suite mt-8 flex flex-col gap-3 sm:flex-row sm:items-center" style="--retard: 500ms">
+      <a
+        href="/devis"
+        data-event="estimateur"
+        data-contexte="hero"
+        class="group inline-flex items-center justify-center gap-2.5 rounded-[2px] bg-cambouis px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-bleu-port lg:bg-rouge-yamaha lg:hover:bg-[#a80d26]"
+      >
+        Estimer ma réparation
+        <Icone nom="fleche" class="size-5 transition-transform group-hover:translate-x-1" />
+      </a>
+      <BoutonAppel variante="contour" contexte="hero" class="justify-center" />
+    </div>
+
+    <ul class="hero-suite mt-9 flex flex-wrap items-center gap-x-6 gap-y-2" style="--retard: 580ms">
+      <li class="flex items-center gap-1.5">
+        <Icone nom="etoile" plein class="size-4 text-bleu-port" />
+        <span class="donnee text-sm font-semibold">{String(avis.note).replace('.', ',')}</span>
+        <span class="text-sm text-beton">· {avis.nombre} avis Google</span>
+      </li>
+      <li class="text-sm text-beton">Depuis <span class="donnee font-semibold text-cambouis">{garage.depuis}</span></li>
+      <li class="text-sm text-beton">Ouvert <span class="font-semibold text-cambouis">le samedi</span></li>
+    </ul>
+  </div>
+
+  <Ondulation />
+
+  <PhotoAttendue
+    numero={2}
+    nom="Le hangar : une voiture sur pont ET un moteur hors-bord dans le même plan. C'est la photo qui raconte tout le site."
+    ratio="16 / 7"
+    class="border-x-0"
+  />
+</section>
+
+<style>
+  /* Séquence d'arrivée : masques par ligne puis cascade. Total 820 ms,
+     sous le budget de 900 ms. En CSS, donc sans attendre le moindre Ko
+     de JavaScript — c'est la seule façon de tenir ce budget. */
+  .ligne {
+    display: block;
+    overflow: hidden;
+  }
+  .ligne > span {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ligne > span {
+      transform: translateY(110%);
+      animation: monter 560ms var(--ease-atelier) forwards;
+      animation-delay: var(--retard, 0ms);
+    }
+    .ligne:nth-child(2) > span {
+      --retard: 80ms;
+    }
+    .ligne:nth-child(3) > span {
+      --retard: 160ms;
+    }
+
+    .hero-suite {
+      opacity: 0;
+      animation: apparaitre 280ms var(--ease-atelier) forwards;
+      animation-delay: var(--retard, 0ms);
+    }
+  }
+
+  @keyframes monter {
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes apparaitre {
+    to {
+      opacity: 1;
+    }
+  }
+</style>

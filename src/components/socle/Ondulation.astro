@@ -1,0 +1,7 @@
+---
+/** Séparateur de section : l'ondulation de la tôle du hangar.
+    Seul ornement du site. Ne se répète jamais en fond de bloc. */
+interface Props { class?: string }
+const { class: classe = '' } = Astro.props;
+---
+<div class:list={['ondulation w-full', classe]} aria-hidden="true"></div>

@@ -1,0 +1,86 @@
+{
+  "_lisezMoi": "SOURCE UNIQUE DE VÉRITÉ. Aucun numéro, horaire ou adresse n'est écrit en dur ailleurs dans le code. Pour changer un numéro de téléphone sur tout le site, une ligne suffit : ici.",
+
+  "nom": "Thalès Automobile",
+  "nomCourt": "Thalès",
+  "enseigne": "Thalès Auto · Bateaux",
+  "_nomAValider": "Le panneau de la rue dit « THALES AUTO / BATEAUX ». Graphie et accent à confirmer par Nabil.",
+
+  "gerant": "Nabil Bendjeddou",
+  "anneesExperience": 20,
+  "depuis": 2005,
+  "_depuisAValider": "À confirmer : ancienneté du garage à cette adresse, ou expérience de Nabil ?",
+
+  "adresse": {
+    "rue": "20 rue du Port",
+    "codePostal": "93800",
+    "ville": "Épinay-sur-Seine",
+    "pays": "FR",
+    "repere": "Portail bleu, à côté de Michel Marine",
+    "_repereAValider": "Citer Michel Marine dépend de la relation commerciale. À confirmer."
+  },
+
+  "geo": {
+    "latitude": null,
+    "longitude": null,
+    "_aCompleter": "COORDONNÉES NON FOURNIES — elles ne sont pas inventées. Tant qu'elles sont nulles, le lien plan pointe sur une recherche par adresse, ce qui fonctionne. À relever sur place ou sur la fiche Google."
+  },
+
+  "telephones": {
+    "principal": { "numero": "0669686384", "affiche": "06 69 68 63 84", "libelle": "Atelier" },
+    "fixe": { "numero": "0986360401", "affiche": "09 86 36 04 01", "libelle": "Ligne fixe" },
+    "depannage": { "numero": "0172895389", "affiche": "01 72 89 53 89", "libelle": "Dépannage" }
+  },
+
+  "whatsapp": {
+    "numeroInternational": "33669686384",
+    "_aValider": "Confirmer que ce numéro est bien sur WhatsApp et qui y répond."
+  },
+
+  "email": null,
+  "_emailACompleter": "Adresse professionnelle non fournie.",
+
+  "horaires": [
+    { "jour": 1, "nom": "lundi",    "ouvre": "09:00", "ferme": "18:00" },
+    { "jour": 2, "nom": "mardi",    "ouvre": "09:00", "ferme": "18:00" },
+    { "jour": 3, "nom": "mercredi", "ouvre": "09:00", "ferme": "18:00" },
+    { "jour": 4, "nom": "jeudi",    "ouvre": "09:00", "ferme": "18:00" },
+    { "jour": 5, "nom": "vendredi", "ouvre": "09:00", "ferme": "18:00" },
+    { "jour": 6, "nom": "samedi",   "ouvre": "09:00", "ferme": "18:00" },
+    { "jour": 0, "nom": "dimanche", "ouvre": null,    "ferme": null }
+  ],
+  "fuseau": "Europe/Paris",
+
+  "avisGoogle": {
+    "note": 4.6,
+    "nombre": 61,
+    "url": null,
+    "_urlACompleter": "Lien de la fiche Google à fournir.",
+    "_interdit": "Ne JAMAIS baliser cette note en aggregateRating dans le JSON-LD : Google interdit de marquer des avis qu'on n'a pas collectés soi-même. Motif de sanction manuelle."
+  },
+
+  "paiement": ["Espèces", "Carte bancaire"],
+  "gammePrix": "€€",
+
+  "liens": {
+    "leboncoin": null,
+    "_leboncoinACompleter": "URL exacte de la boutique à fournir.",
+    "vroomly": null
+  },
+
+  "legal": {
+    "siret": null,
+    "formeJuridique": null,
+    "capital": null,
+    "tvaIntracom": null,
+    "assuranceRcPro": null,
+    "mediateurConsommation": null,
+    "directeurPublication": null,
+    "_aCompleter": "TOUT ce bloc est obligatoire légalement avant mise en ligne. Le médiateur de la consommation est celui qu'on oublie (art. L.612-1 du code de la consommation)."
+  },
+
+  "zonesDesservies": [
+    "Épinay-sur-Seine", "Saint-Denis", "Villetaneuse", "Pierrefitte-sur-Seine",
+    "Stains", "L'Île-Saint-Denis", "Argenteuil", "Enghien-les-Bains", "Saint-Gratien"
+  ]
+}

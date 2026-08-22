@@ -1,24 +1,29 @@
 ---
 import Base from '../layouts/Base.astro';
-import Icon from '../components/Icon.astro';
-// [À COMPLÉTER EN PHASE 5] : reprendre le ton et la charte du site.
+import Icone from '../components/socle/Icone.astro';
+import BoutonAppel from '../components/conversion/BoutonAppel.astro';
+import { garage } from '../lib/garage';
 ---
-
-<Base title="Page introuvable" description="Cette page n'existe pas ou plus.">
-  <main id="contenu" class="mx-auto flex min-h-[70svh] max-w-2xl flex-col justify-center px-6">
-    <p class="text-xs uppercase tracking-widest opacity-60">Erreur 404</p>
-    <h1 class="mt-4 text-3xl font-bold">Cette page n'existe pas.</h1>
-    <p class="mt-4 text-base opacity-80">
-      Le lien est peut-être ancien, ou l'adresse comporte une faute.
+<Base
+  titre="Page introuvable — Thalès Auto · Bateaux"
+  description="Cette page n'existe pas. Retour à l'accueil, ou appelez-nous directement."
+>
+  <section class="mx-auto flex min-h-[60svh] max-w-3xl flex-col justify-center px-5 py-20 sm:px-8">
+    <p class="donnee text-xs font-semibold tracking-widest text-beton">ERREUR 404</p>
+    <h1 class="mt-4 font-display text-3xl font-extrabold text-bleu-port">Cette page n'existe pas.</h1>
+    <p class="mt-5 text-lg">
+      Le lien est peut-être ancien. Si vous cherchiez un tarif ou une prestation,
+      tout est à l'accueil — et si c'est urgent, le téléphone reste le plus rapide.
     </p>
-    <p class="mt-8">
+    <div class="mt-9 flex flex-col gap-3 sm:flex-row">
       <a
         href="/"
-        class="group inline-flex items-center gap-2 underline underline-offset-4"
+        class="group inline-flex items-center justify-center gap-2.5 rounded-[2px] bg-rouge-yamaha px-6 py-3.5 font-semibold text-white transition-colors hover:bg-[#a80d26]"
       >
-        <Icon name="arrow-left" class="h-4 w-4 transition-transform group-hover:-translate-x-1" />
         Revenir à l'accueil
+        <Icone nom="fleche" class="size-5 transition-transform group-hover:translate-x-1" />
       </a>
-    </p>
-  </main>
+      <BoutonAppel variante="contour" contexte="404" class="justify-center" />
+    </div>
+  </section>
 </Base>

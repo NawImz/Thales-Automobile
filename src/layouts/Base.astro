@@ -1,58 +1,79 @@
 ---
 import '../styles/global.css';
+import { garage } from '../lib/garage';
+import EnTete from '../components/socle/EnTete.astro';
+import PiedDePage from '../components/socle/PiedDePage.astro';
+import BarreUrgence from '../components/socle/BarreUrgence.astro';
 
 interface Props {
-  title: string;
+  titre: string;
   description: string;
-  ogImage?: string;
-  jsonLd?: Record<string, unknown>;
+  imageOg?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  sansBarreUrgence?: boolean;
 }
-
-const { title, description, ogImage = '/og-image.jpg', jsonLd } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogUrl = new URL(ogImage, Astro.site).href;
-
-// [À COMPLÉTER EN PHASE 2] couleur de marque
-const themeColor = '#111111';
+const { titre, description, imageOg = '/og/accueil.jpg', jsonLd, sansBarreUrgence = false } = Astro.props;
+const canonique = new URL(Astro.url.pathname, Astro.site).href;
+const urlOg = new URL(imageOg, Astro.site).href;
 ---
-
 <!doctype html>
-<html lang="fr" class="no-js">
+<html lang="fr" class="sans-js">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline>
-      document.documentElement.classList.remove('no-js');
+      document.documentElement.classList.remove('sans-js');
     </script>
 
-    <title>{title}</title>
+    <title>{titre}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content={themeColor} />
+    <link rel="canonical" href={canonique} />
+    <meta name="theme-color" content="#16375F" />
+
+    <!-- Une seule police préchargée : celle du titre du hero, qui porte le LCP. -->
+    <link
+      rel="preload"
+      href="/fonts/archivo-expanded.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
+    <meta property="og:site_name" content={garage.nom} />
+    <meta property="og:title" content={titre} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={ogUrl} />
+    <meta property="og:url" content={canonique} />
+    <meta property="og:image" content={urlOg} />
     <meta property="og:locale" content="fr_FR" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- [À COMPLÉTER EN PHASE 5] favicons générés depuis l'élément signature -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
 
-  <body>
+  <body class="min-h-svh">
     <a
       href="#contenu"
-      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:rounded focus:bg-white focus:px-4 focus:py-2"
-      >Aller au contenu</a
+      class="sr-only focus:not-sr-only focus:absolute focus:z-[60] focus:m-3 focus:border focus:border-cambouis focus:bg-tole focus:px-4 focus:py-2 focus:font-semibold"
     >
-    <slot />
+      Aller au contenu
+    </a>
+
+    <EnTete />
+    <main id="contenu" class:list={[!sansBarreUrgence && 'pb-[56px] lg:pb-0']}>
+      <slot />
+    </main>
+    <PiedDePage />
+    {!sansBarreUrgence && <BarreUrgence />}
+
     <script>
-      import '../scripts/motion.js';
+      import '../scripts/horaires';
+      import '../scripts/mouvement';
     </script>
   </body>
 </html>

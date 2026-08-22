@@ -1,0 +1,14 @@
+{
+  "_statut": "PLACEHOLDER-AVIS",
+  "_avertissement": "Ces six entrées sont des emplacements, PAS des avis. Aucun avis n'est inventé, aucun n'est cité mot pour mot au-delà d'une quinzaine de mots. À remplacer par l'export réel des 61 avis Google.",
+  "_tri": "Les avis s'affichent triés par ancienneté du client (champ clientDepuis), pas par date ni par note. C'est la preuve sociale la plus forte du garage et personne dans le coin ne l'exploite. Quand l'ancienneté n'est pas déductible de l'avis, le champ reste null et la mention disparaît — elle n'est pas devinée.",
+
+  "avis": [
+    { "id": 1, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : honnêteté du devis.", "source": "Google", "misEnAvant": true },
+    { "id": 2, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : fidélité longue.", "source": "Google", "misEnAvant": true },
+    { "id": 3, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : prise en charge le jour même.", "source": "Google", "misEnAvant": true },
+    { "id": 4, "auteur": "PLACEHOLDER-AVIS", "note": 4, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : rapport qualité-prix.", "source": "Google", "misEnAvant": true },
+    { "id": 5, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : compétence sur une panne difficile.", "source": "Google", "misEnAvant": true },
+    { "id": 6, "auteur": "PLACEHOLDER-AVIS", "note": 5, "date": null, "clientDepuis": null, "texte": "[À COMPLÉTER] Emplacement d'avis réel — thème attendu : accueil et taille humaine.", "source": "Google", "misEnAvant": true }
+  ]
+}

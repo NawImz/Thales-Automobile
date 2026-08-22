@@ -1,0 +1,28 @@
+---
+import { statutOuverture } from '../../lib/garage';
+
+/**
+ * Statut calculé au build pour être juste sans JavaScript, puis
+ * rafraîchi côté client (le build peut dater de plusieurs jours).
+ * Le repli sans JS reste correct : au pire il indique l'état du build,
+ * et les horaires écrits sont toujours affichés en pied de page.
+ */
+const etat = statutOuverture();
+interface Props { class?: string }
+const { class: classe = '' } = Astro.props;
+---
+<span
+  data-statut
+  class:list={[
+    'donnee inline-flex items-center gap-2 border px-2.5 py-1 text-xs font-semibold whitespace-nowrap',
+    etat.ouvert ? 'border-bleu-port/30 text-bleu-port' : 'border-beton/40 text-beton',
+    classe,
+  ]}
+>
+  <span
+    data-pastille
+    class:list={['size-1.5 shrink-0 rounded-full', etat.ouvert ? 'bg-bleu-port' : 'bg-beton']}
+    aria-hidden="true"
+  ></span>
+  <span data-statut-libelle>{etat.libelle}</span>
+</span>

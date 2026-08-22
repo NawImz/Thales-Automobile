@@ -8,3 +8,4 @@ npm-debug.log*
 .env.production
 .vercel
 .netlify
+.playwright-mcp/

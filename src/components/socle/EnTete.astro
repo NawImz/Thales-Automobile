@@ -1,0 +1,48 @@
+---
+import { garage } from '../../lib/garage';
+import StatutOuverture from './StatutOuverture.astro';
+import BoutonAppel from '../conversion/BoutonAppel.astro';
+
+const liens = [
+  { href: '/entretien-reparation-auto', libelle: 'Auto' },
+  { href: '/bateaux-jet-ski', libelle: 'Bateaux' },
+  { href: '/tarifs', libelle: 'Tarifs' },
+  { href: '/vehicules-occasion', libelle: 'Occasions' },
+  { href: '/le-garage', libelle: 'Le garage' },
+  { href: '/contact', libelle: 'Contact' },
+];
+const ici = Astro.url.pathname;
+---
+<header class="border-b border-cambouis/12 bg-tole">
+  <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4 sm:px-8">
+    <a href="/" class="font-display text-lg leading-none font-extrabold tracking-tight text-bleu-port">
+      {garage.enseigne}
+    </a>
+
+    <nav class="order-3 w-full overflow-x-auto lg:order-none lg:w-auto" aria-label="Navigation principale">
+      <ul class="flex items-center gap-x-5 whitespace-nowrap">
+        {liens.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              aria-current={ici === l.href ? 'page' : undefined}
+              class:list={[
+                'inline-block py-1 text-sm font-semibold transition-colors',
+                ici === l.href ? 'text-rouge-yamaha' : 'text-cambouis hover:text-bleu-cadran',
+              ]}
+            >
+              {l.libelle}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="ml-auto flex items-center gap-4">
+      <StatutOuverture />
+      <div class="hidden lg:block">
+        <BoutonAppel variante="nu" contexte="en-tete" class="px-0 py-0" />
+      </div>
+    </div>
+  </div>
+</header>
