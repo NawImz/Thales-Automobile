@@ -104,3 +104,42 @@ action, elle n'a pas droit à l'accent.
   faudra remettre en question — le vocabulaire de mouvement du brief (une
   seule révélation, 16 px et une opacité) tient en une trentaine de lignes de
   CSS.
+
+---
+
+## Phase 3 · Étape 3 — les deux sections stratégiques
+
+### Trois affirmations, pas trois cartes
+
+Appliqué la révision décidée en critique du plan : pas d'icône, pas de carte.
+Trois phrases en Archivo, chacune suivie d'une ligne de preuve en mono
+capitales. Le contenu vient des thèmes réels des avis, pas de mon clavier.
+
+### La grille de tarifs, et deux bugs qu'elle a révélés
+
+**1. Les lignes de prix s'arrêtaient au milieu de la page.** Le point de
+conduite partait dans le vide et le prix flottait à mi-largeur. Cause : ma
+règle globale `p, li { max-width: 68ch }`. La mesure de 68 caractères est une
+règle de **prose** ; appliquée à tous les `li`, elle bride les grilles et les
+listes de mise en page.
+**Correction :** la mesure reste sur `p`, et sur les `li` uniquement dans un
+contexte `.prose`. C'est le même genre de piège que la collision de classes de
+l'étape 2 : une règle correcte, posée trop large.
+
+**2. L'ondulation était invisible.** `--tole-ombre` sur `--tole` ne fait que
+1,2:1 de contraste — les filets existaient dans le DOM mais ne se voyaient pas,
+et le séparateur ressemblait à un blanc de mise en page. Passé à `--beton` à
+55 % : la corrugation se lit enfin comme une corrugation.
+
+### Le chargement paresseux, enfin vérifiable
+
+Il n'y avait aucun `[data-revele]` sur la page jusqu'ici, donc rien ne
+déclenchait l'import de GSAP. Avec ces deux sections, le mécanisme est
+mesuré et confirmé :
+
+- avant scroll : GSAP absent
+- après scroll : GSAP (68 Ko) + ScrollTrigger (42 Ko) arrivent
+- 11 éléments révélés, **0 visible-mais-transparent** en fin de course
+- **sans JavaScript** : 0 élément invisible, 8 prix lisibles, téléphone présent
+
+Chargement de l'accueil : 137,0 Ko (budget 600).

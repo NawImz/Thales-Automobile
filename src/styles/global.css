@@ -106,8 +106,14 @@
     text-wrap: balance;
   }
 
-  /* Longueur de ligne plafonnée à 68 caractères, imposée au brief. */
-  p, li {
+  /* Longueur de ligne plafonnée à 68 caractères : c'est une règle de
+     PROSE. Ne jamais l'étendre aux « li » en bloc — elle briderait les
+     grilles et les listes de mise en page (vécu sur la grille de tarifs,
+     dont les lignes s'arrêtaient au milieu de la page). */
+  p {
+    max-width: 68ch;
+  }
+  :where(.prose) li {
     max-width: 68ch;
   }
 
@@ -145,12 +151,14 @@
 
 /* Tailwind 4 : les utilitaires maison passent par @utility. */
 @utility ondulation {
-  /* Le séparateur de section est l'ondulation de la tôle du hangar. */
-  height: 12px;
+  /* Le séparateur de section est l'ondulation de la tôle du hangar.
+     Un seul trait, une seule opacité : sous 0,3 sur fond crème il
+     disparaît (tole-ombre sur tole ne fait que 1,2:1). */
+  height: 14px;
   background-image: repeating-linear-gradient(
     90deg,
-    var(--color-tole-ombre) 0 1px,
-    transparent 1px 9px
+    color-mix(in srgb, var(--color-beton) 55%, transparent) 0 1px,
+    transparent 1px 10px
   );
 }
 

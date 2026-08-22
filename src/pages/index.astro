@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/contenu/Hero.astro';
+import TroisAffirmations from '../components/contenu/TroisAffirmations.astro';
+import GrilleTarifs from '../components/preuve/GrilleTarifs.astro';
+import Ondulation from '../components/socle/Ondulation.astro';
 import { garage } from '../lib/garage';
 
 const titre = `Garage auto et bateaux à ${garage.adresse.ville} — ${garage.nom}`;
@@ -8,4 +11,7 @@ const description = `Réparation auto et moteurs de bateau à ${garage.adresse.v
 ---
 <Base titre={titre} description={description}>
   <Hero />
+  <TroisAffirmations />
+  <Ondulation />
+  <GrilleTarifs />
 </Base>

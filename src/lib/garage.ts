@@ -86,3 +86,34 @@ export function statutOuverture(maintenant: Date = new Date()): Etat {
   }
   return { ouvert: false, libelle: 'Fermé' };
 }
+
+// ── Barème ────────────────────────────────────────────────────────────
+import bareme from '../content/tarifs/bareme.json';
+
+export const tarifs = bareme;
+
+export type Fourchette = { bas: number; haut: number };
+
+/**
+ * Prix de base × coefficient de gabarit, fourchette ±20 %, arrondie à 5 €.
+ * Les prestations nautiques ignorent le gabarit (il n'a pas de sens pour
+ * un moteur hors-bord).
+ *
+ * ⚠️ Tous les prix de base sont marqués « À VALIDER » : ce sont des ordres
+ * de grandeur destinés à la discussion avec Nabil, pas les prix du garage.
+ */
+export function fourchette(idIntervention: string, idGabarit = 'berline'): Fourchette | null {
+  const i = bareme.interventions.find((x) => x.id === idIntervention);
+  if (!i) return null;
+  const coef = i.gabaritIgnore
+    ? 1
+    : (bareme.gabarits.find((g) => g.id === idGabarit)?.coefficient ?? 1);
+  const centre = i.base * coef;
+  const a5 = (n: number) => Math.round(n / 5) * 5;
+  return { bas: a5(centre * 0.8), haut: a5(centre * 1.2) };
+}
+
+/** « 86 – 110 € », en tirets demi-cadratins et espaces insécables. */
+export function fourchetteEnTexte(f: Fourchette): string {
+  return `${f.bas} – ${f.haut} €`;
+}

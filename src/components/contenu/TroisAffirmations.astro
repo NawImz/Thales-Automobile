@@ -1,0 +1,39 @@
+---
+import { garage } from '../../lib/garage';
+
+/**
+ * Pas de cartes à icône : trois affirmations, tirées des thèmes réels des
+ * avis. Chacune suivie d'une seule ligne de preuve en mono. C'est du
+ * texte, ça se lit en quatre secondes, et ça ne ressemble à aucun autre
+ * site de garage.
+ */
+const affirmations = [
+  {
+    dit: 'On ne change pas une pièce qui peut tenir.',
+    preuve: `Thème n°1 des ${garage.avisGoogle.nombre} avis Google`,
+  },
+  {
+    dit: 'On vous appelle avant toute intervention non prévue.',
+    preuve: 'Pas de mauvaise surprise sur le devis',
+  },
+  {
+    dit: 'Une voiture et un moteur de bateau, même atelier.',
+    preuve: `Personne d'autre à ${garage.adresse.ville}`,
+  },
+];
+---
+<section class="bg-tole" aria-labelledby="pourquoi">
+  <div class="mx-auto max-w-7xl px-5 py-section-normal sm:px-8">
+    <h2 id="pourquoi" class="sr-only">Ce qui distingue l'atelier</h2>
+    <dl data-revele-groupe class="divide-y divide-cambouis/12 border-y border-cambouis/12">
+      {affirmations.map((a) => (
+        <div data-revele class="flex flex-col gap-2 py-7 lg:flex-row lg:items-baseline lg:gap-10">
+          <dt class="font-display text-xl font-bold text-bleu-port lg:flex-1">{a.dit}</dt>
+          <dd class="donnee text-xs font-semibold tracking-widest text-beton uppercase lg:w-[34ch] lg:shrink-0">
+            {a.preuve}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
