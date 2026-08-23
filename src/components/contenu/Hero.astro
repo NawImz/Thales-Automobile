@@ -1,69 +1,102 @@
 ---
-import { garage } from '../../lib/garage';
-import BoutonAppel from '../conversion/BoutonAppel.astro';
+import { garage, lienTel } from '../../lib/garage';
 import Icone from '../socle/Icone.astro';
 import PhotoAttendue from '../socle/PhotoAttendue.astro';
 
+/**
+ * ACTE 1 — l'arrivée.
+ *
+ * Une seule composition, pas une bande suivie d'une photo. Les trois
+ * affirmations qui occupaient une section entière sont ici, en trois
+ * lignes : elles servaient d'argument, pas de chapitre.
+ */
 const avis = garage.avisGoogle;
+const tel = garage.telephones.principal;
+
+const affirmations = [
+  'On ne change pas une pièce qui peut tenir.',
+  'On appelle avant toute intervention non prévue.',
+  'Une voiture et un moteur de bateau, même atelier.',
+];
 ---
 <section class="sur-sombre tole-nervuree relative isolate overflow-hidden bg-cambouis text-tole">
-  <div class="mx-auto max-w-7xl px-5 pt-14 pb-16 sm:px-8 sm:pt-20 sm:pb-24">
-    <p class="hero-suite donnee mb-7 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-widest text-beton-clair uppercase" style="--retard: 340ms">
-      <span>{garage.adresse.ville}</span>
-      <span aria-hidden="true" class="text-beton">·</span>
-      <span>Auto et bateaux</span>
-      <span aria-hidden="true" class="text-beton">·</span>
-      <span>Depuis {garage.depuis}</span>
-    </p>
+  <div class="mx-auto grid max-w-7xl gap-12 px-5 pt-16 pb-20 sm:px-8 lg:min-h-[82svh] lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
+    <div>
+      <p class="hero-suite donnee flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-widest text-beton-clair uppercase" style="--retard: 340ms">
+        <span>{garage.adresse.ville}</span>
+        <span aria-hidden="true" class="text-beton">·</span>
+        <span>Auto et bateaux</span>
+        <span aria-hidden="true" class="text-beton">·</span>
+        <span>Depuis {garage.depuis}</span>
+      </p>
 
-    <h1 class="hero-titre max-w-[17ch] font-display text-3xl font-extrabold text-tole sm:max-w-none sm:text-4xl">
-      <span class="ligne"><span>On vous dit ce qu'il faut</span></span>
-      <span class="ligne"><span>réparer, et ce qu'il</span></span>
-      <span class="ligne"><span>ne faut pas.</span></span>
-    </h1>
+      <h1 class="hero-titre mt-6 max-w-[17ch] font-display text-3xl font-extrabold text-tole sm:max-w-none sm:text-4xl">
+        <span class="ligne"><span>On vous dit ce qu'il faut</span></span>
+        <span class="ligne"><span>réparer, et ce qu'il</span></span>
+        <span class="ligne"><span>ne faut pas.</span></span>
+      </h1>
 
-    <p class="hero-suite mt-7 max-w-[52ch] text-lg text-beton-clair" style="--retard: 420ms">
-      {`Mécanique toutes marques et moteurs de bateau, dans le même atelier. ${garage.anneesExperience} ans de métier. Devis gratuit, prix affichés.`}
-    </p>
+      <!-- Les trois arguments, en trois lignes. Ils tenaient une section
+           entière ; ils valent mieux ici, sous la promesse. -->
+      <ul class="hero-suite mt-7 space-y-2" style="--retard: 420ms">
+        {affirmations.map((a) => (
+          <li class="flex items-start gap-3 text-lg text-beton-clair">
+            <Icone nom="coche" class="mt-1.5 size-4 text-tole/70" />
+            <span>{a}</span>
+          </li>
+        ))}
+      </ul>
 
-    <div class="hero-suite mt-9 flex flex-col gap-3 sm:flex-row sm:items-center" style="--retard: 500ms">
-      <a
-        href="/devis"
-        data-event="estimateur"
-        data-contexte="hero"
-        class="group inline-flex items-center justify-center gap-2.5 rounded-[2px] bg-tole px-6 py-3.5 text-base font-semibold text-cambouis transition-colors hover:bg-white lg:bg-rouge-yamaha lg:text-white lg:hover:bg-[#a80d26]"
-      >
-        Estimer ma réparation
-        <Icone nom="fleche" class="size-5 transition-transform group-hover:translate-x-1" />
-      </a>
-      <BoutonAppel
-        variante="contour"
-        contexte="hero"
-        class="justify-center border-tole/45 text-tole hover:bg-tole hover:text-cambouis"
-      />
+      <div class="hero-suite mt-8 flex flex-col gap-3 sm:flex-row sm:items-center" style="--retard: 500ms">
+        <a
+          href={lienTel(tel.numero)}
+          data-event="appel"
+          data-contexte="hero"
+          class="donnee inline-flex items-center justify-center gap-2.5 rounded-[2px] bg-tole px-6 py-4 text-lg font-semibold whitespace-nowrap text-cambouis transition-colors hover:bg-white lg:bg-rouge-yamaha lg:text-white lg:hover:bg-[#a80d26]"
+        >
+          <Icone nom="telephone" class="size-5" />
+          {tel.affiche}
+        </a>
+        <a
+          href="/devis"
+          data-event="estimateur"
+          data-contexte="hero"
+          class="group inline-flex items-center justify-center gap-2.5 rounded-[2px] border border-tole/45 px-6 py-4 font-semibold text-tole transition-colors hover:bg-tole hover:text-cambouis"
+        >
+          Estimer ma réparation
+          <Icone nom="fleche" class="size-5 transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
+
+      <p class="hero-suite mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-beton-clair" style="--retard: 580ms">
+        <Icone nom="etoile" plein class="size-4 text-tole" />
+        <span class="donnee font-semibold text-tole">{String(avis.note).replace('.', ',')}</span>
+        <span>sur {avis.nombre} avis Google</span>
+        <span aria-hidden="true" class="text-beton">·</span>
+        <span>Ouvert <span class="font-semibold text-tole">le samedi</span></span>
+      </p>
     </div>
 
-    <ul class="hero-suite mt-10 flex flex-wrap items-center gap-x-7 gap-y-2 border-t border-tole/15 pt-6" style="--retard: 580ms">
-      <li class="flex items-center gap-1.5">
-        <Icone nom="etoile" plein class="size-4 text-tole" />
-        <span class="donnee text-sm font-semibold text-tole">{String(avis.note).replace('.', ',')}</span>
-        <span class="text-sm text-beton-clair">sur {avis.nombre} avis Google</span>
-      </li>
-      <li class="text-sm text-beton-clair">Ouvert <span class="font-semibold text-tole">le samedi</span></li>
-      <li class="text-sm text-beton-clair">Pièces neuves <span class="font-semibold text-tole">et d'occasion</span></li>
-    </ul>
+    <PhotoAttendue
+      numero={2}
+      sombre
+      nom="Le hangar : une voiture sur pont ET un moteur hors-bord dans le même plan. C'est la photo qui raconte tout le site."
+      ratio="4 / 5"
+      class="hero-suite"
+    />
   </div>
-
-  <PhotoAttendue
-    numero={2}
-    sombre
-    nom="Le hangar : une voiture sur pont ET un moteur hors-bord dans le même plan. C'est la photo qui raconte tout le site."
-    ratio="16 / 7"
-    class="border-x-0 border-b-0"
-  />
 </section>
 
 <style>
+  /* Écrans bas (portables 13-14 pouces) : le titre cède de la place pour
+     que le bouton d'appel reste au-dessus de la ligne de flottaison.
+     C'est la conversion n°1 — elle passe avant l'effet typographique. */
+  @media (min-width: 64rem) and (max-height: 52rem) {
+    .hero-titre {
+      font-size: clamp(2.25rem, 3.4vw, 3rem);
+    }
+  }
+
   /* Séquence d'arrivée : masques par ligne puis cascade. Total 820 ms,
      sous le budget de 900 ms. En CSS, donc sans attendre le moindre Ko
      de JavaScript — c'est la seule façon de tenir ce budget. */
@@ -82,7 +115,7 @@ const avis = garage.avisGoogle;
     .hero-suite {
       opacity: 0;
       animation: apparaitre 280ms var(--ease-atelier) forwards;
-      animation-delay: var(--retard, 0ms);
+      animation-delay: var(--retard, 640ms);
     }
   }
 

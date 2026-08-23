@@ -1,0 +1,94 @@
+---
+import { garage, avisTries, lienTel, lienItineraire, heureEnTexte } from '../../lib/garage';
+import Icone from '../socle/Icone.astro';
+
+/**
+ * ACTE 4 — qui on est, où on est, et on appelle.
+ *
+ * Fusionne trois blocs qui étaient séparés : les avis, l'accès et le
+ * bandeau d'appel. Ils répondent tous à la même question — « est-ce que
+ * je peux y aller ? » — et les séparer diluait la réponse.
+ */
+const liste = avisTries();
+const g = garage.avisGoogle;
+const a = garage.adresse;
+const tel = garage.telephones.principal;
+const jours = garage.horaires.filter((h) => h.jour !== 0);
+---
+<section class="sur-sombre bg-cambouis text-tole" aria-labelledby="confiance">
+  <div class="mx-auto max-w-7xl px-5 py-section-ample sm:px-8">
+    <p class="donnee text-xs font-semibold tracking-widest text-beton-clair uppercase">
+      {String(g.note).replace('.', ',')} sur {g.nombre} avis Google
+    </p>
+    <h2 id="confiance" class="mt-4 max-w-[18ch] font-display text-2xl font-extrabold text-white lg:text-3xl">
+      Des clients qui reviennent depuis des années.
+    </h2>
+
+    <ul data-revele-groupe class="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-3">
+      {liste.map((avis) => (
+        <li data-revele class="flex flex-col gap-4 border-t border-tole/20 pt-5">
+          {avis.ancienneteDite && (
+            <p class="donnee text-xs font-semibold tracking-wide text-white uppercase">
+              {avis.ancienneteDite}
+            </p>
+          )}
+          <blockquote class="text-lg leading-snug text-tole">« {avis.extrait} »</blockquote>
+          <p class="mt-auto flex flex-wrap items-baseline gap-x-2 text-sm text-beton-clair">
+            <span class="font-semibold text-tole">{avis.auteur}</span>
+            {avis.profil && <span class="donnee text-xs">{avis.profil}</span>}
+          </p>
+        </li>
+      ))}
+    </ul>
+
+    <!-- L'accès et l'appel, dans le même souffle que la preuve. -->
+    <div class="mt-16 grid gap-10 border-t border-tole/20 pt-12 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
+      <div class="grid gap-8 sm:grid-cols-2">
+        <div>
+          <h3 class="donnee text-xs font-semibold tracking-widest text-beton-clair uppercase">Nous trouver</h3>
+          <address class="mt-3 text-lg not-italic text-tole">
+            {a.rue}<br />{a.codePostal} {a.ville}
+          </address>
+          <p class="mt-2 text-sm text-beton-clair">{a.repere}</p>
+          <a
+            href={lienItineraire()}
+            rel="noopener"
+            data-event="itineraire"
+            data-contexte="acte-4"
+            class="group mt-3 inline-flex items-center gap-2 text-sm font-semibold text-tole underline underline-offset-4 hover:text-white"
+          >
+            Itinéraire
+            <Icone nom="fleche" class="size-4 transition-transform group-hover:translate-x-1" />
+          </a>
+        </div>
+
+        <div>
+          <h3 class="donnee text-xs font-semibold tracking-widest text-beton-clair uppercase">Horaires</h3>
+          <p class="donnee mt-3 text-lg text-tole">
+            Lundi – samedi<br />
+            {heureEnTexte(jours[0].ouvre!)} – {heureEnTexte(jours[0].ferme!)}
+          </p>
+          <p class="mt-2 text-sm text-beton-clair">
+            Fermé le dimanche · {garage.paiement.join(' et ').toLowerCase()}
+          </p>
+        </div>
+      </div>
+
+      <div class="lg:text-right">
+        <p class="text-lg text-beton-clair">Un bruit, un voyant, un doute ?</p>
+        <a
+          href={lienTel(tel.numero)}
+          data-event="appel"
+          data-contexte="acte-4"
+          class="donnee mt-3 inline-flex items-center gap-3 rounded-[2px] bg-rouge-yamaha px-6 py-4 text-xl font-semibold whitespace-nowrap text-white transition-colors hover:bg-[#a80d26]"
+        >
+          <Icone nom="telephone" class="size-5" />
+          {tel.affiche}
+        </a>
+        <p class="mt-3 text-sm text-beton-clair">
+          On vous rappelle avec un créneau. Devis gratuit.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

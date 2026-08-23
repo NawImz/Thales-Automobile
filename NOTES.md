@@ -287,3 +287,57 @@ la grille de tarifs principale, corrigé aussi.
 La seule inversion chromatique de la page, sur `--bleu-port`, bord à bord.
 Contrainte respectée : le rouge est à 2,04:1 sur ce fond, l'action principale
 est donc un bouton **plein** à libellé blanc (5,88:1), jamais du texte rouge.
+
+---
+
+## Phase 3 · Étape 6 — refonte en quatre actes
+
+Retour client : « le site n'a pas changé, trop basique, trop le fouillis, fais
+le moins de parties possible ».
+
+Il a raison, et le diagnostic est précis : **j'empilais des bandes**. Sept
+blocs pleine largeur qui se suivaient tous de la même façon — titre, contenu,
+séparateur, titre, contenu. Ce n'est pas le contenu qui était en trop, c'est la
+structure qui était plate.
+
+### De sept bandes à quatre actes
+
+| Avant | Après |
+|---|---|
+| Hero · Trois affirmations · Ondulation · Grille de tarifs · Trait · Pôle nautique · Ondulation · Avis | **1.** L'arrivée · **2.** Les deux métiers · **3.** Les prix · **4.** La confiance |
+
+Chaque acte répond à **une** question du visiteur, et à une seule :
+
+1. **L'arrivée** (cambouis) — la promesse et le téléphone.
+2. **Les deux métiers** (cambouis → bleu-port) — le trait devient coque, et le
+   nautique enchaîne sans respiration. C'était deux sections, c'est un geste.
+3. **Les prix** (tôle) — le seul moment clair de la page. Le contraste fait
+   l'événement : on allume la lumière au-dessus de la facture.
+4. **La confiance** (cambouis) — avis, accès, horaires et appel d'un souffle.
+   Trois blocs séparés auparavant, alors qu'ils répondent tous à la même
+   question : « est-ce que je peux y aller ? »
+
+**Supprimés :** `TroisAffirmations` (absorbée dans le hero, en trois lignes
+sous la promesse — c'était un argument, pas un chapitre), `SectionAvis` et
+`CarteAvis` (fondus dans l'acte 4), et les deux ondulations qui séparaient des
+blocs qui n'avaient plus besoin d'être séparés.
+
+### Deux fautes que je me suis faites à moi-même
+
+**Sept rouges à l'écran.** Les trois coches du hero étaient en
+`--rouge-yamaha`. Une coche n'est pas une action. Ramené à un rouge par écran —
+et la mention d'ancienneté client de l'acte 4, elle aussi en rouge, est passée
+en blanc : c'est une donnée, pas un bouton.
+
+**Zéro rouge en desktop**, ensuite. En corrigeant j'avais retiré l'accent à
+l'action principale : sur grand écran la barre d'urgence disparaît, c'est donc
+le bouton d'appel du hero qui doit le porter. Exactement un rouge par écran, à
+toutes les largeurs.
+
+### Le pli, mesuré à trois hauteurs
+
+À 1440 × 760 — un portable de 13 pouces — **le bouton d'appel tombait sous la
+ligne de flottaison**. La promesse était visible, la conversion n°1 non. Une
+media query sur la *hauteur* fait céder le titre : l'effet typographique passe
+après le téléphone. Contrôlé à 900, 760 et 844 px de haut : promesse, appel et
+preuve tiennent au-dessus du pli partout.
