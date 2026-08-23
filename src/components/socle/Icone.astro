@@ -54,7 +54,10 @@ const decoratif = !titre;
 ---
 
 <svg
-  class={classe}
+  {/* shrink-0 non négociable : en contexte flex, un SVG sans largeur
+      intrinsèque se fait écraser à 0 pendant que son tracé continue de
+      peindre à sa géométrie d'origine — et déborde de la page. */}
+  class:list={['shrink-0', classe]}
   viewBox="0 0 24 24"
   fill={plein ? 'currentColor' : 'none'}
   stroke="currentColor"

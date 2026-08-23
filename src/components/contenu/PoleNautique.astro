@@ -1,0 +1,111 @@
+---
+import { garage, lienWhatsApp, tarifs, fourchette, fourchetteEnTexte } from '../../lib/garage';
+import Icone from '../socle/Icone.astro';
+import PhotoAttendue from '../socle/PhotoAttendue.astro';
+
+/**
+ * La seule inversion chromatique de la page d'accueil.
+ * C'est mérité : c'est un autre monde et un autre client, et aucun des
+ * cinq concurrents ne touche au nautique.
+ *
+ * ⚠️ Contrainte de contraste sur ce fond : le rouge est à 2,04:1 sur
+ * --bleu-port. L'action principale est donc un bouton rouge PLEIN à
+ * libellé blanc (5,88:1), jamais du texte rouge.
+ */
+const prestations = [
+  { icone: 'engrenage', titre: 'Entretien et réparation', detail: 'Hors-bord et in-board, toutes marques.' },
+  { icone: 'goutte', titre: 'Hivernage', detail: 'Vidange, protection, remisage hors saison.' },
+  { icone: 'bateau', titre: 'Jet-skis et remorques', detail: 'Révision, mise en conformité, roulement.' },
+  { icone: 'remorquage', titre: 'Dépannage', detail: 'Sur place ou à quai, selon le cas.' },
+] as const;
+
+const nautiques = tarifs.interventions
+  .filter((i) => i.categorie === 'nautique' && i.courant)
+  .map((i) => ({ ...i, prix: fourchetteEnTexte(fourchette(i.id)!) }));
+
+const message =
+  "Bonjour, je vous contacte depuis votre site pour un moteur de bateau / jet-ski.";
+---
+<section class="sur-sombre bg-bleu-port text-tole" aria-labelledby="nautique">
+  <div class="mx-auto max-w-7xl px-5 py-section-ample sm:px-8">
+    <div class="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+      <div>
+        <p class="donnee text-xs font-semibold tracking-widest text-beton-clair uppercase">
+          Le pôle nautique
+        </p>
+
+        <h2 id="nautique" class="mt-4 max-w-[22ch] font-display text-2xl font-extrabold text-white lg:text-3xl">
+          Il y a une poignée d'ateliers hors-bord en Île-de-France.
+        </h2>
+
+        <p class="mt-6 text-lg text-tole">
+          Le même atelier, les mêmes mains, la Seine à cent mètres. On répare une
+          Clio et un hors-bord de 150 chevaux sous le même toit — et on annonce
+          le prix avant de commencer, ici comme ailleurs.
+        </p>
+
+        <ul data-revele-groupe class="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2">
+          {prestations.map((p) => (
+            <li data-revele class="flex gap-3.5">
+              <Icone nom={p.icone} class="mt-0.5 size-5 shrink-0 text-beton-clair" />
+              <div>
+                <h3 class="font-display text-base font-bold text-white">{p.titre}</h3>
+                <p class="mt-1 text-sm text-beton-clair">{p.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+          <a
+            href="/bateaux-jet-ski"
+            data-event="nautique"
+            data-contexte="pole-nautique"
+            class="group inline-flex items-center justify-center gap-2.5 rounded-[2px] bg-rouge-yamaha px-6 py-3.5 font-semibold text-white transition-colors hover:bg-[#a80d26]"
+          >
+            Voir le pôle nautique
+            <Icone nom="fleche" class="size-5 transition-transform group-hover:translate-x-1" />
+          </a>
+          <a
+            href={lienWhatsApp(message)}
+            data-event="whatsapp"
+            data-contexte="pole-nautique"
+            rel="noopener"
+            class="inline-flex items-center justify-center gap-2 rounded-[2px] border border-tole/45 px-6 py-3.5 font-semibold text-tole transition-colors hover:bg-tole hover:text-bleu-port"
+          >
+            <Icone nom="message" class="size-5" />
+            Décrire ma panne
+          </a>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-6">
+        <PhotoAttendue
+          numero={6}
+          sombre
+          nom="Un jet-ski ou un hors-bord démonté, plan serré sur le moteur ouvert."
+          ratio="4 / 3"
+          class="border-tole/25 bg-bleu-port"
+        />
+
+        <div class="border border-tole/20 p-6">
+          <p class="donnee text-xs font-semibold tracking-widest text-beton-clair uppercase">
+            Ordres de grandeur
+          </p>
+          <ul class="mt-4">
+            {nautiques.map((n) => (
+              <li class="flex items-baseline gap-3 border-b border-tole/15 py-3 last:border-0">
+                <span class="min-w-0 text-tole">{n.libelle}</span>
+                <span class="min-w-6 flex-1 translate-y-[-0.2em] border-b border-dotted border-tole/35" aria-hidden="true"></span>
+                <span class="donnee shrink-0 font-semibold whitespace-nowrap text-white">{n.prix}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="donnee mt-4 text-xs tracking-wide text-beton-clair uppercase">
+            À valider par Nabil
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

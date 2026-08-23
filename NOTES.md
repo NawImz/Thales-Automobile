@@ -216,3 +216,74 @@ Elle a été collée dans la conversation, pas déposée en fichier : je la vois
 je ne peux pas l'extraire sur le disque. À déposer dans le dépôt pour être
 utilisée. Elle irait dans la future section « véhicules d'occasion » — une Clio
 est justement la « citadine » du barème — et non en ambiance.
+
+---
+
+## Phase 3 · Étape 5 — l'élément signature et le pôle nautique
+
+Retour client : le site est trop classique, les animations banales. Il demande
+des animations « comme on n'a jamais vu », des voitures détourées qui roulent,
+des outils qui flottent.
+
+### Ce que je n'ai pas fait, et pourquoi
+
+Des PNG de voitures qui traversent l'écran. C'est exactement ce que fait un
+template, et sur un site dont l'argument central est l'honnêteté, du clipart
+décoratif dessert le propos. Les images fournies ne sont de toute façon pas
+récupérables : collées dans la conversation, pas déposées en fichier.
+
+### Le trait continu
+
+Un seul trait qui dessine un profil de voiture, puis **se transforme en coque
+de bateau** au scroll. C'est le métier en un geste — auto ET nautique — et
+c'est la charnière qui introduit le pôle nautique.
+
+**Technique :** deux tracés SVG à structure de commandes rigoureusement
+identique (M + 10 × C, 62 nombres chacun), interpolés coordonnée par
+coordonnée. Un contrôle automatique vérifie l'égalité des structures : sans
+elle le morph est impossible.
+
+**Sans GSAP.** Le scrub est un rAF maison de quarante lignes. GSAP aurait coûté
+43 Ko gzip pour interpoler soixante-deux nombres. Résultat mesuré : le budget
+JS ne bouge pas d'un octet — 51,1 Ko avant comme après.
+
+**Trois itérations avant que ça ressemble à quelque chose.** Les coordonnées de
+Bézier écrites à la main ne pardonnent pas : je les ai rendues en PNG à chaque
+passe plutôt que de les imaginer.
+1. Premier jet : la voiture passait, le bateau lisait « semelle de chaussure ».
+   Pas de tableau arrière, ligne de fond interrompue.
+2. Deuxième : le bateau devenait lisible mais la voiture avait un **bec** —
+   le soubassement rejoignait le museau sous un angle rasant.
+3. Troisième : premier point de contrôle placé à la verticale sous la fin du
+   segment précédent, la courbe repart droit vers le bas et donne un angle de
+   pare-chocs arrondi. Et franc-bord relevé sur la coque, qui lisait « canoë ».
+
+Réglage de rythme : le scrub courait sur 2,2 écrans, ramené à 1,5. Une
+animation ne doit pas retenir le visiteur en otage.
+
+### Trois bugs de débordement en cascade, tous à 390 px
+
+Le contrôle disait « débordement » sans dire où. Diagnostiqué en remontant la
+chaîne des ancêtres, jamais en tâtonnant.
+
+**1. Les icônes se faisaient écraser à 0.** En contexte flex, un `<svg>` sans
+largeur intrinsèque peut être réduit à zéro pendant que son tracé continue de
+peindre à sa géométrie d'origine — et déborde. Corrigé dans le composant
+`Icone` : `shrink-0` est désormais dans sa base. Une icône ne rétrécit jamais.
+
+**2. Un `<details>` FERMÉ reçoit une containment de layout du navigateur.**
+Il devient alors le bloc conteneur de tout descendant en position absolue : le
+panneau de menu se retrouvait large de 44 px — la taille du burger — avec son
+contenu débordant hors de l'écran. Rien de visible, onze pixels de
+`scrollWidth` en trop. Corrigé en retirant le panneau du flux à la fermeture,
+plutôt qu'en bricolant le positionnement.
+
+**3. `shrink-0` sur le libellé ET sur le prix** d'une ligne de conduite : rien
+ne pouvait céder. Seul le prix doit être insécable. Le même piège dormait dans
+la grille de tarifs principale, corrigé aussi.
+
+### Le pôle nautique
+
+La seule inversion chromatique de la page, sur `--bleu-port`, bord à bord.
+Contrainte respectée : le rouge est à 2,04:1 sur ce fond, l'action principale
+est donc un bouton **plein** à libellé blanc (5,88:1), jamais du texte rouge.

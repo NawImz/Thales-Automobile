@@ -122,6 +122,16 @@ const tel = garage.telephones.principal;
   .menu-mobile[open] .barres::before { top: 0; transform: translateY(0) rotate(45deg); }
   .menu-mobile[open] .barres::after { top: -1.5px; transform: translateY(0) rotate(-45deg); }
 
+  /* ⚠️ Piège coûteux : un <details> FERMÉ reçoit une containment de
+     layout du navigateur. Il devient alors le bloc conteneur de tout
+     descendant en position absolue — le panneau se retrouvait large de
+     44 px (la taille du burger) avec son contenu débordant hors de
+     l'écran, sans rien de visible. On le retire donc du flux à la
+     fermeture, plutôt que de compter sur le positionnement. */
+  .menu-mobile:not([open]) .menu-panneau {
+    display: none;
+  }
+
   /* Le panneau sort du flux de l'en-tête pour couvrir toute la largeur. */
   .menu-panneau {
     position: absolute;
