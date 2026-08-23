@@ -1,23 +1,14 @@
 ---
-import { VOITURE } from './traces';
-
 /**
- * L'élément signature du site : un seul trait continu qui dessine un
- * profil de voiture, puis se transforme en coque de bateau au scroll.
+ * LA CHARNIÈRE — le volume qui roule devient celui qui flotte.
  *
- * C'est le métier en un geste — auto ET nautique — et c'est la charnière
- * qui introduit le pôle nautique.
- *
- * Aucune librairie : le scrub est un rAF maison de quarante lignes.
- * GSAP aurait coûté 43 Ko gzip pour interpoler soixante-deux nombres.
+ * Ce n'est plus un dessin au trait : c'est le même solide extrudé,
+ * en acier, dont les 12 048 sommets se déplacent en temps réel de la
+ * voiture vers la coque. Les roues s'effacent, le plan d'eau monte.
  */
 ---
-<section
-  data-trait
-  class="sur-sombre relative bg-cambouis text-tole"
-  aria-labelledby="charniere"
->
-  <div class="sticky top-0 flex h-svh flex-col justify-center gap-6 overflow-hidden py-10 sm:gap-8">
+<section data-trait class="sur-sombre grille-hud relative bg-cambouis text-tole" aria-labelledby="charniere">
+  <div class="sticky top-0 flex h-svh flex-col justify-center overflow-hidden">
     <div class="mx-auto w-full max-w-7xl px-5 sm:px-8">
       <p class="donnee text-xs font-semibold tracking-widest text-beton-clair uppercase">
         Le même atelier
@@ -28,117 +19,99 @@ import { VOITURE } from './traces';
       </h2>
     </div>
 
-    <div class="w-full">
-      <svg
-        data-scene
-        viewBox="0 0 1000 320"
-        class="h-auto w-full"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          data-profil
-          d={VOITURE}
-          stroke="currentColor"
-          stroke-width="4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          vector-effect="non-scaling-stroke"
-        />
-        <circle data-roue cx="285" cy="240" r="48" stroke="currentColor" stroke-width="4" vector-effect="non-scaling-stroke" />
-        <circle data-roue cx="735" cy="240" r="48" stroke="currentColor" stroke-width="4" vector-effect="non-scaling-stroke" />
-        <!-- L'eau n'apparaît qu'une fois la coque formée. -->
-        <path
-          data-eau
-          d="M 40 288 C 160 280 280 296 400 288 C 520 280 640 296 760 288 C 850 282 920 288 960 286"
-          stroke="currentColor"
-          stroke-width="3"
-          stroke-linecap="round"
-          opacity="0"
-          vector-effect="non-scaling-stroke"
-        />
-      </svg>
+    <div class="relative mt-4 min-h-0 flex-1">
+      <canvas
+        data-scene-charniere
+        class="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-700 data-[pret=oui]:opacity-100"
+        aria-hidden="true"></canvas>
+
+      <!-- Repli : servi en mobile, en mouvement réduit et sans WebGL. -->
+      <div data-repli-charniere class="absolute inset-0 flex items-center justify-center px-5 transition-opacity duration-500">
+        <p class="donnee max-w-[30ch] text-center text-sm leading-relaxed text-beton">
+          Voiture ou moteur de bateau,<br />le même atelier et les mêmes mains.
+        </p>
+      </div>
+
+      <p class="donnee pointer-events-none absolute right-5 bottom-0 hidden text-[0.625rem] tracking-widest text-beton uppercase sm:right-8 lg:block">
+        [ <span data-etat>Profil auto</span> ]
+      </p>
     </div>
 
-    <p class="mx-auto w-full max-w-7xl px-5 text-lg text-beton-clair sm:px-8">
+    <p class="mx-auto mt-4 w-full max-w-7xl px-5 text-lg text-beton-clair sm:px-8">
       <span data-legende>Mécanique toutes marques, freinage, distribution, embrayage.</span>
     </p>
   </div>
 
-  <!-- Hauteur de défilement qui pilote la transformation. -->
-  <div class="h-[120svh] lg:h-[150svh]" aria-hidden="true"></div>
+  <div class="h-[130svh] lg:h-[160svh]" aria-hidden="true"></div>
 </section>
 
 <script>
-  import { melanger } from './traces';
-
   const section = document.querySelector<HTMLElement>('[data-trait]');
+  const toile = section?.querySelector<HTMLCanvasElement>('[data-scene-charniere]');
+  const repli = section?.querySelector<HTMLElement>('[data-repli-charniere]');
+
   if (section) {
-    const profil = section.querySelector<SVGPathElement>('[data-profil]')!;
-    const roues = section.querySelectorAll<SVGCircleElement>('[data-roue]');
-    const eau = section.querySelector<SVGPathElement>('[data-eau]')!;
     const motRoule = section.querySelector<HTMLElement>('[data-mot="roule"]')!;
     const motFlotte = section.querySelector<HTMLElement>('[data-mot="flotte"]')!;
     const legende = section.querySelector<HTMLElement>('[data-legende]')!;
+    const etat = section.querySelector<HTMLElement>('[data-etat]')!;
 
     const TEXTE_AUTO = 'Mécanique toutes marques, freinage, distribution, embrayage.';
     const TEXTE_NAUTIQUE = 'Hors-bord, in-board, jet-ski. Entretien, hivernage, dépannage.';
 
     const reduit = matchMedia('(prefers-reduced-motion: reduce)');
+    const grand = matchMedia('(min-width: 64rem)');
+    const webgl = (() => {
+      try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; }
+    })();
 
-    if (reduit.matches) {
-      // Mouvement réduit : état final, aucune boucle, aucun scrub.
-      appliquer(1);
-    } else {
-      let cible = 0;
-      let lisse = 0;
-      let anime = false;
-
-      const mesurer = () => {
-        const r = section.getBoundingClientRect();
-        const course = r.height - innerHeight;
-        if (course <= 0) return 0;
-        return Math.min(1, Math.max(0, -r.top / course));
-      };
-
-      const boucle = () => {
-        const delta = cible - lisse;
-        if (Math.abs(delta) > 0.0004) {
-          lisse += delta * 0.12;
-          appliquer(lisse);
-          requestAnimationFrame(boucle);
-        } else {
-          anime = false;
-        }
-      };
-
-      const relancer = () => {
-        cible = mesurer();
-        if (!anime) {
-          anime = true;
-          requestAnimationFrame(boucle);
-        }
-      };
-
-      addEventListener('scroll', relancer, { passive: true });
-      addEventListener('resize', relancer, { passive: true });
-      relancer();
-      appliquer(mesurer());
+    /** Progression du défilement à travers la section. */
+    function mesurer() {
+      const r = section.getBoundingClientRect();
+      const course = r.height - innerHeight;
+      return course <= 0 ? 0 : Math.min(1, Math.max(0, -r.top / course));
     }
 
-    function appliquer(t: number) {
-      profil.setAttribute('d', melanger(t));
+    function habiller(t: number) {
+      const versLeau = t > 0.5;
+      motRoule.style.color = versLeau ? 'var(--color-beton-clair)' : 'var(--color-tole)';
+      motFlotte.style.color = versLeau ? 'var(--color-tole)' : 'var(--color-beton-clair)';
+      legende.textContent = versLeau ? TEXTE_NAUTIQUE : TEXTE_AUTO;
+      etat.textContent = versLeau ? 'Profil coque' : 'Profil auto';
+    }
+    habiller(0);
 
-      // Les roues disparaissent dans la première moitié.
-      const opaciteRoues = Math.max(0, 1 - t / 0.5);
-      roues.forEach((r) => r.setAttribute('opacity', String(opaciteRoues)));
+    if (toile && webgl && grand.matches && !reduit.matches) {
+      const guetteur = new IntersectionObserver(async (entrees) => {
+        if (!entrees.some((e) => e.isIntersecting)) return;
+        guetteur.disconnect();
+        try {
+          const { monterScene } = await import('./scene-atelier');
+          const api = await monterScene(toile, { mode: 'scrub' });
+          repli?.style.setProperty('opacity', '0');
 
-      // L'eau n'arrive qu'une fois la coque lisible.
-      eau.setAttribute('opacity', String(Math.max(0, (t - 0.6) / 0.4) * 0.55));
-
-      motRoule.style.color = t > 0.5 ? 'var(--color-beton-clair)' : 'var(--color-tole)';
-      motFlotte.style.color = t > 0.5 ? 'var(--color-tole)' : 'var(--color-beton-clair)';
-      legende.textContent = t > 0.5 ? TEXTE_NAUTIQUE : TEXTE_AUTO;
+          let anime = false;
+          const relancer = () => {
+            const t = mesurer();
+            api.setMelange(t);
+            habiller(t);
+            if (!anime) {
+              anime = true;
+              // La scène lisse elle-même : on se contente de la nourrir.
+              requestAnimationFrame(() => { anime = false; });
+            }
+          };
+          addEventListener('scroll', relancer, { passive: true });
+          addEventListener('resize', relancer, { passive: true });
+          relancer();
+        } catch {
+          // Échec de chargement : le repli textuel reste, rien ne casse.
+        }
+      }, { rootMargin: '300px' });
+      guetteur.observe(toile);
+    } else if (!reduit.matches) {
+      // Sans 3D, le texte bascule quand même au défilement.
+      addEventListener('scroll', () => habiller(mesurer()), { passive: true });
     }
   }
 </script>

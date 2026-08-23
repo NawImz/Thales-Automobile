@@ -115,7 +115,7 @@ const affirmations = [
       </svg>
 
       <p class="donnee pointer-events-none absolute right-0 bottom-0 hidden text-[0.625rem] tracking-widest text-beton uppercase lg:block">
-        [ Disque ventilé · ø 280 ]
+        [ Ce qui roule · profil extrudé ]
       </p>
     </div>
   </div>
@@ -150,7 +150,7 @@ const affirmations = [
       guetteur.disconnect();
       try {
         const { monterScene } = await import('../signature/scene-atelier');
-        await monterScene(toile);
+        await monterScene(toile, { mode: 'rotation' });
         repli?.style.setProperty('opacity', '0');
       } catch {
         // Échec de chargement : le repli reste, rien ne casse.

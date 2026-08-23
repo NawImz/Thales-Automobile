@@ -404,3 +404,69 @@ les visiteurs qui la voient.
 Le titre passé en `text-5xl` a fait retomber le bouton d'appel sous la ligne de
 flottaison à 1440 × 900. Ramené à `text-4xl`. Troisième fois que la taille du
 display menace la conversion n°1 : c'est le compromis permanent de ce hero.
+
+---
+
+## Phase 3 · Étape 8 — le volume qui roule devient celui qui flotte
+
+Retour client : remplacer le disque de frein par une voiture, et remplacer le
+dessin au trait de la transition par « quelque chose de plus beau et plus pro ».
+
+### Ne pas modéliser à la main : extruder les profils
+
+Assembler une voiture avec des primitives fait jouet. Les deux profils déjà
+validés — dix cubiques chacun, structure identique — sont **extrudés en volumes
+biseautés**. Même nombre de segments de courbe des deux côtés, donc mêmes
+comptes de sommets : vérifié à 12 048 puis 8 448 après réglage.
+
+La transition n'est plus un dessin : c'est **le même solide en acier qui se
+déforme**, roues qui s'effacent, plan d'eau qui monte.
+
+### Trois défauts de volume, corrigés dans l'ordre
+
+**1. Proportions de chausson.** Le tracé n'occupe que la moitié basse de sa
+boîte : brut, le volume sortait à 5,4:1 et ne se lisait pas comme une voiture.
+Étirement en hauteur de 1,45 pour retrouver ~3:1.
+
+**2. Roues à moitié enfouies.** Posées au jugé à z = 0,675, soit exactement la
+surface du volume. Elles sont désormais **dérivées du tracé source** (les
+cercles à cx 285 et 735, cy 240, r 48) et dépassent franchement.
+
+**3. Axe de rotation décalé.** `ExtrudeGeometry` extrude de z = 0 vers +Z : sans
+recentrage, le volume tournait autour d'un axe décalé d'une demi-épaisseur.
+
+### Le bug qui valait le détour : la coque en éclats noirs
+
+À mi-course et à l'arrivée, la coque se **déchirait en triangles noirs**.
+
+**Cause :** `ExtrudeGeometry` triangule les faces d'about pour la forme de
+départ. En déplaçant ces sommets vers un autre contour, les triangles se
+replient sur eux-mêmes — la triangulation de la voiture n'est pas valide pour
+la coque.
+
+**Ce que je n'ai pas fait :** rafistoler avec des normales recalculées ou du
+double-sided. Le problème est structurel.
+
+**Mesure avant décision.** Coût d'une reconstruction complète de la géométrie :
+
+| curveSegments | temps | sommets |
+|---|---|---|
+| 20 | 3,25 ms | 12 048 |
+| **16** | ~2 ms | 9 648 |
+| 10 | 1,13 ms | 6 048 |
+
+Largement dans le budget d'une frame de 16 ms. **On reconstruit donc la
+géométrie depuis le contour interpolé** au lieu de déplacer des sommets, avec
+un seuil de 0,006 pour ne pas refaire le travail à chaque millième de course.
+Triangulation juste à chaque étape, plus aucun éclat.
+
+### Le plan d'eau
+
+Première version : un rectangle qui coupait l'écran d'un bord à l'autre par un
+trait net — ça lisait « rectangle », pas « eau ». Corrigé par une carte alpha en
+dégradé radial : l'eau devient un halo sous la carène.
+
+### Budget, inchangé dans son principe
+
+three.js reste conditionné à trois critères cumulatifs. Revérifié après la
+refonte du volume : **desktop oui, mobile non, mouvement réduit non.**
