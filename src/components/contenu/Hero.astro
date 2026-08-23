@@ -1,17 +1,20 @@
 ---
 import { garage, lienTel } from '../../lib/garage';
 import Icone from '../socle/Icone.astro';
-import PhotoAttendue from '../socle/PhotoAttendue.astro';
+import Croix from '../socle/Croix.astro';
+import { VOITURE } from '../signature/traces';
 
 /**
  * ACTE 1 — l'arrivée.
  *
- * Une seule composition, pas une bande suivie d'une photo. Les trois
- * affirmations qui occupaient une section entière sont ici, en trois
- * lignes : elles servaient d'argument, pas de chapitre.
+ * Langage emprunté aux références client : filets de repérage, croix,
+ * micro-typo monospace en HUD, display géant recouvert par l'objet.
+ * Le sujet 3D est un disque de frein — la pièce que le garage change le
+ * plus — et non une forme abstraite.
  */
 const avis = garage.avisGoogle;
 const tel = garage.telephones.principal;
+const a = garage.adresse;
 
 const affirmations = [
   'On ne change pas une pièce qui peut tenir.',
@@ -19,30 +22,44 @@ const affirmations = [
   'Une voiture et un moteur de bateau, même atelier.',
 ];
 ---
-<section class="sur-sombre tole-nervuree relative isolate overflow-hidden bg-cambouis text-tole">
-  <div class="mx-auto grid max-w-7xl gap-12 px-5 pt-16 pb-20 sm:px-8 lg:min-h-[82svh] lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
-    <div>
-      <p class="hero-suite donnee flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-widest text-beton-clair uppercase" style="--retard: 340ms">
-        <span>{garage.adresse.ville}</span>
-        <span aria-hidden="true" class="text-beton">·</span>
-        <span>Auto et bateaux</span>
-        <span aria-hidden="true" class="text-beton">·</span>
+<section class="sur-sombre grille-hud relative isolate overflow-hidden bg-cambouis text-tole">
+  <!-- HUD : repères et micro-typo, empruntés au plan d'atelier. -->
+  <Croix class="top-[18%] left-[16.66%] -translate-x-1/2 -translate-y-1/2" />
+  <Croix class="top-[64%] left-[50%] -translate-x-1/2 -translate-y-1/2" />
+  <Croix class="top-[34%] left-[83.33%] -translate-x-1/2 -translate-y-1/2" />
+
+  <p class="donnee pointer-events-none absolute top-5 right-5 hidden text-right text-[0.625rem] leading-relaxed tracking-widest text-beton uppercase sm:block sm:right-8">
+    / {a.codePostal} {a.ville}<br />
+    // Auto · Nautique
+  </p>
+  <p class="donnee pointer-events-none absolute bottom-5 left-5 hidden text-[0.625rem] leading-relaxed tracking-widest text-beton uppercase lg:block lg:left-8">
+    ////// {garage.anneesExperience} ans d'atelier<br />
+    Bords de Seine
+  </p>
+
+  <div class="mx-auto grid max-w-7xl gap-10 px-5 pt-14 pb-20 sm:px-8 lg:min-h-[86svh] lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-0 lg:pt-16 lg:pb-20">
+    <div class="relative z-10">
+      <p class="hero-suite donnee flex flex-wrap items-center gap-x-3 text-xs font-semibold tracking-widest text-beton-clair uppercase" style="--retard: 340ms">
+        <span>Garage Thalès</span>
+        <span aria-hidden="true" class="text-beton">—</span>
         <span>Depuis {garage.depuis}</span>
       </p>
 
-      <h1 class="hero-titre mt-6 max-w-[17ch] font-display text-3xl font-extrabold text-tole sm:max-w-none sm:text-4xl">
-        <span class="ligne"><span>On vous dit ce qu'il faut</span></span>
-        <span class="ligne"><span>réparer, et ce qu'il</span></span>
-        <span class="ligne"><span>ne faut pas.</span></span>
+      <h1 class="hero-titre mt-5 font-display text-4xl font-extrabold text-tole">
+        <span class="ligne"><span>On vous dit</span></span>
+        <span class="ligne"><span>ce qu'il faut</span></span>
+        <span class="ligne"><span>réparer.</span></span>
       </h1>
 
-      <!-- Les trois arguments, en trois lignes. Ils tenaient une section
-           entière ; ils valent mieux ici, sous la promesse. -->
-      <ul class="hero-suite mt-7 space-y-2" style="--retard: 420ms">
-        {affirmations.map((a) => (
-          <li class="flex items-start gap-3 text-lg text-beton-clair">
-            <Icone nom="coche" class="mt-1.5 size-4 text-tole/70" />
-            <span>{a}</span>
+      <p class="hero-suite mt-6 max-w-[34ch] text-lg text-beton-clair" style="--retard: 400ms">
+        Et ce qu'il ne faut pas. Auto et moteurs de bateau, à {a.ville}.
+      </p>
+
+      <ul class="hero-suite mt-7 space-y-2" style="--retard: 440ms">
+        {affirmations.map((t) => (
+          <li class="flex items-start gap-3 text-base text-beton-clair">
+            <Icone nom="coche" class="mt-1 size-4 text-tole/60" />
+            <span>{t}</span>
           </li>
         ))}
       </ul>
@@ -61,14 +78,14 @@ const affirmations = [
           href="/devis"
           data-event="estimateur"
           data-contexte="hero"
-          class="group inline-flex items-center justify-center gap-2.5 rounded-[2px] border border-tole/45 px-6 py-4 font-semibold text-tole transition-colors hover:bg-tole hover:text-cambouis"
+          class="group inline-flex items-center justify-center gap-2.5 rounded-[2px] border border-tole/40 px-6 py-4 font-semibold text-tole transition-colors hover:bg-tole hover:text-cambouis"
         >
           Estimer ma réparation
           <Icone nom="fleche" class="size-5 transition-transform group-hover:translate-x-1" />
         </a>
       </div>
 
-      <p class="hero-suite mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-beton-clair" style="--retard: 580ms">
+      <p class="hero-suite mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-beton-clair" style="--retard: 580ms">
         <Icone nom="etoile" plein class="size-4 text-tole" />
         <span class="donnee font-semibold text-tole">{String(avis.note).replace('.', ',')}</span>
         <span>sur {avis.nombre} avis Google</span>
@@ -77,31 +94,80 @@ const affirmations = [
       </p>
     </div>
 
-    <PhotoAttendue
-      numero={2}
-      sombre
-      nom="Le hangar : une voiture sur pont ET un moteur hors-bord dans le même plan. C'est la photo qui raconte tout le site."
-      ratio="4 / 5"
-      class="hero-suite"
-    />
+    <!-- L'objet : disque de frein en temps réel, ou repli au trait. -->
+    <div class="relative -mx-5 aspect-square sm:-mx-8 lg:mx-0 lg:aspect-auto lg:h-[74svh]">
+      <canvas
+        data-scene-atelier
+        class="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-700 data-[pret=oui]:opacity-100"
+        aria-hidden="true"></canvas>
+
+      <!-- Repli servi tant que la 3D n'est pas là, et définitif en
+           mobile, en mouvement réduit ou sans WebGL. -->
+      <svg
+        data-repli
+        viewBox="0 0 1000 320"
+        class="absolute inset-0 m-auto h-auto w-full max-w-xl text-tole/45 transition-opacity duration-500"
+        fill="none" aria-hidden="true"
+      >
+        <path d={VOITURE} stroke="currentColor" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+        <circle cx="285" cy="240" r="48" stroke="currentColor" stroke-width="3" vector-effect="non-scaling-stroke" />
+        <circle cx="735" cy="240" r="48" stroke="currentColor" stroke-width="3" vector-effect="non-scaling-stroke" />
+      </svg>
+
+      <p class="donnee pointer-events-none absolute right-0 bottom-0 hidden text-[0.625rem] tracking-widest text-beton uppercase lg:block">
+        [ Disque ventilé · ø 280 ]
+      </p>
+    </div>
   </div>
 </section>
 
-<style>
-  /* Écrans bas (portables 13-14 pouces) : le titre cède de la place pour
-     que le bouton d'appel reste au-dessus de la ligne de flottaison.
-     C'est la conversion n°1 — elle passe avant l'effet typographique. */
-  @media (min-width: 64rem) and (max-height: 52rem) {
-    .hero-titre {
-      font-size: clamp(2.25rem, 3.4vw, 3rem);
+<script>
+  /**
+   * three.js n'est téléchargé que si ça vaut le coup : grand écran,
+   * mouvement non réduit, WebGL disponible. Sur mobile et en
+   * reduced-motion, les 129 Ko ne partent jamais et le repli au trait
+   * reste affiché.
+   */
+  const toile = document.querySelector<HTMLCanvasElement>('[data-scene-atelier]');
+  const repli = document.querySelector<SVGElement>('[data-repli]');
+
+  function webglDisponible() {
+    try {
+      return !!document.createElement('canvas').getContext('webgl2');
+    } catch {
+      return false;
     }
   }
 
-  /* Séquence d'arrivée : masques par ligne puis cascade. Total 820 ms,
-     sous le budget de 900 ms. En CSS, donc sans attendre le moindre Ko
-     de JavaScript — c'est la seule façon de tenir ce budget. */
+  if (
+    toile &&
+    matchMedia('(min-width: 64rem)').matches &&
+    !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    webglDisponible()
+  ) {
+    const guetteur = new IntersectionObserver(async (entrees) => {
+      if (!entrees.some((e) => e.isIntersecting)) return;
+      guetteur.disconnect();
+      try {
+        const { monterScene } = await import('../signature/scene-atelier');
+        await monterScene(toile);
+        repli?.style.setProperty('opacity', '0');
+      } catch {
+        // Échec de chargement : le repli reste, rien ne casse.
+      }
+    }, { rootMargin: '200px' });
+    guetteur.observe(toile);
+  }
+</script>
+
+<style>
   .ligne { display: block; overflow: hidden; }
   .ligne > span { display: block; }
+
+  /* Écrans bas : le titre cède pour que l'appel reste au-dessus du pli. */
+  @media (min-width: 64rem) and (max-height: 52rem) {
+    .hero-titre { font-size: clamp(2.25rem, 3.4vw, 3.25rem); }
+  }
 
   @media (prefers-reduced-motion: no-preference) {
     .ligne > span {

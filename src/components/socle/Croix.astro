@@ -1,0 +1,8 @@
+---
+/** Repère en croix, emprunté au vocabulaire des plans d'atelier. */
+interface Props { class?: string }
+const { class: classe = '' } = Astro.props;
+---
+<svg class:list={['pointer-events-none absolute size-3 text-tole/25', classe]} viewBox="0 0 12 12" aria-hidden="true">
+  <path d="M6 0v12M0 6h12" stroke="currentColor" stroke-width="1" />
+</svg>

@@ -341,3 +341,66 @@ ligne de flottaison**. La promesse était visible, la conversion n°1 non. Une
 media query sur la *hauteur* fait céder le titre : l'effet typographique passe
 après le téléphone. Contrôlé à 900, 760 et 844 px de haut : promesse, appel et
 preuve tiennent au-dessus du pli partout.
+
+---
+
+## Phase 3 · Étape 7 — la 3D temps réel
+
+Le client précise ce qu'il entend par « site à 10 000 € » : trois références
+Webflow/Spline. Elles parlent toutes la même langue — un objet 3D temps réel qui
+tourne, une micro-typo monospace en HUD dans les coins, des repères en croix et
+des filets verticaux, du display géant recouvert par l'objet.
+
+### Le sujet : un disque de frein, pas une blob
+
+La forme vient du métier. C'est la pièce que le garage change le plus, et son
+vocabulaire — acier usiné, perçages, rainures radiales, stries concentriques —
+porte l'ambiance mieux qu'une forme abstraite iridescente.
+
+### Trois erreurs de rendu, dans l'ordre où je les ai payées
+
+**1. Métal noir.** Un `MeshStandardMaterial` à `metalness: 0.92` **sans carte
+d'environnement rend quasi noir** : un métal ne fait que réfléchir, s'il n'a
+rien à réfléchir il reste éteint. Erreur three.js classique.
+
+**2. Environnement procédural insuffisant.** J'ai fabriqué un environnement
+d'atelier — dégradé vertical, néons au plafond, sol sombre — via `CanvasTexture`
++ `PMREMGenerator`, sans importer de fichier HDR. Mieux, mais toujours sombre.
+
+**3. La carte de rugosité a tout aggravé.** Je l'avais dessinée en gris moyen,
+or three **multiplie** `roughnessMap` par `material.roughness` : 0,3 × 0,42 a
+donné un miroir parfait, qui ne reflétait que du noir. Base repassée en clair.
+
+**Conclusion retenue :** sans vraie carte HDR, un métal pur est ingérable.
+Passé en acier revêtu (`metalness: 0.55`, `roughness: 0.42`) où les lumières
+directes shadent réellement la surface. Prévisible, et ça se lit enfin.
+
+### Le budget, mesuré et arbitré
+
+three.js pèse **180 Ko gzip**. C'est trois fois le poste « JS ≤ 60 Ko » du brief.
+
+La parade : trois conditions cumulatives avant de le télécharger — grand écran,
+mouvement non réduit, WebGL disponible — et un `IntersectionObserver` par-dessus.
+Vérifié dans le navigateur, pas déduit :
+
+| | three téléchargé | scène | repli |
+|---|---|---|---|
+| desktop 1440 | **oui** | active | masqué |
+| mobile 390 | **non** | — | affiché |
+| reduced-motion | **non** | — | affiché |
+
+Poids réel, **compressé** (le serveur d'aperçu ne compresse pas, sa mesure de
+876 Ko était trompeuse) :
+
+- **mobile, page entière parcourue : 128 Ko** — budget 600 respecté
+- **desktop, page entière parcourue : 308 Ko** — budget 600 respecté
+
+Le seul poste encore dépassé est « JS ≤ 60 Ko gzip » : 52 Ko en mobile (tenu),
+232 Ko en desktop (dépassé). C'est le prix de la 3D, et il n'est payé que par
+les visiteurs qui la voient.
+
+### Le pli, encore
+
+Le titre passé en `text-5xl` a fait retomber le bouton d'appel sous la ligne de
+flottaison à 1440 × 900. Ramené à `text-4xl`. Troisième fois que la taille du
+display menace la conversion n°1 : c'est le compromis permanent de ce hero.
