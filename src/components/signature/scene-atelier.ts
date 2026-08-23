@@ -22,11 +22,20 @@ export type Options = {
   taille?: number;
 };
 
+/**
+ * Chemins des modèles. L'aperçu autonome publié en artefact n'a pas de
+ * serveur de fichiers : il injecte des data: URI dans window.__MODELES,
+ * qui prennent alors le pas.
+ */
 const MODELES = {
   bmw: '/modeles/bmw.glb',
   volvo: '/modeles/volvo.glb',
-  yacht: '/modeles/yacht.glb',
 } as const;
+
+function urlModele(cle: keyof typeof MODELES) {
+  const injectes = (globalThis as any).__MODELES;
+  return injectes?.[cle] ?? MODELES[cle];
+}
 
 export async function monterScene(toile: HTMLCanvasElement, options: Options) {
   const [THREE, { GLTFLoader }, { MeshoptDecoder }] = await Promise.all([
@@ -160,13 +169,13 @@ export async function monterScene(toile: HTMLCanvasElement, options: Options) {
   let eau: THREE.Mesh | null = null;
 
   if (options.mode === 'rotation') {
-    const gltf = await loader.loadAsync(MODELES.bmw);
+    const gltf = await loader.loadAsync(urlModele('bmw'));
     accorderMateriaux(gltf.scene);
     groupe.add(normaliser(gltf.scene, cible));
     camera.position.set(0, cible * 0.16, cible * 1.35);
     camera.lookAt(0, 0, 0);
   } else {
-    const voiture = await loader.loadAsync(MODELES.volvo);
+    const voiture = await loader.loadAsync(urlModele('volvo'));
 
     /**
      * ⚠️ Le yacht fourni est inexploitable en l'état : ses 47 meshes sont

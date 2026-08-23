@@ -47,7 +47,7 @@ if (grand && !reduit && webgl) {
         if (motRoule) motRoule.style.color = versLeau ? 'var(--color-beton-clair)' : 'var(--color-tole)';
         if (motFlotte) motFlotte.style.color = versLeau ? 'var(--color-tole)' : 'var(--color-beton-clair)';
         if (legende) legende.textContent = versLeau ? TEXTE_NAUTIQUE : TEXTE_AUTO;
-        if (etat) etat.textContent = versLeau ? 'Profil coque' : 'Profil auto';
+        if (etat) etat.textContent = versLeau ? 'Coque acier' : 'Volvo V50';
       };
       addEventListener('scroll', relancer, { passive: true });
       addEventListener('resize', relancer, { passive: true });

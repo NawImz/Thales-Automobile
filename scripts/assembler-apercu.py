@@ -31,6 +31,15 @@ for f in sorted(glob.glob('public/fonts/*.woff2')):
     assert css != avant, 'police non referencee dans le CSS : ' + nom
     print('  embarque  %-34s %6.1f Ko base64' % (nom, len(b64)/1024))
 
+# Modèles 3D en data: URI — l'artefact n'a pas de serveur de fichiers.
+modeles = {}
+for f in sorted(glob.glob('public/modeles/*.glb')):
+    cle = os.path.splitext(os.path.basename(f))[0]
+    b64 = base64.b64encode(pathlib.Path(f).read_bytes()).decode()
+    modeles[cle] = 'data:model/gltf-binary;base64,' + b64
+    print('  embarque  %-34s %6.1f Mo base64' % (cle + '.glb', len(b64) / 1048576))
+injection = '<script>window.__MODELES=' + __import__('json').dumps(modeles) + ';</script>' if modeles else ''
+
 corps = re.search(r'<body[^>]*>(.*)</body>', html, re.S).group(1)
 corps = re.sub(r'<script type="module" src="[^"]*"></script>', '', corps)
 corps = re.sub(r"<script>\s*document\.documentElement\.classList\.remove\(.sans-js.\);\s*</script>", '', corps)
@@ -47,7 +56,7 @@ sortie = (
  '\n/* L\'artefact enveloppe la page : on repeint le fond explicitement,\n'
  '   sinon elle emprunte celui de l\'hote selon son theme. */\n'
  ':root, html, body { background-color: #E9E4D8; }\n</style>\n'
- + bandeau + '\n' + corps +
+ + bandeau + '\n' + injection + '\n' + corps +
  "\n<script>\ndocument.documentElement.classList.remove('sans-js');\n" + js + '\n</script>\n'
 )
 
