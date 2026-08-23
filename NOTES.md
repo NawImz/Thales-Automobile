@@ -470,3 +470,69 @@ dégradé radial : l'eau devient un halo sous la carène.
 
 three.js reste conditionné à trois critères cumulatifs. Revérifié après la
 refonte du volume : **desktop oui, mobile non, mouvement réduit non.**
+
+---
+
+## Phase 3 · Étape 9 — les vrais modèles 3D
+
+Le client fournit trois GLB : BMW M4, Volvo V50, yacht animé.
+
+### Compression : 32,8 Mo → 2,5 Mo
+
+Aucun ne demandait Draco ni Meshopt : du glTF 2.0 standard. Mais 32,8 Mo au
+total, dont 18 Mo pour la BMW à 495 000 triangles — 50× le budget du brief.
+
+Pipeline `gltf-transform optimize` : meshopt, textures en WebP plafonnées à
+1024, simplification de maillage.
+
+| | avant | après |
+|---|---|---|
+| BMW | 18,03 Mo | **1,82 Mo** (−90 %) |
+| Volvo | 9,46 Mo | **0,71 Mo** (−92 %) |
+
+### Le yacht est inexploitable, et ce n'est pas ma compression
+
+Quatre hypothèses testées dans l'ordre, chacune écartée par la mesure :
+
+1. **Le shader de dissolution ?** Non : identique avec la dissolution coupée.
+2. **La compression ?** Non : recompressé sans `simplify`/`flatten`/`join`,
+   puis **sans meshopt du tout** — même résultat.
+3. **Les matériaux ?** Non : inspectés dans le navigateur, tous opaques,
+   visibles, sans transmission.
+4. **L'occlusion par la Volvo ?** Non : isolé seul via un drapeau d'URL.
+
+**Conclusion : le fichier d'origine, non compressé, ne rend que quelques
+pièces.** Ses 47 meshes sur 47 sont skinnés et aucun ne s'affiche dans three.
+
+Deux tentatives de contournement, l'une et l'autre abandonnées :
+- Remplacer les `SkinnedMesh` par des `Mesh` en recopiant leur transformation
+  locale → le yacht rendait, mais **éclaté** : le placement des pièces vient
+  des os, pas des meshes.
+- Cuire la pose sommet par sommet avec `applyBoneTransform` → **l'onglet
+  crashait**, sans doute une exception par sommet sur des indices d'os
+  invalides.
+
+**Décision :** on ne débogue pas indéfiniment le rig d'un tiers. L'aboutissement
+de la transition redevient la coque d'acier extrudée, qui fonctionnait et qui
+tient le propos. Un modèle de bateau **statique, non riggé** est demandé au
+client.
+
+### Deux pièges three.js consignés
+
+**Box3 et l'attribut `position` ne sont pas dans le même espace.**
+`Box3.setFromObject` donne des coordonnées MONDE ; l'attribut `position` d'un
+mesh est en coordonnées LOCALES du modèle brut. Mon balayage de dissolution
+mélangeait les deux : incohérent sur un modèle, invisible sur l'autre selon
+son échelle d'origine. Le shader travaille désormais en espace monde.
+
+**Ne jamais transformer un modèle riggé, seulement son enveloppe.** Poser une
+échelle ou une position sur la racine d'un modèle contenant des `SkinnedMesh`
+casse la liaison au squelette.
+
+**Et le balayage suit le grand axe horizontal du modèle**, pas X par principe :
+la Volvo est orientée sur Z, balayer X traversait sa largeur.
+
+### Budget
+
+Chargement conditionnel revérifié : desktop oui, mobile non, mouvement réduit
+non. Les modèles ne partent donc jamais sur mobile.

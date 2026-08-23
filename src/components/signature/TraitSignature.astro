@@ -33,7 +33,7 @@
       </div>
 
       <p class="donnee pointer-events-none absolute right-5 bottom-0 hidden text-[0.625rem] tracking-widest text-beton uppercase sm:right-8 lg:block">
-        [ <span data-etat>Profil auto</span> ]
+        [ <span data-etat>Volvo V50</span> ]
       </p>
     </div>
 
@@ -77,7 +77,7 @@
       motRoule.style.color = versLeau ? 'var(--color-beton-clair)' : 'var(--color-tole)';
       motFlotte.style.color = versLeau ? 'var(--color-tole)' : 'var(--color-beton-clair)';
       legende.textContent = versLeau ? TEXTE_NAUTIQUE : TEXTE_AUTO;
-      etat.textContent = versLeau ? 'Profil coque' : 'Profil auto';
+      etat.textContent = versLeau ? 'Coque acier' : 'Volvo V50';
     }
     habiller(0);
 
@@ -87,7 +87,7 @@
         guetteur.disconnect();
         try {
           const { monterScene } = await import('./scene-atelier');
-          const api = await monterScene(toile, { mode: 'scrub' });
+          const api = await monterScene(toile, { mode: 'scrub', taille: 6 });
           repli?.style.setProperty('opacity', '0');
 
           let anime = false;
