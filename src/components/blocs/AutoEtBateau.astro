@@ -1,0 +1,67 @@
+---
+import Trait from '../socle/Trait.astro';
+import Cliche from '../socle/Cliche.astro';
+
+/**
+ * La bascule vers le nautique.
+ *
+ * C'est la SEULE inversion chromatique du site : fond encre, texte clair. Elle
+ * marque le changement d'univers sans ajouter de couleur — le brief interdit
+ * les aplats décoratifs, mais une inversion n'est pas une décoration, c'est une
+ * ponctuation. Elle n'a lieu qu'ici, sinon elle ne veut plus rien dire.
+ */
+---
+<section class="section relative isolate bg-encre text-blanc-atelier" id="nautique" aria-labelledby="titre-nautique">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <div class="lg:grid lg:grid-cols-2 lg:items-center lg:gap-16">
+      <div>
+        <p class="font-mono text-xs tracking-widest text-gris-trait uppercase">Le même atelier</p>
+        <h2 id="titre-nautique" class="mt-3 text-[length:var(--text-2xl)] font-extrabold">
+          Ce qui roule.<br />Ce qui flotte.
+        </h2>
+        <p class="mt-5 text-lg text-gris-trait">
+          Hors-bord, in-board, jet-ski. Entretien, hivernage, dépannage.
+          Presque aucun garage d'Île-de-France ne fait les deux — nous, depuis
+          toujours, dans le même atelier et avec les mêmes mains.
+        </p>
+
+        <ul class="mt-8 space-y-3">
+          {[
+            { trait: 'moteur', texte: 'Hors-bord et in-board, toutes cylindrées' },
+            { trait: 'helice', texte: 'Hélices, embases, circuits de refroidissement' },
+            { trait: 'coque', texte: 'Hivernage et remise à l\'eau' },
+          ].map((l) => (
+            <li class="flex items-start gap-3">
+              <Trait nom={l.trait} class="mt-0.5 size-5 text-blanc-atelier" />
+              <span class="text-gris-trait">{l.texte}</span>
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href="/bateaux-jet-ski"
+          class="lien-clair cible mt-8 inline-flex items-center gap-2 font-semibold text-blanc-atelier"
+        >
+          Voir le pôle nautique
+          <Trait nom="fleche" class="size-4" />
+        </a>
+      </div>
+
+      <div class="mt-12 lg:mt-0">
+        <Cliche nom="Un hors-bord ou un jet-ski démonté à l'atelier" ratio="4 / 3" class="border-gris-texte" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lien-clair { position: relative; padding-bottom: 3px; }
+  .lien-clair::after {
+    content: ''; position: absolute; left: 0; bottom: 0;
+    width: 100%; height: var(--trait);
+    background: currentColor;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--duree-cliquet) var(--ease-cliquet);
+  }
+  .lien-clair:hover::after, .lien-clair:focus-visible::after { transform: scaleX(1); }
+</style>

@@ -3,6 +3,9 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/blocs/Hero.astro';
 import TroisRaisons from '../components/blocs/TroisRaisons.astro';
 import CeQuOnRepare from '../components/blocs/CeQuOnRepare.astro';
+import AutoEtBateau from '../components/blocs/AutoEtBateau.astro';
+import Confiance from '../components/blocs/Confiance.astro';
+import Venir from '../components/blocs/Venir.astro';
 import { garage, a } from '../lib/garage';
 
 const titre = `Garage auto et bateaux à ${a.ville} — ${garage.nom}`;
@@ -14,4 +17,7 @@ const description =
   <Hero />
   <TroisRaisons />
   <CeQuOnRepare />
+  <AutoEtBateau />
+  <Confiance />
+  <Venir />
 </Base>

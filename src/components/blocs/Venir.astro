@@ -1,0 +1,112 @@
+---
+import Trait from '../socle/Trait.astro';
+import Bouton from '../socle/Bouton.astro';
+import {
+  garage, a, tel, lienTel, lienWhatsApp, lienItineraire,
+  heureEnTexte, statutOuverture,
+} from '../../lib/garage';
+
+const statut = statutOuverture();
+const aujourdhui = new Date().getDay();
+const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouvé sur votre site.`;
+---
+<section class="section border-t border-gris-trait" id="venir" aria-labelledby="titre-venir">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <h2 id="titre-venir" class="text-[length:var(--text-2xl)] font-extrabold">Venir</h2>
+
+    <div class="mt-10 grid gap-px bg-gris-trait lg:grid-cols-3">
+      <!-- Adresse et repère -->
+      <div class="bg-blanc-atelier p-7">
+        <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">L'atelier</h3>
+        <address class="mt-4 text-lg not-italic">
+          {a.rue}<br />{a.codePostal} {a.ville}
+        </address>
+        <p class="mt-4 flex items-start gap-2.5 text-sm text-gris-texte">
+          <Trait nom="itineraire" class="mt-0.5 size-4" />
+          <span>{a.repere}</span>
+        </p>
+        <a
+          href={lienItineraire()}
+          data-event="itineraire" data-contexte="venir"
+          class="lien-trait cible mt-5 inline-flex items-center gap-2 text-sm font-semibold"
+        >
+          Ouvrir l'itinéraire
+          <Trait nom="fleche" class="size-4" />
+        </a>
+      </div>
+
+      <!-- Horaires, avec l'état calculé en direct -->
+      <div class="bg-blanc-atelier p-7">
+        <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">Horaires</h3>
+        <p class="mt-4 flex items-center gap-2 font-semibold">
+          <Trait nom="horloge" class="size-4" />
+          {statut.texte}
+        </p>
+        <dl class="mt-4 space-y-1 text-sm">
+          {garage.horaires.map((h) => (
+            <div class:list={['flex justify-between gap-4', h.jour === aujourdhui && 'font-semibold']}>
+              <dt class="capitalize">{h.nom}</dt>
+              <dd class="chiffres text-gris-texte">
+                {h.ouvre ? `${heureEnTexte(h.ouvre)} – ${heureEnTexte(h.ferme)}` : 'fermé'}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <!-- Contact -->
+      <div class="bg-blanc-atelier p-7">
+        <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">Nous joindre</h3>
+        <div class="mt-4 flex flex-col gap-3">
+          <Bouton href={lienTel(tel.numero)} variante="accent-desktop" class="flex" data-event="appel" data-contexte="venir">
+            <Trait nom="telephone" class="size-4" />
+            <span class="chiffres whitespace-nowrap">{tel.affiche}</span>
+          </Bouton>
+          <Bouton href={lienWhatsApp(message)} class="flex" data-event="whatsapp" data-contexte="venir">
+            <Trait nom="whatsapp" class="size-4" />
+            WhatsApp
+          </Bouton>
+        </div>
+        <p class="mt-4 text-sm text-gris-texte">
+          On répond pendant les heures d'atelier. Le devis est gratuit et sans
+          engagement.
+        </p>
+      </div>
+    </div>
+
+    <!--
+      ⚠️ Pas d'iframe Google Maps (le brief l'interdit, et c'est justifié :
+      c'est un tiers qui pose des cookies, ralentit la page et casse le score
+      Lighthouse). Un vrai plan statique demande les coordonnées GPS, qui ne
+      sont pas fournies — je ne dessine donc AUCUNE géométrie de rue, ce serait
+      inventer. Ce bandeau porte le repère réel et ouvre l'itinéraire.
+    -->
+    <a
+      href={lienItineraire()}
+      data-event="itineraire" data-contexte="plan"
+      class="plan group mt-px flex items-center justify-between gap-6 bg-blanc-atelier p-7 cadre"
+    >
+      <span>
+        <span class="font-mono text-xs tracking-widest text-gris-texte uppercase">Le repère</span>
+        <span class="mt-2 block text-lg font-semibold">{a.repere}</span>
+        <span class="mt-1 block text-sm text-gris-texte">Ouvrir dans l'application de navigation</span>
+      </span>
+      <Trait nom="fleche" class="size-6 shrink-0 transition-transform group-hover:translate-x-1" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .lien-trait { position: relative; padding-bottom: 2px; }
+  .lien-trait::after {
+    content: ''; position: absolute; left: 0; bottom: 0;
+    width: 100%; height: var(--trait);
+    background: currentColor;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--duree-cliquet) var(--ease-cliquet);
+  }
+  .lien-trait:hover::after, .lien-trait:focus-visible::after { transform: scaleX(1); }
+
+  .plan { transition: background-color var(--duree-cliquet) var(--ease-cliquet); }
+  .plan:hover { background-color: color-mix(in srgb, var(--color-gris-trait) 18%, transparent); }
+</style>

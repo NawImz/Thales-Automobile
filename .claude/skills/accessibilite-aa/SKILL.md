@@ -19,6 +19,18 @@ comme « texte secondaire » plafonnait à 2,67:1 — sous le seuil de 3:1 rése
 composants, donc inutilisable même pour une bordure. La charte du client n'est pas
 une autorisation : elle se vérifie.
 
+## La règle de l'accent — une action, une seule fois
+
+Le turquoise marque **l'action principale de la section, et rien d'autre**.
+Pas un statut, pas une preuve, pas un fait remarquable — ce sont des
+informations, et une information accentuée dilue l'action.
+
+Vérification automatisable, à relancer à chaque bloc terminé : compter les
+éléments dont `color`, `backgroundColor` ou `borderColor` portent l'accent,
+section par section. **Plus de 1 = il faut en retirer.** Sur mobile, c'est la
+barre d'action fixe qui porte l'accent : le bouton du contenu passe donc en
+`accent-desktop`, qui ne s'allume qu'à partir de `lg`.
+
 ## Focus visible
 
 Double anneau `box-shadow` — un trait clair **et** un trait foncé — jamais une

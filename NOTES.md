@@ -205,3 +205,59 @@ La banderole de la devanture porte **09 86 36 04 01**. Le site affiche
 **06 69 68 63 84**. Un visiteur qui voit les deux ne sait pas lequel appeler —
 et c'est la conversion n°1. Passé en tête des points bloquants de
 `TODO-CLIENT.md`.
+
+---
+
+## Phase 3 · Étape 4 — les quatre derniers blocs de l'accueil
+
+Nautique, confiance, venir. L'accueil a ses sept blocs (l'estimateur reste à
+faire, il vient ensuite).
+
+**Une seule inversion chromatique sur tout le site**, dans le bloc nautique :
+fond encre, texte clair. Elle marque le changement d'univers sans ajouter de
+couleur. Le brief interdit les aplats décoratifs — une inversion n'est pas une
+décoration, c'est une ponctuation, et elle ne vaut que si elle n'a lieu qu'une
+fois.
+
+**Pas de plan géographique.** Le brief interdit l'iframe Google Maps, et les
+coordonnées GPS ne sont pas fournies : je ne dessine donc aucune géométrie de
+rue, ce serait inventer. Le bandeau porte le repère réel — « portail bleu, à
+côté de Michel Marine » — et ouvre l'itinéraire.
+
+**Trois avis, pas quatre.** Le brief en demande quatre, je n'en ai que trois de
+réels. Aucun quatrième n'est inventé ; la grille est dimensionnée pour trois et
+s'étendra sans toucher au code.
+
+### Trois fautes attrapées, dont une grave
+
+1. **⚠️ GRAVE — les compteurs affichaient « 00 » sous le pli.** Je posais le
+   zéro sur *tous* les compteurs au chargement, puis j'attendais l'observateur
+   d'intersection. Conséquence : tout compteur pas encore atteint restait figé
+   sur zéro. Une capture pleine page montrait « Nabil tient l'atelier depuis
+   **00** ans » et « 4,6 sur **00** avis ».
+
+   Pire que laid : si le script échoue entre les deux moments, le faux chiffre
+   devient définitif. Un garage qui annonce zéro an d'ancienneté.
+
+   Corrigé : **le zéro n'est posé qu'au moment d'animer**, et la cible est
+   rétablie dans la foulée sur deux `requestAnimationFrame`. Aucune image
+   n'affiche un chiffre faux. Vérifié : avant défilement, tous les compteurs
+   sont sur la valeur rendue côté serveur ; après, sur leur cible.
+
+   Leçon générale : **une animation ne doit jamais poser son état de départ
+   avant d'être sûre de jouer.** L'état par défaut doit rester l'état vrai.
+
+2. **Le tri par identifiant, encore.** Même piège que pour les prestations, à un
+   endroit qui compte plus : Pierre F. — « client depuis 4 ou 5 ans », la preuve
+   la plus forte du garage — passait derrière Brahh par ordre alphabétique
+   d'identifiant. Champ `ordre` rendu obligatoire dans le schéma des avis.
+
+3. **Deux turquoises dans « Venir »** — le lien d'itinéraire et le bouton
+   téléphone. Règle posée et consignée dans le skill `accessibilite-aa` :
+   **l'accent marque l'action principale de la section, une seule fois.** Ni un
+   statut, ni une preuve, ni un fait remarquable. Vérifié section par section :
+   hero 1, réparer 0, nautique 0, confiance 0, venir 1.
+
+### Vérifié à 390 px
+
+Aucun débordement, aucun débordement interne, aucune cible sous 44 px.

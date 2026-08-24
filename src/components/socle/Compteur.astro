@@ -76,12 +76,21 @@ const chiffres = String(valeur).split('');
 
     if (reduit) { poser(false); return; }
 
-    // État de départ : tout à zéro, puis on roule à l'entrée dans le viewport.
-    rubans.forEach((r) => r.style.setProperty('--cible', '0'));
+    /**
+     * ⚠️ Ne JAMAIS poser le zéro à l'avance.
+     * Première version : je remettais tous les compteurs à 0 au chargement puis
+     * j'attendais l'observateur. Résultat, tout compteur sous le pli restait
+     * figé sur « 00 » — un garage qui affiche « depuis 00 ans ». Et si le
+     * script échoue entre les deux, le faux chiffre est définitif.
+     *
+     * Le zéro n'est donc posé qu'au moment d'animer, et la valeur cible est
+     * rétablie dans la foulée : aucune image ne montre un chiffre faux.
+     */
     const guetteur = new IntersectionObserver((entrees) => {
       if (!entrees.some((e) => e.isIntersecting)) return;
       guetteur.disconnect();
-      poser(true);
+      rubans.forEach((r) => r.style.setProperty('--cible', '0'));
+      requestAnimationFrame(() => requestAnimationFrame(() => poser(true)));
     }, { threshold: 0.6 });
     guetteur.observe(compteur);
   });

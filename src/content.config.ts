@@ -24,6 +24,9 @@ const avis = defineCollection({
     parser: (texte) => JSON.parse(texte).avis,
   }),
   schema: z.object({
+    // Même raison que pour les services : le tri par identifiant enterrait
+    // l'avis le plus probant. Obligatoire, pour qu'un oubli casse le build.
+    ordre: z.number(),
     auteur: z.string(),
     profil: z.string(),
     note: z.number().nullable(),
