@@ -18,7 +18,7 @@ const annee = new Date().getFullYear();
           {a.rue}<br />{a.codePostal} {a.ville}
         </address>
         <a href={lienTel(tel.numero)} data-event="appel" data-contexte="pied"
-           class="mt-3 inline-flex items-center gap-2 text-turquoise">
+           class="cible mt-3 inline-flex items-center gap-2 text-turquoise">
           <Trait nom="telephone" class="size-4" />
           <span class="chiffres">{tel.affiche}</span>
         </a>
@@ -42,8 +42,8 @@ const annee = new Date().getFullYear();
     <div class="mt-12 flex flex-col gap-3 border-t border-gris-texte pt-6 text-xs text-gris-trait sm:flex-row sm:justify-between">
       <p>© {annee} {garage.nom}</p>
       <nav class="flex gap-5" aria-label="Liens légaux">
-        <a href="/mentions-legales" class="hover:text-blanc-atelier">Mentions légales</a>
-        <a href="/confidentialite" class="hover:text-blanc-atelier">Confidentialité</a>
+        <a href="/mentions-legales" class="cible hover:text-blanc-atelier">Mentions légales</a>
+        <a href="/confidentialite" class="cible hover:text-blanc-atelier">Confidentialité</a>
       </nav>
     </div>
   </div>

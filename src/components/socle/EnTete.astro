@@ -17,7 +17,7 @@ const liens = [
 ---
 <header class="relative z-40 border-b border-gris-trait bg-blanc-atelier">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-    <a href="/" class="group flex flex-col leading-none" aria-label={`${garage.nom} — accueil`}>
+    <a href="/" class="cible group flex flex-col justify-center leading-none min-h-[44px]" aria-label={`${garage.nom} — accueil`}>
       <span class="font-display text-lg font-bold tracking-tight">THALÈS</span>
       <span class="font-mono text-[0.6rem] tracking-[0.22em] text-gris-texte">AUTOMOBILE</span>
     </a>
@@ -26,7 +26,7 @@ const liens = [
       <ul class="flex items-center gap-8">
         {liens.map((l) => (
           <li>
-            <a href={l.href} class="lien-nav relative py-2 text-sm font-medium">{l.libelle}</a>
+            <a href={l.href} class="lien-nav cible relative py-2 text-sm font-medium">{l.libelle}</a>
           </li>
         ))}
       </ul>

@@ -95,6 +95,25 @@ h1, h2, h3 {
   border: var(--trait) solid var(--color-gris-trait);
 }
 
+/**
+ * Cible tactile conforme.
+ * ⚠️ Un lien de texte fait ~22px de haut : bien en dessous des 44px exigés.
+ * Les pseudo-éléments étendent la zone cliquable SANS toucher la mise en page —
+ * ajouter du padding décalerait tout le rythme vertical.
+ */
+@utility cible {
+  position: relative;
+}
+@utility cible {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+}
+
 /** Chiffres alignés en colonne : prix, compteurs, horaires. */
 @utility chiffres {
   font-family: var(--font-mono);

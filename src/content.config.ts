@@ -7,6 +7,10 @@ import { file } from 'astro/loaders';
 const services = defineCollection({
   loader: file('src/content/services/services.json'),
   schema: z.object({
+    // ⚠️ `getCollection` trie par IDENTIFIANT, pas par ordre du fichier : sans
+    // ce champ la vidange — la porte d'entrée — se retrouvait en dernier.
+    // Obligatoire, pour qu'un oubli casse le build et non l'affichage.
+    ordre: z.number(),
     titre: z.string(),
     phrase: z.string(),
     prixDepart: z.number(),

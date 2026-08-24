@@ -104,3 +104,44 @@ divergent — c'est le même fichier.
 Build propre, 390 et 1440 contrôlés. Promesse et moyen d'appeler visibles sans
 défiler aux deux largeurs. Une seule erreur console : le 404 de `favicon.ico`,
 qui viendra du logo.
+
+---
+
+## Phase 3 · Étape 2 — trois raisons, ce qu'on répare, compteurs
+
+**Le compteur odomètre est fait, et il refuse les décimales.** Le composant
+*lève une erreur au build* si on lui passe autre chose qu'un entier — un
+odomètre compte des entiers, le voir s'arrêter sur « 4,6 » est un contresens
+mécanique. La note Google s'affiche donc fixe, ailleurs. La contrainte est dans
+le code, pas dans un commentaire qu'on oublie.
+
+Position finale posée par défaut en CSS : sans JavaScript, ou en mouvement
+réduit, le bon chiffre est déjà affiché. Le décalage de 90 ms d'une molette à
+l'autre est ce qui fait « mécanique » plutôt que « chiffre qui change ».
+
+**Les trois raisons n'ont aucune icône**, comme décidé en critique de Phase 2, et
+la raison n°2 porte un vrai prix tiré du barème.
+
+### Deux fautes attrapées par la boucle, pas par relecture
+
+1. **`getCollection` trie par identifiant, pas par ordre du fichier.** Les
+   prestations sortaient dans le désordre — la vidange, qui est la porte
+   d'entrée du garage, se retrouvait en dernier. Corrigé par un champ `ordre`
+   **obligatoire dans le schéma** : un oubli casse désormais le build au lieu de
+   passer inaperçu à l'affichage.
+
+2. **Six cibles tactiles sous 44 px** — liens de section, liens légaux du pied,
+   téléphone du pied, mot-symbole. Un lien de texte fait ~22 px de haut, soit la
+   moitié du minimum exigé.
+
+   Corrigé par un utilitaire `cible` unique plutôt que six rustines. ⚠️ Il étend
+   la zone cliquable par un **pseudo-élément**, pas par du padding : du padding
+   aurait décalé tout le rythme vertical pour un problème qui n'est pas de mise
+   en page.
+
+   Vérifié après correction : **0 cible restante sous 44 px, 0 débordement**.
+
+### Structure vérifiée à 390 px
+
+Un seul `<h1>`, hiérarchie de titres sans saut de niveau (H1 › H2 › H3 › H2),
+aucun débordement horizontal.
