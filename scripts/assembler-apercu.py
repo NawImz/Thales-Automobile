@@ -20,7 +20,21 @@ import base64, pathlib, re, glob, os
 SP = pathlib.Path('.apercu')
 SP.mkdir(exist_ok=True)
 html = pathlib.Path('dist/index.html').read_text()
-css = pathlib.Path(glob.glob('dist/_astro/*.css')[0]).read_text()
+
+# ⚠️ Astro n'écrit PAS tout le CSS dans dist/_astro/. Par défaut
+# (`inlineStylesheets: 'auto'`) il inline dans le <head> les feuilles
+# plus petites que la limite Vite — c'est le cas des styles scopés des
+# composants. Ne ramasser que dist/_astro/*.css les perdait en silence :
+# le titre du hero s'affichait « On vous ditce qu'il faut » parce que la
+# règle `.ligne { display: block }` était restée dans le <head>. On prend
+# donc les DEUX sources, feuilles liées puis styles inlinés, dans l'ordre.
+css = '\n'.join(pathlib.Path(f).read_text() for f in sorted(glob.glob('dist/_astro/*.css')))
+tete = re.search(r'<head>(.*?)</head>', html, re.S).group(1)
+inlines = re.findall(r'<style[^>]*>(.*?)</style>', tete, re.S)
+for bloc in inlines:
+    css += '\n' + bloc
+print('  CSS : %d feuille(s) liee(s) + %d bloc(s) inline(s)'
+      % (len(glob.glob('dist/_astro/*.css')), len(inlines)))
 js = (SP / 'artefact.js').read_text()
 
 for f in sorted(glob.glob('public/fonts/*.woff2')):
@@ -52,6 +66,7 @@ bandeau = (
 )
 
 sortie = (
+ '<meta charset="utf-8">\n'
  '<title>Thalès Auto · Bateaux</title>\n<style>\n' + css +
  '\n/* L\'artefact enveloppe la page : on repeint le fond explicitement,\n'
  '   sinon elle emprunte celui de l\'hote selon son theme. */\n'
@@ -61,10 +76,16 @@ sortie = (
 )
 
 cible = SP / 'apercu-thales.html'
-cible.write_text(sortie)
+cible.write_text(sortie, encoding='utf-8')
 print('\n  fichier autonome : %.0f Ko' % (len(sortie)/1024))
 externe = re.search(r'(src|href)="https?://', sortie)
 print('  aucune URL externe   :', 'oui' if not externe else 'NON -> ' + externe.group(0))
 print('  aucun /_astro/       :', 'oui' if '/_astro/' not in sortie else 'NON')
 print('  aucun /fonts/        :', 'oui' if '/fonts/' not in sortie else 'NON')
-print('  balise title         :', 'oui' if sortie.startswith('<title>') else 'NON')
+cids = set(re.findall(r'data-astro-cid-([a-z0-9]+)', corps))
+manquants = sorted(c for c in cids if c not in css)
+print('  styles scopes        :', 'oui' if not manquants
+      else 'NON -> cid sans CSS : ' + ', '.join(manquants))
+assert not manquants, 'CSS scope manquant pour : ' + ', '.join(manquants)
+print('  meta charset         :', 'oui' if sortie.startswith('<meta charset="utf-8">') else 'NON')
+print('  balise title         :', 'oui' if '<title>' in sortie[:200] else 'NON')

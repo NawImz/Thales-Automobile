@@ -536,3 +536,64 @@ la Volvo est orientée sur Z, balayer X traversait sa largeur.
 
 Chargement conditionnel revérifié : desktop oui, mobile non, mouvement réduit
 non. Les modèles ne partent donc jamais sur mobile.
+
+---
+
+## Phase 3 · Étape N — « ya aucun modèle 3D sur le site »
+
+Signalement du client. Mes contrôles automatisés disaient pourtant
+`hero 3D : true`. Les deux étaient vrais : je mesurais à 1440 px, le client
+regardait dans un panneau plus étroit.
+
+**Cause première.** La 3D était conditionnée à `matchMedia('(min-width: 64rem)')`,
+soit 1024 px. L'intention était bonne — ne pas envoyer 2,5 Mo de GLB sur un
+téléphone — mais la largeur de fenêtre n'est pas un test d'appareil : un
+navigateur en demi-écran, ou le panneau d'aperçu, tombent sous le seuil alors
+que la machine encaisse la scène sans effort. La condition était en plus
+**recopiée dans trois fichiers**, ce qui est la vraie raison pour laquelle elle
+a pu dériver sans que personne le voie.
+
+**Corrigé.** `src/lib/capacites.ts` porte désormais la décision, seul :
+`(pointer: fine)` — qui écarte téléphones et tablettes, là où le budget de
+600 Ko compte vraiment — plus un plancher à 40 rem, `deviceMemory ≥ 4` et
+WebGL2. Dans l'aperçu autonome, aucun filtre de taille : les modèles y sont
+inlinés en `data:` URI, donc déjà téléchargés — les refuser n'économise rien.
+
+**Trois défauts trouvés en cherchant celui-là.**
+
+1. *Le `<style>` du hero n'a jamais été compilé dans l'aperçu.* Astro inline
+   dans le `<head>` les feuilles sous la limite Vite ; mon assembleur ne
+   ramassait que `dist/_astro/*.css`. Résultat : `.ligne { display: block }`
+   perdu, et le titre rendu « ON VOUS DITCE QU'IL FAUTRÉPARER ». Le site, lui,
+   était sain — seule la démo était cassée, et c'est elle que le client regarde.
+   L'assembleur vérifie maintenant qu'aucun `data-astro-cid-*` n'est sans CSS.
+2. *Pas de `<meta charset>` dans l'aperçu* → windows-1252, tous les accents
+   cassés (« ThalÈs Auto »).
+3. *Cadrage 3D faux.* Mesuré : la BMW décalée de 163 px, 41 % du cadre.
+
+**Le cadrage, en détail.** Les bornes géométriques de ces GLB sont
+inexploitables : après compression, les pièces partagent un tampon de sommets
+commun et annoncent toutes la boîte du véhicule entier — un étrier de frein se
+déclarait large de 3,65 unités. `Box3.setFromObject(obj, true)` ne change rien,
+le tampon fait réellement cette taille. J'ai donc arrêté de croire le fichier et
+je mesure **la silhouette rendue** (cible 192 px, canal alpha), en deux temps :
+`recentrerSurRendu()` pose le sujet sur l'axe de rotation — sans quoi il orbite
+autour de l'origine au lieu de tourner sur lui-même, ce qui était l'essentiel du
+décalage — puis `ajusterSurRendu()` règle la distance sur l'union de quatre
+angles, pour que la voiture ne sorte jamais du cadre en tournant.
+
+Vérifié : centre à ±0,06 du milieu à tous les angles, remplissage 0,797 pour
+une consigne de 0,80.
+
+**Matériaux.** Mesure : 4 des 9 matériaux de la BMW en `metalness: 1,
+roughness: 1` — un métal parfaitement rugueux, qui ne réfléchit rien et rend
+donc quasi noir ; les 5 autres en `metalness: 0, roughness: 0.82`, du plastique
+mat. D'où la voiture grise et plate. Ces signatures numériques permettent de
+trier ce que les noms de meshes ne disent pas : le premier groupe reçoit le
+vernis teinté au bleu marine de la devanture (`#16375f`), le second reste mat.
+Carrosserie mesurée à 64 de luminance contre 19 pour le fond — les reflets
+portent la silhouette.
+
+**Non vérifiable ici.** Ce conteneur rend en SwiftShader (aucun GPU) : la page
+y tourne à 1 image/s contre 61 sur page blanche. Ce chiffre ne dit rien du
+comportement réel et **les FPS restent à mesurer sur une vraie machine**.

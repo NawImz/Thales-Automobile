@@ -121,44 +121,7 @@ const affirmations = [
   </div>
 </section>
 
-<script>
-  /**
-   * three.js n'est téléchargé que si ça vaut le coup : grand écran,
-   * mouvement non réduit, WebGL disponible. Sur mobile et en
-   * reduced-motion, les 129 Ko ne partent jamais et le repli au trait
-   * reste affiché.
-   */
-  const toile = document.querySelector<HTMLCanvasElement>('[data-scene-atelier]');
-  const repli = document.querySelector<SVGElement>('[data-repli]');
 
-  function webglDisponible() {
-    try {
-      return !!document.createElement('canvas').getContext('webgl2');
-    } catch {
-      return false;
-    }
-  }
-
-  if (
-    toile &&
-    matchMedia('(min-width: 64rem)').matches &&
-    !matchMedia('(prefers-reduced-motion: reduce)').matches &&
-    webglDisponible()
-  ) {
-    const guetteur = new IntersectionObserver(async (entrees) => {
-      if (!entrees.some((e) => e.isIntersecting)) return;
-      guetteur.disconnect();
-      try {
-        const { monterScene } = await import('../signature/scene-atelier');
-        await monterScene(toile, { mode: 'rotation', taille: 6 });
-        repli?.style.setProperty('opacity', '0');
-      } catch {
-        // Échec de chargement : le repli reste, rien ne casse.
-      }
-    }, { rootMargin: '200px' });
-    guetteur.observe(toile);
-  }
-</script>
 
 <style>
   .ligne { display: block; overflow: hidden; }
@@ -188,3 +151,29 @@ const affirmations = [
   @keyframes monter { to { transform: translateY(0); } }
   @keyframes apparaitre { to { opacity: 1; } }
 </style>
+
+<script>
+  import { sceneAutorisee } from '../../lib/capacites';
+  /**
+   * three.js n'est téléchargé que si l'appareil le porte : voir
+   * `sceneAutorisee`. Sur téléphone et en mouvement réduit, les octets
+   * ne partent jamais et le repli au trait reste affiché.
+   */
+  const toile = document.querySelector<HTMLCanvasElement>('[data-scene-atelier]');
+  const repli = document.querySelector<SVGElement>('[data-repli]');
+
+  if (toile && sceneAutorisee()) {
+    const guetteur = new IntersectionObserver(async (entrees) => {
+      if (!entrees.some((e) => e.isIntersecting)) return;
+      guetteur.disconnect();
+      try {
+        const { monterScene } = await import('../signature/scene-atelier');
+        await monterScene(toile, { mode: 'rotation', taille: 6 });
+        repli?.style.setProperty('opacity', '0');
+      } catch {
+        // Échec de chargement : le repli reste, rien ne casse.
+      }
+    }, { rootMargin: '200px' });
+    guetteur.observe(toile);
+  }
+</script>

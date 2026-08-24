@@ -5,13 +5,16 @@ import './horaires';
 import './mouvement';
 import { monterScene } from '../components/signature/scene-atelier';
 
-const grand = matchMedia('(min-width: 64rem)').matches;
+// L'aperçu ne filtre PAS sur la taille de l'écran, contrairement au site.
+// Les modèles y sont inlinés en data: URI : ils sont téléchargés avec la
+// page, qu'on les affiche ou non. Refuser la scène ne fait donc économiser
+// aucun octet — ça ne fait que priver le client de ce qu'il vient voir.
 const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const webgl = (() => {
   try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; }
 })();
 
-if (grand && !reduit && webgl) {
+if (!reduit && webgl) {
   const heroToile = document.querySelector<HTMLCanvasElement>('[data-scene-atelier]');
   const heroRepli = document.querySelector<SVGElement>('[data-repli]');
   if (heroToile) {

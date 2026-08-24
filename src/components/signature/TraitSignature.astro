@@ -46,6 +46,7 @@
 </section>
 
 <script>
+  import { sceneAutorisee } from '../../lib/capacites';
   const section = document.querySelector<HTMLElement>('[data-trait]');
   const toile = section?.querySelector<HTMLCanvasElement>('[data-scene-charniere]');
   const repli = section?.querySelector<HTMLElement>('[data-repli-charniere]');
@@ -59,12 +60,7 @@
     const TEXTE_AUTO = 'Mécanique toutes marques, freinage, distribution, embrayage.';
     const TEXTE_NAUTIQUE = 'Hors-bord, in-board, jet-ski. Entretien, hivernage, dépannage.';
 
-    const reduit = matchMedia('(prefers-reduced-motion: reduce)');
-    const grand = matchMedia('(min-width: 64rem)');
-    const webgl = (() => {
-      try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; }
-    })();
-
+  
     /** Progression du défilement à travers la section. */
     function mesurer() {
       const r = section.getBoundingClientRect();
@@ -81,7 +77,7 @@
     }
     habiller(0);
 
-    if (toile && webgl && grand.matches && !reduit.matches) {
+    if (toile && sceneAutorisee()) {
       const guetteur = new IntersectionObserver(async (entrees) => {
         if (!entrees.some((e) => e.isIntersecting)) return;
         guetteur.disconnect();

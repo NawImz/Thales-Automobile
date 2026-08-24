@@ -462,6 +462,38 @@ finaux et aucune boucle. Les animations CSS ont leur bloc
   boîte (`left: 54%; width: 46%`) et on calcule la géométrie relativement à
   cette boîte. Ajuster des coefficients au jugé contre le viewport ne converge
   jamais.
+- **Astro n'écrit pas tout le CSS dans `dist/_astro/`.** Par défaut
+  (`inlineStylesheets: 'auto'`) il *inline dans le `<head>`* les feuilles sous
+  la limite Vite — ce qui est le cas des styles scopés de composants. Un script
+  d'assemblage qui ne ramasse que `dist/_astro/*.css` les perd **en silence** :
+  ici le titre du hero s'affichait « On vous ditce qu'il faut » parce que
+  `.ligne { display: block }` était resté dans le `<head>` et qu'Astro avait
+  minifié les espaces entre les `<span>`. Ramasser les deux sources, et
+  **vérifier qu'aucun `data-astro-cid-*` du HTML n'est sans règle CSS**.
+- **Un fichier HTML autonome sans `<meta charset="utf-8">` retombe en
+  windows-1252** : tous les accents cassent (« ThalÈs »). Le serveur d'artefacts
+  peut masquer le problème par un en-tête HTTP ; en local il saute aux yeux.
+- **Ne jamais borner une scène 3D sur la géométrie d'un GLB compressé.** Après
+  `gltf-transform`, les pièces partagent un même tampon de sommets : chacune
+  annonce alors la boîte du véhicule entier — un étrier de frein se déclarait
+  large de 3,65 unités. `Box3.setFromObject(obj, true)` n'y change rien, le
+  tampon fait réellement cette taille. **Mesurer la silhouette RENDUE** : rendu
+  dans une cible de 192 px, lecture du canal alpha (renderer en `alpha: true`),
+  puis correction de la distance et du point visé.
+- **Centrer la caméra ne centre pas le sujet.** Si le modèle est décalé par
+  rapport à l'origine du groupe, il n'y tourne pas sur lui-même : il **orbite**
+  autour, et paraît décalé tantôt d'un côté tantôt de l'autre. Il faut poser le
+  sujet *sur* l'axe — en déplaçant l'enveloppe, jamais le modèle riggé.
+- **Un seuil de largeur n'est pas un test d'appareil.** `min-width: 64rem` pour
+  décider de charger la 3D coupait la scène sur toute fenêtre de bureau un peu
+  étroite — dont le panneau d'aperçu du client, d'où un « ya aucun modèle 3D sur
+  le site » parfaitement fondé. Le bon critère est `(pointer: fine)` (+ un
+  plancher de largeur et `deviceMemory`), et cette condition vit **dans un seul
+  fichier** : recopiée dans trois, elle dérive.
+- **Dans un aperçu autonome, les modèles sont inlinés en `data:` URI** : ils
+  sont téléchargés avec la page, affichés ou non. Y filtrer sur la taille de
+  l'écran n'économise **aucun octet** — ça ne fait que priver le client de ce
+  qu'il vient voir. Le filtrage a sa place sur le site, pas dans la démo.
 - **`document.fonts.check()` ment.** Il renvoie `true` dès qu'une famille se
   résout, fallback compris. Pour détecter un fallback muet, **mesurer** la
   largeur rendue d'un même texte et la comparer à celle obtenue avec une
