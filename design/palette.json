@@ -1,0 +1,23 @@
+{
+  "_avertissement": "L'accent n'a PAS été échantillonné : le fichier du logo n'est pas dans le dépôt. `turquoise-signature` porte une valeur de travail. Dès réception : node scripts/echantillonner-logo.mjs public/brand/<logo>, reporter les hex ici, relancer node scripts/contraste.mjs.",
+  "_echantillonne": false,
+  "couleurs": {
+    "encre":               "#111417",
+    "turquoise":           "#0E7C7C",
+    "turquoise-signature": "#17A2A2",
+    "blanc-atelier":       "#F7F7F5",
+    "gris-texte":          "#5A605E",
+    "gris-trait":          "#7E847F"
+  },
+  "usages": [
+    { "nom": "titres et corps sur clair",        "devant": "encre",        "derriere": "blanc-atelier", "type": "corps" },
+    { "nom": "texte secondaire sur clair",       "devant": "gris-texte",   "derriere": "blanc-atelier", "type": "corps" },
+    { "nom": "lien turquoise sur clair",         "devant": "turquoise",    "derriere": "blanc-atelier", "type": "corps" },
+    { "nom": "icone porteuse de sens sur clair", "devant": "turquoise",    "derriere": "blanc-atelier", "type": "interface" },
+    { "nom": "libelle blanc sur bouton accent",  "devant": "#FFFFFF",      "derriere": "turquoise",     "type": "corps" },
+    { "nom": "cadre de composant sur clair",     "devant": "gris-trait",   "derriere": "blanc-atelier", "type": "interface" },
+    { "nom": "texte clair sur encre (pied)",     "devant": "blanc-atelier","derriere": "encre",         "type": "corps" },
+    { "nom": "turquoise sur encre (pied)",       "devant": "turquoise",    "derriere": "encre",         "type": "interface" },
+    { "nom": "anneau de focus sur clair",        "devant": "encre",        "derriere": "blanc-atelier", "type": "interface" }
+  ]
+}

@@ -1,158 +1,78 @@
-# TODO CLIENT — ce qu'il faut réunir
+# TODO CLIENT — ce que Nabil doit fournir ou valider
 
-Classé par urgence réelle. Les éléments **bloquants** empêchent la mise en ligne ;
-les **importants** dégradent sérieusement le site s'ils manquent ; le **confort**
-peut arriver en v1.1.
-
-Tant qu'un élément n'est pas fourni, il apparaît sur le site sous forme de
-placeholder explicitement marqué. **Rien n'est inventé** — ni un avis, ni un prix,
-ni un chiffre, ni une photo.
+Classé par ce qui bloque, ce qui compte, ce qui améliore.
+Mis à jour à chaque phase.
 
 ---
 
-## 🔴 BLOQUANT — pas de mise en ligne sans ça
+## 🔴 BLOQUANT — la Phase 3 ne peut pas démarrer sans
 
-### Mentions légales (obligation légale, pas une préférence)
-- [ ] **SIRET** et forme juridique exacte
-- [ ] Capital social (si société)
-- [ ] Numéro de TVA intracommunautaire
-- [ ] Assurance RC professionnelle : nom de l'assureur et zone de couverture
-- [ ] **Médiateur de la consommation** : nom et adresse. Obligatoire pour tout
-      professionnel vendant à des particuliers (art. L.612-1 du code de la
-      consommation). C'est celui qu'on oublie et qui coûte cher.
-- [ ] Directeur de la publication
-- [ ] Hébergeur du site (je le remplis une fois l'hébergement choisi)
+| # | Élément | Pourquoi ça bloque |
+|---|---|---|
+| 1 | **Le fichier du logo**, dans `/public/brand/` (PNG haute définition ou SVG) | Tout le langage visuel en découle. Sans le fichier je ne peux pas pipetter les hex, et le brief interdit — à raison — de les deviner. La palette entière et le calage typographique en dépendent. |
+| 2 | **Arbitrage : Astro 7 ou Astro 5** | Le brief dit 5, la 7.2.4 est installée et vous m'aviez dit de la garder. Ma recommandation : rester en 7 (voir `SETUP.md` §5). |
+| 3 | **Arbitrage : palette à 6 valeurs** | Aucun turquoise unique ne passe WCAG AA à la fois en libellé blanc et en libellé encre. Détail chiffré dans `DESIGN-PLAN.md` §3. |
 
-### Le barème de prix
-- [ ] **Validation de chaque ligne du barème par Nabil.**
-      Le fichier `src/content/tarifs/bareme.json` est intégralement marqué
-      `À VALIDER`. Les ordres de grandeur de départ viennent de Vroomly
-      (vidange ≈ 86 €, disques de frein ≈ 232 €) — ce sont des moyennes
-      publiées, **pas les prix de Thalès**.
+## 🟠 IMPORTANT — le site fonctionnera, mais incomplet ou juridiquement exposé
 
-      ⚠️ C'est le point le plus sensible du projet. Publier des prix est
-      l'argument central du site ; publier des prix faux serait pire que
-      ne rien publier. Il faut une fourchette basse et une fourchette haute
-      pour chaque intervention, main-d'œuvre comprise ou non — à préciser.
+### Photos (le site vit ou meurt dessus)
 
-- [ ] Les tarifs nautiques (révision hors-bord, hivernage) : y a-t-il une grille,
-      ou est-ce systématiquement sur devis ?
+| Cliché | Usage |
+|---|---|
+| **Le hangar : une voiture sur pont ET un moteur hors-bord dans le même cadre** | **le hero.** C'est le cliché qui raconte tout le positionnement en une image. Le plus important des sept. |
+| La façade avec le portail bleu | bloc « Venir », repère pour trouver l'entrée |
+| Nabil au travail | bloc « Pourquoi on nous fait confiance » |
+| Plan serré de mains sur un moteur | bloc « Ce qu'on répare » |
+| Le mur de pièces détachées | page `/tarifs` |
+| Un jet-ski ou un hors-bord démonté | bloc nautique et page `/bateaux-jet-ski` |
+| Une texture d'atelier | fonds et OG images |
 
-### L'identité affichée
-- [ ] **Le nom exact tel qu'il doit apparaître** : « Thalès Automobile »,
-      « Thales Auto·Bateaux », avec ou sans accent ? Le panneau de la rue dit
-      « THALES AUTO / BATEAUX ».
-- [ ] Confirmation des trois numéros et de leur rôle :
-      06 69 68 63 84 (principal) · 09 86 36 04 01 (atelier) · 01 72 89 53 89
-      (dépannage). Lequel met-on en avant sur mobile ?
-- [ ] **Le numéro WhatsApp** — je pars sur le 06 69 68 63 84. À confirmer :
-      est-il bien sur WhatsApp, et qui répond ?
-- [ ] Adresse e-mail professionnelle
+En attendant : blocs de remplacement aux proportions exactes, portant le nom du
+cliché attendu.
 
----
+### Mentions légales — obligatoires, actuellement absentes
 
-## 🟠 IMPORTANT — le site fonctionne, mais nettement moins bien
+- **SIRET**
+- **Forme juridique** (SARL, EI, auto-entrepreneur…)
+- **Numéro de TVA intracommunautaire**, ou la mention « TVA non applicable, art.
+  293 B du CGI »
+- **Assurance responsabilité civile professionnelle** : assureur et couverture
+  géographique
+- **Médiateur de la consommation** : nom et coordonnées.
+  ⚠️ Obligatoire pour tout professionnel vendant à des particuliers
+  (art. L.612-1 du Code de la consommation). Son absence est sanctionnable.
 
-### Les photos
-**Le site vit ou meurt là-dessus.** Aucune image de banque, aucune image générée :
-tant que les vraies photos ne sont pas là, ce sont des blocs de couleur au bon
-ratio portant le nom du cliché attendu.
+### Données commerciales
 
-- [ ] **1. Façade depuis la rue**, portail bleu ouvert, fin d'après-midi
-- [ ] **2. Le cliché du hero** — une voiture sur pont ET un moteur hors-bord dans
-      le même plan. C'est la photo qui raconte toute l'histoire du site. Si une
-      seule photo doit être réussie, c'est celle-là.
-- [ ] **3. Nabil au travail**, dans l'atelier, pas posé face caméra
-- [ ] **4. Mains sur un moteur**, plan serré, lumière rasante
-- [ ] **5. Le mur de pièces détachées**
-- [ ] **6. Un jet-ski ou un hors-bord démonté**
-- [ ] **7. Deux ou trois véhicules du parc**, trois-quarts avant, fond propre
-- [ ] **8. Un détail de texture** : tôle ondulée, établi, clé dynamométrique
+- **Le barème complet.** Tous les prix du site sont des placeholders marqués
+  `À VALIDER` dans `bareme.json`. **Aucun ne doit être publié sans votre
+  validation** — un prix faux affiché engage le garage.
+- **E-mail professionnel** (le formulaire et les mentions légales en ont besoin).
+- **Le périmètre nautique exact** : quelles marques, quels types de moteurs,
+  hivernage ou non, manutention ou non.
+- **Dépannage / remorquage** : rayon d'intervention et tarif.
+- **Coordonnées GPS exactes** de l'entrée (pour le JSON-LD et le plan statique).
 
-⚠️ **La photo de Clio transmise n'a pas pu être récupérée** : collée dans la
-conversation et non déposée en fichier. Il faut la mettre dans le dépôt (ou la
-renvoyer en pièce jointe) pour que je puisse l'utiliser. Réserve : c'est une vue
-catalogue constructeur sur fond blanc — elle convient à une fiche de véhicule
-d'occasion, pas à une ambiance d'atelier, et les droits d'usage d'une image
-Renault sont à vérifier avant mise en ligne.
+### Décision de service
 
-Format : 3:2 ou 16:9, la plus grande définition disponible (je génère les
-déclinaisons AVIF/WebP en 640/1024/1600/2400). **Photos de téléphone acceptées**
-si elles sont nettes et prises en lumière naturelle — mieux vaut un vrai atelier
-au smartphone qu'une image de banque.
+- **Analytics** : Plausible ou Umami — les deux demandent un compte payant.
+  Sans cookie, donc **pas de bandeau cookies** : c'est un gain de conversion et de
+  performance. Dites-moi lequel, ou si on s'en passe en v1.
 
-### Les avis
-- [x] ~~Trois avis réels reçus~~ (Pierre F., Brahh, Sonia A.) — en ligne.
-- [ ] **Export des 58 avis restants** (auteur, note, date, texte).
-- [ ] **Les notes en étoiles de Pierre F. et Sonia A.** Leurs textes n'annoncent
-      pas de note ; le site n'en affiche donc aucune pour eux, plutôt que de la
-      deviner. Seul Brahh écrit explicitement « une note parfaite » et affiche
-      5/5. À compléter depuis l'export Google.
-- [ ] **Noms complets ou prénom + initiale ?** Le site affiche aujourd'hui
-      « Pierre F. », « Sonia A. ». Les avis Google sont publics, donc le nom
-      complet est possible — c'est votre choix.
-- [ ] **L'ancienneté des clients quand elle est connue.** Le plan trie les avis
-      par ancienneté et affiche « CLIENT DEPUIS 2014 » — c'est l'argument le plus
-      fort du garage et personne dans le coin ne l'exploite. Là où l'avis ne le
-      dit pas, la ligne disparaît : elle n'est pas devinée.
+## 🟢 CONFORT — améliore, ne bloque pas
 
-### Le périmètre nautique
-- [ ] Marques de moteurs réellement travaillées (Yamaha seulement, ou toutes ?)
-- [ ] **Hivernage : proposé ou non ?** Le plan lui donne une ligne dans la grille
-      de tarifs et une puce dans le pôle nautique.
-- [ ] Capacité de levage / de manutention (jusqu'à quelle taille de bateau ?)
-- [ ] Jet-skis : entretien seulement, ou aussi vente et location ?
-
-### Le dépannage
-- [ ] **Rayon d'intervention** en km ou en communes
-- [ ] Tarification : forfait de déplacement, prix au km, majoration de nuit ?
-- [ ] Amplitude horaire réelle du 01 72 89 53 89 — est-ce du 24/7 ou les horaires
-      de l'atelier ? À ne pas promettre à tort.
-
-### Les véhicules d'occasion
-- [ ] Lien exact de la boutique leboncoin
-- [ ] Le stock à afficher, ou bien renvoie-t-on uniquement vers leboncoin ?
-      (Deux stratégies : le stock sur le site est meilleur pour le SEO mais
-      demande une mise à jour ; le renvoi est sans entretien.)
-- [ ] Y a-t-il une garantie sur les véhicules vendus, et de quelle durée ?
+- Photos avant/après d'une réparation marquante.
+- Deux ou trois avis supplémentaires (j'en ai trois de vérifiés).
+- Logo Yamaha / OMC si vous êtes agréé : à confirmer, car afficher une marque sans
+  accord expose.
+- Horaires de fermeture annuelle.
+- Une page « véhicules d'occasion » si vous en vendez régulièrement.
 
 ---
 
-## 🟡 CONFORT — améliore le site, ne le bloque pas
+## Ce que je n'inventerai jamais
 
-- [ ] **Faut-il citer Michel Marine** dans le repère d'accès (« portail bleu, à
-      côté de Michel Marine ») ? C'est un excellent repère pour trouver l'entrée,
-      mais ça dépend de votre relation commerciale. À confirmer avant publication.
-- [ ] Le prénom de la personne qui répond au téléphone — plusieurs avis la
-      trouvent agréable, c'est un atout humain et il est anonyme aujourd'hui.
-      Ne rien publier sans son accord.
-- [ ] Photo et prénom d'Azzedine, second mécanicien cité dans les avis
-      (même réserve : son accord).
-- [ ] L'année exacte de création. Le brief dit « 20 ans d'expérience » ; le site
-      affiche « depuis 2005 ». À confirmer : est-ce l'expérience de Nabil ou
-      l'ancienneté du garage à cette adresse ?
-- [ ] Certification Vroomly : avez-vous un logo ou un lien de profil à afficher ?
-- [ ] Réseaux sociaux, s'il y en a
-- [ ] Y a-t-il un véhicule de courtoisie ou de prêt ? C'est un argument fort et
-      il n'apparaît nulle part.
-- [ ] Acceptez-vous le paiement en plusieurs fois ? (paiement : espèces et CB
-      confirmés)
-
----
-
-## Notes de méthode
-
-**Sur les avis.** Aucun avis n'est cité mot pour mot au-delà d'une quinzaine de
-mots, et aucun avis n'est inventé. La note 4,6/5 sur 61 avis s'affiche avec
-attribution claire à Google et lien vers la fiche, **mais n'est pas balisée en
-`aggregateRating` dans le JSON-LD** : Google interdit de marquer ainsi des avis
-qu'on n'a pas collectés soi-même, et c'est un motif de sanction manuelle.
-
-**Sur les délais.** Plusieurs avis signalent une attente longue quand il y a du
-monde, et un délai annoncé non tenu. Le site ne promet donc **jamais** de durée
-d'intervention. La formulation retenue est « on vous rappelle avec un créneau »,
-jamais « réparé en une heure ». Une promesse non tenue coûte un avis à une étoile.
-
-**Sur les prix Vroomly.** Ce sont des moyennes publiées par une plateforme tierce.
-Elles servent d'ordre de grandeur pour amorcer la discussion avec Nabil, et
-**rien d'autre**. Elles ne seront jamais mises en ligne telles quelles.
+Aucune valeur de ce site n'est devinée. Tout ce qui manque apparaît comme
+`[À COMPLÉTER]` visible dans les pages, et se retrouve dans cette liste. Un site
+de garage qui affiche un faux numéro ou un faux prix coûte plus cher qu'un site
+incomplet.

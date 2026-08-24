@@ -56,34 +56,39 @@ sont dessinées à la main. À faire au premier pas de la Phase 3.
 
 **Où en est le projet — état au dernier tour.**
 
-Le client a fourni un **brief de production complet** qui fait autorité et remplace
-les arbitrages précédents. Points qui ont changé :
+⚠️ **Remise à zéro.** Le site précédent a été **rejeté par le client**. On
+reconstruit entièrement sur un nouveau brief de production, qui fait seul autorité.
+Tout ce qui précède — DA « Ambre et Fonte », élément signature « bon d'atelier »,
+scènes 3D three.js, modèles GLB — est **caduc**. Le code de l'ancienne version
+reste en place jusqu'au premier pas de la Phase 3, pour que le retour arrière
+tienne en un `git checkout` ; il sera démonté à ce moment-là.
 
-| Avant | Maintenant |
-|---|---|
-| « garage / réparation auto » | **auto ET nautique** — hors-bord, in-board, jet-ski. Le nautique est l'angle stratégique : aucun des cinq concurrents ne le touche. |
-| ambition « Spectacle » (WebGL) | **WebGL écarté.** Une seule séquence d'arrivée ≤ 900 ms, un seul type de révélation au scroll. |
-| DA « Ambre et Fonte » (proposée par moi) | **caduque.** La DA vient de la façade réelle : tôle crème, lettrage bleu marine, panneau Yamaha rouge. |
-| élément signature = arc de jauge | **le bon d'atelier** — l'estimateur traité en bon de commande papier. |
-| one-page | **multi-pages**, le SEO local exige des pages à intention unique. |
+**Ce qui change radicalement** : la 3D disparaît (plus de `three`, plus de GLB).
+L'identité vient désormais **du logo**, qui est un dessin **au trait** — et le
+trait devient tout le vocabulaire graphique : icônes, cadres, séparateurs,
+illustrations, et une **ligne signature** unique qui parcourt la page et se
+métamorphose au scroll. L'accent est le **turquoise du logo**, employé comme un
+scalpel. Le site doit se lire comme un **plan technique**, pas comme une landing.
 
-`design/phase-2-direction-artistique.html` est conservé comme trace, **mais ne
-décrit plus le projet**.
+**Les documents qui font foi** :
+- `SETUP.md` — outillage, API vérifiées, et les trois écarts assumés au brief.
+- `DESIGN-PLAN.md` — analyse du logo, palette mesurée, ligne signature,
+  micro-interactions, wireframes, **et la critique de Phase 2**.
+- `TODO-CLIENT.md` — ce que Nabil doit fournir, classé bloquant / important / confort.
+- `NOTES.md` — journal d'itération.
 
-**Les documents qui font foi désormais** :
-- `DESIGN-PLAN.md` — tokens vérifiés, wireframes, arborescence, et la critique du
-  plan. **En attente du feu vert client ; la Phase 3 ne démarre pas avant.**
-- `TODO-CLIENT.md` — tout ce que Nabil doit fournir, classé bloquant / important /
-  confort.
+**Cinq skills ont été ajoutés** dans `.claude/skills/` : `api-verifiees`,
+`animation-cliquet`, `accessibilite-aa`, `seo-local-garage`, `budget-performance`.
+Plus deux scripts : `scripts/echantillonner-logo.mjs` et `scripts/contraste.mjs`.
 
-**Deux corrections de palette à ne pas défaire** : `--beton` passe de `#8C8C86` à
-`#595955` (il était à 2,67:1 sur le fond crème alors qu'il porte le texte
-secondaire) et `--beton-clair: #9F9F9A` est ajouté, parce qu'aucune encre du brief
-ne passait sur le fond `--bleu-port` du pôle nautique. Détail chiffré en §2.1 du
-plan.
+**Deux faits d'environnement à ne pas redécouvrir** :
+- **L'egress web est bloqué** — la doc en ligne est inatteignable, un MCP de
+  documentation n'y changerait rien. On lit les `.d.ts` de `node_modules`.
+- **Le conteneur rend en SwiftShader** — aucun chiffre de FPS ou de Lighthouse
+  Performance mesuré ici n'est transposable.
 
-**Une seule question technique reste ouverte** : Astro 7 (installé) ou Astro 5
-(demandé au brief). Voir §1.1 du plan.
+**Un seul point bloque la Phase 3** : le fichier du logo, absent de `/public/brand/`.
+Sans lui les hex ne peuvent pas être échantillonnés, et on ne devine pas une charte.
 
 ### 0.1 Les skills (référence)
 
