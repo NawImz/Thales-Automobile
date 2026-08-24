@@ -109,6 +109,10 @@
    */
   .voiture {
     position: absolute;
+    /* ⚠️ Sa propre couche : sans ça, animer une voiture force le compositeur
+       à repeindre toute la couche fixe, décor et route compris. */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
     width: 44px;
     right: 1.5vw;
     top: -80px;
@@ -135,6 +139,8 @@
   /* ── Les outils ────────────────────────────────────────────────────── */
   .outil {
     position: absolute;
+    will-change: transform;
+    backface-visibility: hidden;
     width: 30px;
     color: var(--color-gris-trait);
     opacity: 0.4;
@@ -152,6 +158,8 @@
   /* ── Le garagiste ──────────────────────────────────────────────────── */
   .garagiste {
     position: absolute;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
     left: -50px; bottom: 8vh;
     width: 34px;
     color: var(--color-gris-texte);

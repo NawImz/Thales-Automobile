@@ -409,3 +409,49 @@ se lit pas. Chaque forme compte désormais **3 pièces de 12 points** :
 - hélice : trois pales + moyeu.
 
 La structure reste identique par construction, donc morphable sans plugin payant.
+
+---
+
+## Fluidité, deuxième passe — GSAP retiré
+
+Le client signale toujours que « ça rame ». Ma première correction avait traité
+le symptôme le plus visible (la réécriture du chemin à chaque image) mais laissé
+la cause de fond en place.
+
+**GSAP + ScrollTrigger pesaient 44 Ko gzip, téléchargés et exécutés à chaque
+visite, pour une seule chose : lire une progression entre 0 et 1.**
+
+Et surtout : **le ticker de GSAP ne s'arrête jamais.** Page immobile, onglet au
+repos, il continue de tourner et ScrollTrigger relit la géométrie du document.
+C'est du travail permanent pour un site qui, la plupart du temps, ne bouge pas.
+
+**Remplacé par** un écouteur de défilement passif et une boucle
+`requestAnimationFrame` qui **s'éteint d'elle-même** dès que l'inertie est
+retombée. L'inertie du `scrub: 1` est reproduite par un lissage exponentiel de
+trois lignes. La hauteur du document est mise en cache et relue seulement au
+redimensionnement — la relire à chaque événement de défilement force un
+recalcul de mise en page, exactement le coût qu'on cherchait à supprimer.
+
+### Mesuré, avant/après
+
+| | Avant | Après |
+|---|---|---|
+| JavaScript externe | 44 Ko gzip (gsap + ScrollTrigger) | **0 — aucun fichier** |
+| Écritures DOM, défilement complet | une par pièce et par image | **156** |
+| Travail JS page immobile | ticker GSAP en continu | **0 écriture en 2 s** |
+| Dépendances du projet | 9 | **7** (`gsap` et `lenis` désinstallés) |
+
+`lenis` n'avait en réalité jamais été utilisé — il traînait dans le
+`package.json` depuis le socle.
+
+Chaque élément animé du décor a par ailleurs reçu `will-change` et
+`backface-visibility: hidden` : sans sa propre couche de composition, animer une
+voiture forçait le compositeur à repeindre toute la couche fixe, route comprise.
+
+### Une fausse alerte, pour mémoire
+
+J'ai cru voir une régression en trouvant Roboto Slab en police d'affichage alors
+que le plan initial annonçait Familjen Grotesk. Vérification faite dans
+`DESIGN-PLAN.md` §4 : c'est une **correction documentée**, prise après réception
+du logo — le lettrage est un slab serif, pas un grotesque. Rien à réparer.
+Le réflexe reste bon : vérifier avant de « corriger ».

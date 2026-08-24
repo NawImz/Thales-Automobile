@@ -71,6 +71,8 @@ const depart = FORMES.voiture.map((p) => versChemin(p.points, p.tension));
   if (svg && pieces.length === PIECES) {
     const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // En mouvement réduit : la voiture rendue côté serveur reste. Rien ne bouge,
+    // rien ne se télécharge, aucune boucle ne démarre.
     if (!reduit) {
       const etapes = [FORMES.voiture, FORMES.disque, FORMES.bateau, FORMES.helice, FORMES.voiture];
       const table = precalculer(etapes as any, 90);
@@ -85,36 +87,52 @@ const depart = FORMES.voiture.map((p) => versChemin(p.points, p.tension));
         for (let p = 0; p < pieces.length; p++) pieces[p].setAttribute('d', chemins[p]);
       }
 
-      (async () => {
-        try {
-          const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
-            import('gsap'),
-            import('gsap/ScrollTrigger'),
-          ]);
-          gsap.registerPlugin(ScrollTrigger);
-          ScrollTrigger.create({
-            trigger: document.body,
-            start: 'top top',
-            end: 'bottom bottom',
-            // scrub: 1 — le nombre donne l'inertie ; `true` colle à la molette.
-            scrub: 1,
-            onUpdate: (self) => poser(self.progress),
-          });
-        } catch {
-          // GSAP indisponible : repli sans dépendance, sur le défilement natif.
-          let attendu = false;
-          addEventListener('scroll', () => {
-            if (attendu) return;
-            attendu = true;
-            requestAnimationFrame(() => {
-              attendu = false;
-              const h = document.documentElement.scrollHeight - innerHeight;
-              poser(h > 0 ? scrollY / h : 0);
-            });
-          }, { passive: true });
+      /**
+       * ⚠️ GSAP a été RETIRÉ d'ici, et c'est le gros du gain de fluidité.
+       *
+       * ScrollTrigger pesait 44 Ko gzip (gsap + le plugin), téléchargés et
+       * exécutés à chaque visite pour une seule chose : lire une progression
+       * entre 0 et 1. Pire, son ticker tourne en PERMANENCE — page immobile
+       * comprise — et il relit la géométrie du document à chaque image.
+       *
+       * Ici, la boucle ne démarre qu'au défilement et **s'arrête d'elle-même**
+       * dès que l'inertie est retombée. Au repos, zéro ligne de JavaScript
+       * s'exécute. L'inertie du `scrub: 1` est reproduite par un simple
+       * lissage exponentiel.
+       */
+      let cible = 0;
+      let lisse = 0;
+      let tourne = false;
+
+      // ⚠️ La hauteur du document est mise en cache : la relire à chaque
+      // événement de défilement force un recalcul de mise en page, ce qui est
+      // exactement le genre de coût qui fait ramer une page.
+      let course = 0;
+      function mesurer() {
+        course = document.documentElement.scrollHeight - innerHeight;
+      }
+      mesurer();
+
+      function boucle() {
+        lisse += (cible - lisse) * 0.12;
+        poser(lisse);
+        if (Math.abs(cible - lisse) > 0.0004) {
+          requestAnimationFrame(boucle);
+        } else {
+          lisse = cible;
+          poser(lisse);
+          tourne = false; // la boucle s'éteint
         }
-      })();
+      }
+
+      function auDefilement() {
+        cible = course > 0 ? Math.min(1, Math.max(0, scrollY / course)) : 0;
+        if (!tourne) { tourne = true; requestAnimationFrame(boucle); }
+      }
+
+      addEventListener('scroll', auDefilement, { passive: true });
+      addEventListener('resize', () => { mesurer(); auDefilement(); }, { passive: true });
+      auDefilement();
     }
-    // En mouvement réduit : la voiture reste, rendue côté serveur. Rien ne bouge.
   }
 </script>

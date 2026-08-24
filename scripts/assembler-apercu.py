@@ -71,7 +71,10 @@ cids = set()
 for c in pages.values():
     cids |= set(re.findall(r'data-astro-cid-([a-z0-9]+)', c))
 
-signature = (SP / 'signature.js').read_text()
+# ⚠️ GSAP a été retiré : il n'y a plus AUCUN script externe, tout est inliné
+# par Astro dans le HTML des pages. L'assembleur n'a donc plus de bundle à
+# produire — les scripts voyagent avec le corps des pages.
+signature = ''
 version = datetime.datetime.now().strftime('%d/%m %Hh%M')
 
 bandeau = (
