@@ -58,10 +58,16 @@ corps = re.search(r'<body[^>]*>(.*)</body>', html, re.S).group(1)
 corps = re.sub(r'<script type="module" src="[^"]*"></script>', '', corps)
 corps = re.sub(r"<script>\s*document\.documentElement\.classList\.remove\(.sans-js.\);\s*</script>", '', corps)
 
+# Tampon de version : sans lui, impossible de distinguer d'un coup d'oeil
+# une page rechargee d'une page servie depuis le cache du navigateur — on
+# se retrouve a debattre de correctifs deja publies.
+version = __import__('datetime').datetime.now().strftime('%d/%m %Hh%M')
+
 bandeau = (
  '<div style="background:#131619;color:#E9E4D8;font:600 13px/1.5 system-ui,sans-serif;'
  'padding:10px 16px;text-align:center;letter-spacing:.02em">'
  'Aperçu de travail — Phase 3 en cours. Photos, avis et prix sont des emplacements marqués.'
+ '<span style="opacity:.55;font-weight:400"> · build ' + version + '</span>'
  '</div>'
 )
 
