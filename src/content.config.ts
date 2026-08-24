@@ -13,7 +13,10 @@ const services = defineCollection({
     ordre: z.number(),
     titre: z.string(),
     phrase: z.string(),
-    prixDepart: z.number(),
+    // ⚠️ AUCUN PRIX sur ce site. Le client n'en a communiqué aucun, et un prix
+    // inventé engage le garage. Le champ est explicitement interdit : toute
+    // réintroduction casse le build au lieu de passer en production.
+    prixDepart: z.never().optional(),
     duree: z.string(),
     trait: z.string(),
   }),

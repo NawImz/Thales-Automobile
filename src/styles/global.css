@@ -139,6 +139,9 @@ h1, h2, h3 {
   }
 }
 
+/* Le décor vit en z-0 : tout le contenu passe au-dessus. */
+header, main, footer { position: relative; z-index: 1; }
+
 /* Lien d'évitement */
 .evitement {
   position: absolute;

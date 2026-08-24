@@ -1,0 +1,192 @@
+---
+/**
+ * Le décor animé : une route qui serpente, des voitures qui la parcourent,
+ * des outils qui flottent, un garagiste qui traverse.
+ *
+ * ⚠️ TOUT EST EN `transform` ET `opacity`, EXCLUSIVEMENT.
+ * Ce sont les deux seules propriétés que le navigateur anime sur le GPU sans
+ * repasser par la mise en page ni par la peinture. Le site ramait justement
+ * parce qu'un élément fixe se repeignait à chaque image : on ne recommence pas.
+ * Aucune de ces animations n'exécute la moindre ligne de JavaScript.
+ *
+ * ⚠️ Le décor est PUREMENT décoratif : `aria-hidden`, `pointer-events: none`,
+ * et il ne porte aucune information absente du texte.
+ */
+---
+<div class="decor" aria-hidden="true">
+  <!-- La route : elle sort par la droite, serpente, revient. -->
+  <svg class="route" viewBox="0 0 400 1600" preserveAspectRatio="xMidYMin slice" fill="none">
+    <path
+      id="tracé-route"
+      d="M330 -40 C330 120 90 180 90 340 C90 500 340 560 340 720 C340 880 70 940 70 1100 C70 1260 330 1320 330 1480 L330 1640"
+      stroke="currentColor" stroke-width="26" stroke-linecap="round" class="asphalte"
+    />
+    <path
+      d="M330 -40 C330 120 90 180 90 340 C90 500 340 560 340 720 C340 880 70 940 70 1100 C70 1260 330 1320 330 1480 L330 1640"
+      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+      stroke-dasharray="14 18" class="bande"
+    />
+  </svg>
+
+  <!-- Les voitures : trois, de couleurs et d'allures différentes. -->
+  {[
+    { classe: 'v1', couleur: 'var(--color-turquoise)' },
+    { classe: 'v2', couleur: 'var(--color-encre)' },
+    { classe: 'v3', couleur: 'var(--color-gris-texte)' },
+  ].map((v) => (
+    <svg class:list={['voiture', v.classe]} viewBox="0 0 40 20" fill="none" style={`color:${v.couleur}`}>
+      <path d="M2 14 L3 9 L10 8 L14 4 L25 4 L29 8 L37 10 L38 14 Z"
+            stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+      <circle cx="11" cy="15" r="3" stroke="currentColor" stroke-width="1.4" />
+      <circle cx="30" cy="15" r="3" stroke="currentColor" stroke-width="1.4" />
+    </svg>
+  ))}
+
+  <!-- Les outils qui flottent. -->
+  <svg class="outil o1" viewBox="0 0 24 24" fill="none">
+    <path d="M14.5 3a5 5 0 0 0-4.6 7L3 16.9V21h4.1l6.9-6.9a5 5 0 1 0 .5-11.1Z"
+          stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+  </svg>
+  <svg class="outil o2" viewBox="0 0 24 24" fill="none">
+    <path d="M12 3.2l7.6 4.4v8.8L12 20.8 4.4 16.4V7.6L12 3.2Z M12 8.4l3.1 1.8v3.6L12 15.6l-3.1-1.8v-3.6L12 8.4Z"
+          stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+  </svg>
+  <svg class="outil o3" viewBox="0 0 24 24" fill="none">
+    <path d="M4 7h10v10H4z M14 10h4l2 2v3h-6 M6 17a2 2 0 1 0 0 .01Z M17 17a2 2 0 1 0 0 .01Z"
+          stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+  </svg>
+
+  <!-- Le garagiste, sa caisse à outils à la main. -->
+  <svg class="garagiste" viewBox="0 0 30 46" fill="none">
+    <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="14" cy="6" r="4" />
+      <path d="M14 10v13 M14 13h-6 M14 13h6 M14 23l-4 10 M14 23l4 10" class="jambes" />
+      <rect x="17" y="16" width="9" height="7" rx="1" class="caisse" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .decor {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    /* Sa propre couche : rien de ce qui bouge ici ne repeint le contenu. */
+    contain: strict;
+  }
+
+  /* ── La route ──────────────────────────────────────────────────────── */
+  .route {
+    position: absolute;
+    top: 0; right: -6vw;
+    width: 26vw; height: 200vh;
+    color: var(--color-gris-trait);
+    opacity: 0.28;
+  }
+  .asphalte { opacity: 0.25; }
+  .bande { opacity: 0.85; }
+
+  /* ── Les voitures ──────────────────────────────────────────────────── */
+  /**
+   * ⚠️ Elles descendent LA ROUTE, elles ne traversent pas l'écran.
+   * Première version : un balayage de -92vw, qui faisait passer une voiture
+   * en plein milieu du titre. Le décor ne doit jamais croiser le texte —
+   * il vit dans la gouttière, comme l'emblème.
+   *
+   * Le déplacement est vertical, avec un léger balancement horizontal qui
+   * suit la courbe de la route. `translate3d` uniquement : composé par le GPU,
+   * aucun recalcul de mise en page.
+   */
+  /**
+   * ⚠️ Le corridor se CALCULE, comme pour l'emblème.
+   * Le contenu fait 80rem centré ; la gouttière vaut donc (100vw − 80rem)/2.
+   * Une voiture de 44 px avec ±19 px de balancement demande ~80 px de
+   * gouttière, soit une fenêtre d'au moins 90rem. En dessous, elle est
+   * masquée — mesuré : à 1600 px une voiture mordait encore de 24 px sur le
+   * texte avec des valeurs choisies au jugé.
+   */
+  .voiture {
+    position: absolute;
+    width: 44px;
+    right: 1.5vw;
+    top: -80px;
+    opacity: 0;
+    animation: descendre 22s linear infinite;
+    display: none;
+  }
+  @media (min-width: 90rem) { .voiture { display: block; } }
+
+  .v1 { animation-delay: 1s; }
+  .v2 { animation-delay: 9s;  animation-duration: 28s; right: 4vw; }
+  .v3 { animation-delay: 17s; animation-duration: 18s; right: 0.4vw; width: 36px; }
+
+  @keyframes descendre {
+    0%   { transform: translate3d(0, 0, 0) rotate(4deg);          opacity: 0; }
+    8%   {                                                         opacity: 0.55; }
+    30%  { transform: translate3d(-1.2vw, 32vh, 0) rotate(-5deg); }
+    55%  { transform: translate3d(0.4vw, 58vh, 0) rotate(6deg); }
+    80%  { transform: translate3d(-0.9vw, 84vh, 0) rotate(-3deg);  opacity: 0.55; }
+    92%  {                                                         opacity: 0; }
+    100% { transform: translate3d(0, 112vh, 0) rotate(0deg);       opacity: 0; }
+  }
+
+  /* ── Les outils ────────────────────────────────────────────────────── */
+  .outil {
+    position: absolute;
+    width: 30px;
+    color: var(--color-gris-trait);
+    opacity: 0.4;
+    animation: flotter 11s ease-in-out infinite;
+  }
+  .o1 { left: 2.5vw; top: 26vh; animation-delay: 0s; }
+  .o2 { left: 5vw;   top: 62vh; animation-delay: 3.5s; width: 24px; }
+  .o3 { left: 1.5vw; top: 84vh; animation-delay: 7s; }
+
+  @keyframes flotter {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(-6deg); }
+    50%      { transform: translate3d(0, -18px, 0) rotate(8deg); }
+  }
+
+  /* ── Le garagiste ──────────────────────────────────────────────────── */
+  .garagiste {
+    position: absolute;
+    left: -50px; bottom: 8vh;
+    width: 34px;
+    color: var(--color-gris-texte);
+    opacity: 0;
+    animation: marcher 38s linear infinite;
+  }
+  .garagiste .jambes { animation: pas 0.7s steps(2, end) infinite alternate; transform-origin: 14px 23px; }
+
+  /* Il traverse la marge gauche seulement — jamais la colonne de texte. */
+  @keyframes marcher {
+    0%   { transform: translate3d(0, 0, 0);     opacity: 0; }
+    6%   { opacity: 0.4; }
+    40%  { opacity: 0.4; }
+    48%  { transform: translate3d(7vw, 0, 0);   opacity: 0; }
+    100% { transform: translate3d(7vw, 0, 0);   opacity: 0; }
+  }
+  @keyframes pas {
+    from { transform: skewX(-7deg); }
+    to   { transform: skewX(7deg); }
+  }
+
+  /* ── Sous 64rem : pas de décor latéral, il n'y a pas de marge pour lui ── */
+  @media (max-width: 63.99rem) {
+    .garagiste, .o2, .o3 { display: none; }
+    .route { width: 40vw; right: -18vw; opacity: 0.16; }
+    .o1 { top: 40vh; opacity: 0.25; }
+  }
+
+  /**
+   * ⚠️ Mouvement réduit : pas de version « ralentie », une version SANS
+   * mouvement. Le décor mobile disparaît entièrement, la route reste comme
+   * une texture fixe.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .voiture, .garagiste, .outil { display: none; }
+    .route { animation: none; }
+  }
+</style>

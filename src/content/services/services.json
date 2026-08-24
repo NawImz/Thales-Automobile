@@ -3,7 +3,6 @@
     "id": "vidange",
     "titre": "Vidange et filtres",
     "phrase": "Huile, filtre à huile, contrôle des niveaux et des usures.",
-    "prixDepart": 69,
     "duree": "45 min",
     "trait": "filtre",
     "ordre": 1
@@ -12,7 +11,6 @@
     "id": "freinage",
     "titre": "Freinage",
     "phrase": "Plaquettes, disques, purge. On vous montre la pièce déposée.",
-    "prixDepart": 120,
     "duree": "1 h 30",
     "trait": "disque",
     "ordre": 2
@@ -21,7 +19,6 @@
     "id": "distribution",
     "titre": "Distribution",
     "phrase": "Courroie ou chaîne, galets, pompe à eau si nécessaire.",
-    "prixDepart": 420,
     "duree": "1 journée",
     "trait": "courroie",
     "ordre": 3
@@ -30,7 +27,6 @@
     "id": "diagnostic",
     "titre": "Diagnostic électronique",
     "phrase": "Lecture des défauts, et l'explication de ce qu'ils veulent dire.",
-    "prixDepart": 45,
     "duree": "30 min",
     "trait": "valise",
     "ordre": 4
@@ -39,7 +35,6 @@
     "id": "embrayage",
     "titre": "Embrayage",
     "phrase": "Kit complet, butée, volant moteur si l'état l'exige.",
-    "prixDepart": 480,
     "duree": "1 à 2 jours",
     "trait": "embrayage",
     "ordre": 5
@@ -48,7 +43,6 @@
     "id": "nautique",
     "titre": "Moteur de bateau et jet-ski",
     "phrase": "Hors-bord, in-board, jet-ski. Entretien, hivernage, dépannage.",
-    "prixDepart": 90,
     "duree": "sur devis",
     "trait": "helice",
     "ordre": 6

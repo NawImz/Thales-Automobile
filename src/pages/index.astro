@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/blocs/Hero.astro';
 import TroisRaisons from '../components/blocs/TroisRaisons.astro';
 import CeQuOnRepare from '../components/blocs/CeQuOnRepare.astro';
-import Estimateur from '../components/blocs/Estimateur.astro';
+import Devis from '../components/blocs/Devis.astro';
 import AutoEtBateau from '../components/blocs/AutoEtBateau.astro';
 import Confiance from '../components/blocs/Confiance.astro';
 import Venir from '../components/blocs/Venir.astro';
@@ -11,14 +11,15 @@ import { garage, a } from '../lib/garage';
 
 const titre = `Garage auto et bateaux à ${a.ville} — ${garage.nom}`;
 const description =
-  `Réparation auto, hors-bord et jet-ski à ${a.ville}. Prix affichés, devis gratuit. ` +
+  `Réparation auto, hors-bord et jet-ski à ${a.ville}. Devis gratuit, et on vous dit ` +
+  `ce qui n'est pas à changer. ` +
   `${garage.anneesExperience} ans d'atelier, ouvert du lundi au samedi.`;
 ---
 <Base titre={titre} description={description}>
   <Hero />
   <TroisRaisons />
   <CeQuOnRepare />
-  <Estimateur />
+  <Devis />
   <AutoEtBateau />
   <Confiance />
   <Venir />

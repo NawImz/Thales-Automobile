@@ -27,8 +27,8 @@ const ouvertSamedi = garage.horaires.find((h) => h.jour === 6)?.ouvre != null;
       </p>
 
       <div class="hero-suite mt-8 flex flex-col gap-3 sm:flex-row" style="--retard:820ms">
-        <Bouton href="/#estimateur" variante="accent-desktop" class="inline-flex" data-event="estimateur" data-contexte="hero">
-          Estimer ma réparation
+        <Bouton href="/#devis" variante="accent-desktop" class="inline-flex" data-event="devis" data-contexte="hero">
+          Demander un devis
           <Trait nom="fleche" class="size-4" />
         </Bouton>
         <Bouton href={lienTel(tel.numero)} class="inline-flex" data-event="appel" data-contexte="hero">

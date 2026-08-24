@@ -27,7 +27,6 @@ SP = pathlib.Path('.apercu'); SP.mkdir(exist_ok=True)
 
 PAGES = [
     ('/',                 'dist/index.html'),
-    ('/tarifs',           'dist/tarifs/index.html'),
     ('/bateaux-jet-ski',  'dist/bateaux-jet-ski/index.html'),
     ('/mentions-legales', 'dist/mentions-legales/index.html'),
     ('/confidentialite',  'dist/confidentialite/index.html'),
@@ -78,7 +77,7 @@ version = datetime.datetime.now().strftime('%d/%m %Hh%M')
 bandeau = (
  '<div style="background:#0E1015;color:#F7F7F5;font:600 13px/1.5 system-ui,sans-serif;'
  'padding:10px 16px;text-align:center;letter-spacing:.02em">'
- 'Aperçu de travail — première version. Photos, prix et mentions légales sont des emplacements marqués.'
+ 'Aperçu de travail. Photos et mentions légales sont des emplacements marqués. Aucun prix n\'est affiché.'
  '<span style="opacity:.55;font-weight:400"> · build ' + version + '</span>'
  '</div>'
 )

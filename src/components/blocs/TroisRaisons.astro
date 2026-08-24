@@ -1,17 +1,15 @@
 ---
 import Compteur from '../socle/Compteur.astro';
-import bareme from '../../content/tarifs/bareme.json';
 import { garage } from '../../lib/garage';
 
 /**
- * ⚠️ Pas d'icônes ici, et c'est délibéré.
- * « Trois blocs avec une icône, un titre, une phrase » est le motif le plus
- * générique du web — je l'aurais écrit à l'identique pour un plombier. Les
- * trois raisons sont donc composées en typographie seule, et la raison n°2
- * porte un VRAI prix tiré du barème : la preuve est le contenu, pas une
- * illustration.
+ * ⚠️ Pas d'icônes ici, et c'est délibéré : « trois blocs avec une icône, un
+ * titre, une phrase » est le motif le plus générique du web.
+ *
+ * ⚠️ La raison n°2 était « les prix sont affichés ». Le client n'ayant
+ * communiqué AUCUN prix, elle a été remplacée par la pièce montrée — une
+ * preuve tout aussi vérifiable, et qui n'engage aucun montant.
  */
-const vidange = bareme.interventions.find((i) => i.id === 'vidange')!;
 ---
 <section class="section border-t border-gris-trait" aria-labelledby="raisons">
   <div class="mx-auto max-w-7xl px-5 sm:px-8">
@@ -27,16 +25,11 @@ const vidange = bareme.interventions.find((i) => i.id === 'vidange')!;
       </div>
 
       <div class="bg-blanc-atelier p-8 lg:p-10">
-        <p class="font-display text-2xl font-extrabold">Les prix sont<br />affichés.</p>
+        <p class="font-display text-2xl font-extrabold">On vous montre<br />la pièce.</p>
         <p class="mt-4 text-gris-texte">
-          Une vidange démarre à
-          <span class="whitespace-nowrap font-semibold text-encre">
-            <Compteur valeur={vidange.base} /> €</span>.
-          Toute la grille est publique.
+          Ce qui est changé vous est présenté, déposé, expliqué. Vous repartez
+          en sachant ce que vous avez payé et pourquoi.
         </p>
-        <a href="/tarifs" class="lien-trait cible mt-5 inline-flex items-center gap-2 text-sm font-semibold text-turquoise">
-          Voir la grille complète
-        </a>
       </div>
 
       <div class="bg-blanc-atelier p-8 lg:p-10">

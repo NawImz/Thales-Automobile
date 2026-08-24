@@ -334,3 +334,78 @@ le bug « ON VOUS DITCE » sur la version précédente.
 
 ⚠️ Lighthouse et les FPS **ne sont pas mesurables ici** (SwiftShader, pas de GPU).
 Ils restent à relever sur une vraie machine avant de figurer au README.
+
+---
+
+## Retour client — lenteur, prix, décor animé
+
+### 1. « Ça rame » — la cause, mesurée
+
+L'emblème signature recalculait et réécrivait son chemin **à chaque image de
+défilement**. Le calcul lui-même ne coûtait que **9,7 µs** — ce n'était pas lui.
+Le coût était `setAttribute('d')` : le navigateur reparse le tracé et repeint
+une couche `position: fixed` soixante fois par seconde.
+
+**Corrigé** : 90 états sont précalculés une seule fois au chargement (8,6 ms), et
+le défilement ne réécrit que lorsque l'indice change vraiment.
+Mesuré sur un défilement complet : **180 écritures DOM** (3 pièces × 60 paliers)
+là où l'ancienne approche en faisait une par pièce et par image.
+
+Ajouts : `will-change: transform` et `translateZ(0)` sur l'emblème pour lui
+donner sa propre couche, `contain: strict` sur le décor.
+
+**Leçon** : quand une animation rame, profiler le calcul ne suffit pas. Ici le
+JavaScript était 60 fois moins cher que l'écriture DOM qu'il provoquait.
+
+### 2. Tous les prix retirés
+
+Le client n'en a communiqué aucun. Tout montant a donc disparu :
+
+- `prixDepart` retiré des services, et **interdit dans le schéma**
+  (`z.never().optional()`) : toute réintroduction casse le build.
+- Le barème devient une simple liste d'interventions, sans prix ni coefficient.
+- **L'estimateur devient un préparateur de devis.** Même mécanique de conversion
+  — on coche, on envoie par WhatsApp — mais ce qui part est une DEMANDE, pas une
+  estimation. Le manomètre est remplacé par un « bon d'atelier » qui se remplit.
+- `/tarifs` supprimée, la nav pointe vers le devis.
+- La raison n°2 était « les prix sont affichés » : remplacée par **« on vous
+  montre la pièce »** — une preuve tout aussi vérifiable, qui n'engage aucun
+  montant.
+
+Audit du rendu : **0 symbole €**. Deux occurrences du mot restent, assumées :
+le bandeau de l'aperçu (« aucun prix n'est affiché ») et **l'avis de Pierre F.**,
+qui écrit « ni par leurs connaissances ni par leurs tarifs ». Ce sont ses mots,
+il ne publie aucun montant, et retoucher un avis réel serait une falsification.
+Consigné dans `avis.json`, à supprimer sur demande explicite seulement.
+
+### 3. Le décor animé
+
+Route qui serpente dans la gouttière droite, trois voitures qui la descendent,
+outils qui flottent à gauche, garagiste qui traverse la marge.
+
+**Tout est en `transform` et `opacity`, exclusivement** — les deux seules
+propriétés composées par le GPU sans repasser par la mise en page. Aucune ligne
+de JavaScript. Vu la plainte sur la lenteur, c'était non négociable.
+
+⚠️ **Deux fautes attrapées à la mesure**, pas à l'œil :
+- première version, une voiture traversait le titre : je balayais `-92vw`. Le
+  décor ne doit jamais croiser le texte. Les voitures **descendent la route**
+  au lieu de traverser l'écran ;
+- même après correction, une voiture mordait encore de **24 px**. Le corridor
+  se calcule : gouttière = (100vw − 80rem)/2, et une voiture de 44 px avec son
+  balancement en demande 80, soit une fenêtre d'au moins **90rem**. En dessous,
+  les voitures sont masquées.
+
+Vérifié sur un cycle complet de 48 échantillons : **0 collision, 0 px
+d'empiétement**.
+
+### 4. L'emblème redessiné
+
+Un contour unique ne pouvait pas porter de roues — et une voiture sans roues ne
+se lit pas. Chaque forme compte désormais **3 pièces de 12 points** :
+- voiture : carrosserie + deux roues ;
+- disque de frein : trois cercles concentriques ;
+- **bateau à moteur** : coque + cabine + hors-bord à l'arrière ;
+- hélice : trois pales + moyeu.
+
+La structure reste identique par construction, donc morphable sans plugin payant.

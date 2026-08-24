@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import Trait from '../socle/Trait.astro';
-import Compteur from '../socle/Compteur.astro';
 
 const services = (await getCollection('services'))
   .sort((x, y) => x.data.ordre - y.data.ordre)
@@ -13,8 +12,8 @@ const services = (await getCollection('services'))
       <h2 id="titre-reparer" class="text-[length:var(--text-2xl)] font-extrabold">
         Ce qu'on répare
       </h2>
-      <a href="/tarifs" class="lien-trait cible inline-flex items-center gap-2 text-sm font-semibold">
-        Toute la grille
+      <a href="/#devis" class="lien-trait cible inline-flex items-center gap-2 text-sm font-semibold">
+        Demander un devis
         <Trait nom="fleche" class="size-4" />
       </a>
     </div>
@@ -26,12 +25,9 @@ const services = (await getCollection('services'))
           <h3 class="mt-5 font-display text-lg font-bold">{s.data.titre}</h3>
           <p class="mt-2 text-sm text-gris-texte">{s.data.phrase}</p>
           <p class="mt-5 flex items-baseline gap-2">
-            <span class="font-mono text-xs tracking-widest text-gris-texte uppercase">dès</span>
-            <span class="font-display text-xl font-extrabold">
-              <Compteur valeur={s.data.prixDepart} /> €
-            </span>
+            <span class="font-mono text-xs tracking-widest text-gris-texte uppercase">durée</span>
+            <span class="chiffres font-display text-lg font-bold">{s.data.duree}</span>
           </p>
-          <p class="mt-1 chiffres text-xs text-gris-texte">{s.data.duree}</p>
           <!-- Le cadre qui se resserre d'un cran au survol : pas d'ombre,
                pas d'élévation, pas d'agrandissement. -->
           <span class="cadre-cran" aria-hidden="true"></span>
@@ -40,8 +36,8 @@ const services = (await getCollection('services'))
     </ul>
 
     <p class="mt-8 max-w-none text-sm text-gris-texte">
-      Prix de départ, pièces d'origine ou équivalent. Le devis exact est gratuit
-      et sans engagement.
+      Le devis est gratuit et sans engagement. On vous appelle avant toute
+      intervention qui n'y figure pas.
     </p>
   </div>
 </section>

@@ -1,0 +1,70 @@
+{
+  "_lisezMoi": "Liste des interventions proposées à la sélection dans le bloc « devis ». ⚠️ AUCUN PRIX ici, volontairement : le client n'en a communiqué aucun et un prix inventé engage le garage. Si des tarifs sont fournis un jour, ils feront l'objet d'une décision explicite, pas d'un ajout discret.",
+  "gabarits": [
+    {
+      "id": "citadine",
+      "libelle": "Citadine",
+      "exemples": "Clio, 208, Polo"
+    },
+    {
+      "id": "berline",
+      "libelle": "Berline / break",
+      "exemples": "Mégane, 308, Passat"
+    },
+    {
+      "id": "suv",
+      "libelle": "SUV / utilitaire",
+      "exemples": "3008, Kadjar, Kangoo"
+    }
+  ],
+  "interventions": [
+    {
+      "id": "vidange",
+      "libelle": "Vidange + filtre à huile"
+    },
+    {
+      "id": "plaquettes-av",
+      "libelle": "Plaquettes avant"
+    },
+    {
+      "id": "disques-av",
+      "libelle": "Disques avant"
+    },
+    {
+      "id": "plaquettes-ar",
+      "libelle": "Plaquettes arrière"
+    },
+    {
+      "id": "distribution",
+      "libelle": "Kit de distribution"
+    },
+    {
+      "id": "embrayage",
+      "libelle": "Embrayage"
+    },
+    {
+      "id": "clim",
+      "libelle": "Recharge climatisation"
+    },
+    {
+      "id": "diagnostic",
+      "libelle": "Diagnostic électronique"
+    },
+    {
+      "id": "pneus",
+      "libelle": "Pneus (montage, la paire)"
+    },
+    {
+      "id": "revision",
+      "libelle": "Révision complète"
+    },
+    {
+      "id": "amortisseurs",
+      "libelle": "Amortisseurs (la paire)"
+    },
+    {
+      "id": "batterie",
+      "libelle": "Batterie"
+    }
+  ]
+}
