@@ -49,9 +49,11 @@ print('  %d police(s) embarquée(s)' % polices)
 
 # ── Images en data: URI ──────────────────────────────────────────────────
 images = {}
-for f in glob.glob('dist/_astro/*.webp') + glob.glob('dist/_astro/*.avif'):
+for f in (glob.glob('dist/_astro/*.webp') + glob.glob('dist/_astro/*.avif')
+          + glob.glob('dist/_astro/*.png')):
     nom = os.path.basename(f)
-    mime = 'image/avif' if nom.endswith('.avif') else 'image/webp'
+    mime = ('image/avif' if nom.endswith('.avif')
+            else 'image/png' if nom.endswith('.png') else 'image/webp')
     images['/_astro/' + nom] = 'data:%s;base64,%s' % (
         mime, base64.b64encode(pathlib.Path(f).read_bytes()).decode())
 print('  %d image(s) embarquée(s)' % len(images))
@@ -76,13 +78,11 @@ for c in pages.values():
 signature = ''
 version = datetime.datetime.now().strftime('%d/%m %Hh%M')
 
-bandeau = (
- '<div style="background:#0E1015;color:#F7F7F5;font:600 13px/1.5 system-ui,sans-serif;'
- 'padding:10px 16px;text-align:center;letter-spacing:.02em">'
- 'Aperçu de travail. Photos et mentions légales sont des emplacements marqués. Aucun prix n\'est affiché.'
- '<span style="opacity:.55;font-weight:400"> · build ' + version + '</span>'
- '</div>'
-)
+# ⚠️ Le bandeau d'aperçu est retiré à la demande du client : il voulait voir
+# le site tel qu'il sera, sans surcouche. Le tampon de build reste utile pour
+# distinguer une page rechargée d'une page en cache — il passe donc en
+# commentaire HTML, invisible à l'écran mais lisible dans le source.
+bandeau = '<!-- Thalès Automobile — aperçu de travail — build ' + version + ' -->'
 
 # Routeur minimal : les liens internes commutent la page au lieu de naviguer.
 routeur = """

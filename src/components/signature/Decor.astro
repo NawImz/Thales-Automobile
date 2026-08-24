@@ -17,11 +17,11 @@
   <!-- Deux routes, une par gouttière. Elles serpentent en sens inverse. -->
   <svg class="route route-gauche" viewBox="0 0 400 1600" preserveAspectRatio="xMidYMin slice" fill="none">
     <path
-      d="M70 -40 C70 120 330 180 330 340 C330 500 60 560 60 720 C60 880 340 940 340 1100 C340 1260 70 1320 70 1480 L70 1640"
+      M90 -60 C90 60 250 110 245 230 C240 350 80 390 95 520 C110 650 260 680 250 810 C240 940 85 980 100 1120 C115 1260 250 1300 240 1440 C232 1560 150 1600 155 1700"
       stroke="currentColor" stroke-width="26" stroke-linecap="round" class="asphalte"
     />
     <path
-      d="M70 -40 C70 120 330 180 330 340 C330 500 60 560 60 720 C60 880 340 940 340 1100 C340 1260 70 1320 70 1480 L70 1640"
+      M90 -60 C90 60 250 110 245 230 C240 350 80 390 95 520 C110 650 260 680 250 810 C240 940 85 980 100 1120 C115 1260 250 1300 240 1440 C232 1560 150 1600 155 1700"
       stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
       stroke-dasharray="14 18" class="bande"
     />
@@ -30,11 +30,11 @@
   <svg class="route route-droite" viewBox="0 0 400 1600" preserveAspectRatio="xMidYMin slice" fill="none">
     <path
       id="tracé-route"
-      d="M330 -40 C330 120 90 180 90 340 C90 500 340 560 340 720 C340 880 70 940 70 1100 C70 1260 330 1320 330 1480 L330 1640"
+      d="M300 -60 C300 160 120 240 140 470 C160 700 340 760 320 1010 C300 1260 130 1300 150 1540 L155 1700"
       stroke="currentColor" stroke-width="26" stroke-linecap="round" class="asphalte"
     />
     <path
-      d="M330 -40 C330 120 90 180 90 340 C90 500 340 560 340 720 C340 880 70 940 70 1100 C70 1260 330 1320 330 1480 L330 1640"
+      d="M300 -60 C300 160 120 240 140 470 C160 700 340 760 320 1010 C300 1260 130 1300 150 1540 L155 1700"
       stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
       stroke-dasharray="14 18" class="bande"
     />
@@ -78,15 +78,20 @@
   }
 
   /* ── La route ──────────────────────────────────────────────────────── */
-  .route {
-    position: absolute;
-    top: 0;
-    width: 26vw; height: 200vh;
-    color: var(--color-gris-trait);
-    opacity: 0.3;
-  }
-  .route-droite { right: -6vw; }
-  .route-gauche { left: -6vw; }
+  /**
+   * ⚠️ Les deux routes ne sont PAS symétriques, et c'est délibéré.
+   * Deux tracés en miroir donnent une page qui se lit comme une grille : l'œil
+   * repère l'axe et tout paraît rigide. Elles ont donc des courbes, des
+   * largeurs, des hauteurs et des opacités différentes, et ne se croisent
+   * jamais à la même hauteur.
+   */
+  .route { position: absolute; color: var(--color-gris-trait); }
+  .route-droite { right: -7vw;  top: -6vh;  width: 23vw; height: 230vh; opacity: 0.34; }
+  /* ⚠️ Décalage vertical FRANC : à quelques pour cent près, l'œil apparie les
+     deux routes et la page redevient une grille. Un tiers d'écran d'écart, et
+     des inflexions deux fois plus courtes à gauche, suffisent à casser
+     l'appariement. */
+  .route-gauche { left: -11vw;  top: 34vh;  width: 31vw; height: 175vh; opacity: 0.2; }
   .asphalte { opacity: 0.25; }
   .bande { opacity: 0.85; }
 
@@ -119,27 +124,35 @@
     right: 1.5vw;
     top: -80px;
     opacity: 0;
-    animation: descendre 22s linear infinite;
     display: none;
   }
   @media (min-width: 90rem) { .voiture { display: block; } }
 
-  .v1 { animation-delay: 1s; }
-  .v2 { animation-delay: 9s;  animation-duration: 28s; right: 4vw; }
-  .v3 { animation-delay: 17s; animation-duration: 18s; right: 0.4vw; width: 36px; }
-  /* Côté gauche : mêmes règles, corridor symétrique. */
-  .v4, .v5 { right: auto; }
-  .v4 { left: 1.5vw; animation-delay: 5s;  animation-duration: 25s; }
-  .v5 { left: 4vw;   animation-delay: 13s; animation-duration: 20s; width: 38px; }
+  /**
+   * ⚠️ Une voiture passe RAREMENT.
+   * Le passage lui-même dure ~14 s, mais le cycle en dure 55 à 95 : la voiture
+   * est invisible la plus grande partie du temps. C'est ce qui fait la
+   * différence entre « il passe une voiture de temps en temps » et « il y a
+   * un défilé permanent sur le côté ».
+   *
+   * Les durées sont premières entre elles pour que les passages ne se
+   * resynchronisent pas : deux voitures côte à côte au même instant, ça se
+   * remarque immédiatement.
+   */
+  .v1 { right: 1.5vw; animation: descendre 61s linear infinite;  animation-delay: 4s; }
+  .v2 { right: 4.5vw; animation: descendre 79s linear infinite;  animation-delay: 26s; }
+  .v3 { right: 0.4vw; animation: descendre 67s linear infinite;  animation-delay: 48s; width: 36px; }
+  .v4 { right: auto; left: 2vw;   animation: descendre 71s linear infinite; animation-delay: 15s; }
+  .v5 { right: auto; left: 5.5vw; animation: descendre 89s linear infinite; animation-delay: 37s; width: 38px; }
 
   @keyframes descendre {
-    0%   { transform: translate3d(0, 0, 0) rotate(4deg);          opacity: 0; }
-    8%   {                                                         opacity: 0.55; }
-    30%  { transform: translate3d(-1.2vw, 32vh, 0) rotate(-5deg); }
-    55%  { transform: translate3d(0.4vw, 58vh, 0) rotate(6deg); }
-    80%  { transform: translate3d(-0.9vw, 84vh, 0) rotate(-3deg);  opacity: 0.55; }
-    92%  {                                                         opacity: 0; }
-    100% { transform: translate3d(0, 112vh, 0) rotate(0deg);       opacity: 0; }
+    0%    { transform: translate3d(0, 0, 0) rotate(4deg);         opacity: 0; }
+    1.5%  {                                                        opacity: 0.5; }
+    5%    { transform: translate3d(-1.1vw, 30vh, 0) rotate(-5deg); }
+    9%    { transform: translate3d(0.4vw, 62vh, 0) rotate(6deg); }
+    13%   { transform: translate3d(-0.8vw, 92vh, 0) rotate(-3deg); opacity: 0.5; }
+    15%   { transform: translate3d(0, 112vh, 0) rotate(0deg);      opacity: 0; }
+    100%  { transform: translate3d(0, 112vh, 0) rotate(0deg);      opacity: 0; }
   }
 
   /* ── Le garagiste ──────────────────────────────────────────────────── */
@@ -147,21 +160,22 @@
     position: absolute;
     will-change: transform, opacity;
     backface-visibility: hidden;
-    left: -50px; bottom: 8vh;
+    left: -34px; bottom: 14vh;
     width: 34px;
     color: var(--color-gris-texte);
     opacity: 0;
-    animation: marcher 38s linear infinite;
+    animation: marcher 83s linear infinite;
   }
   .garagiste .jambes { animation: pas 0.7s steps(2, end) infinite alternate; transform-origin: 14px 23px; }
 
   /* Il traverse la marge gauche seulement — jamais la colonne de texte. */
+  /* Il traverse la marge gauche seulement — jamais la colonne de texte. */
   @keyframes marcher {
-    0%   { transform: translate3d(0, 0, 0);     opacity: 0; }
-    6%   { opacity: 0.4; }
-    40%  { opacity: 0.4; }
-    48%  { transform: translate3d(7vw, 0, 0);   opacity: 0; }
-    100% { transform: translate3d(7vw, 0, 0);   opacity: 0; }
+    0%    { transform: translate3d(0, 0, 0);   opacity: 0; }
+    2%    { opacity: 0.4; }
+    16%   { opacity: 0.4; }
+    19%   { transform: translate3d(7vw, 0, 0); opacity: 0; }
+    100%  { transform: translate3d(7vw, 0, 0); opacity: 0; }
   }
   @keyframes pas {
     from { transform: skewX(-7deg); }

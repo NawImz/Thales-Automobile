@@ -530,3 +530,52 @@ Astro minifie l'espace entre un mot et un composant placé à la ligne suivante 
 « depuis\n<Compteur/> » sortait **« depuis20 ans »**. Corrigé par des entités
 insécables explicites — qui sont de toute façon la bonne typographie française
 devant un nombre.
+
+---
+
+## Retour client — logo, routes libres, épuration du décor
+
+### Le logo entre, le mot composé sort
+
+Le fichier a été analysé avant découpage : profil de densité d'encre ligne par
+ligne. **Creux vide mesuré à y = 54** — le pictogramme occupe y 10-53, le mot
+commence à y 58. Le favicon est donc borné à cette mesure, pas à un pourcentage
+choisi au jugé. Premier essai à `top: 6, height: 50` : le haut de « THALES »
+apparaissait encore. Corrigé à `left 13, top 5, 60 × 50`, puis carré **par ajout
+de transparent** — élargir le découpage aurait forcément ramené le texte.
+
+⚠️ **Le logo est livré sur fond BLANC, pas transparent.** Posé sur le crème de
+l'atelier (#F7F7F5) il dessinait un carré clair nettement visible. Détouré par
+seuil (blanc franc > 242 uniquement, pour ne toucher ni au turquoise ni au
+noir) : **74 % des pixels rendus transparents**.
+
+⚠️ **Taille en en-tête.** Le logo est carré avec deux lignes de texte occupant
+42 % de sa hauteur : à 44 px, le mot tombait sous 10 px et devenait illisible.
+Porté à 56 px, 64 sur grand écran. Un logo qu'on ne peut pas lire n'est plus un
+logo.
+
+Sur le pied de page, sombre, un `invert` seul virait le turquoise au rouge. La
+chaîne `grayscale → invert → brightness` préserve la lisibilité sans inventer
+de couleur.
+
+### Les routes ne sont plus un miroir
+
+Elles avaient les mêmes courbes inversées : l'œil repérait l'axe et la page se
+lisait comme une grille. Elles diffèrent maintenant **de caractère**, pas
+seulement de coordonnées — à droite de longues courbes amples, à gauche des
+inflexions deux fois plus courtes — et surtout **elles sont décalées d'un tiers
+d'écran en hauteur** (34vh contre −6vh). À quelques pour cent près, l'œil
+apparie encore ; il faut un décalage franc.
+
+### Les voitures passent rarement
+
+Le passage dure ~14 % du cycle, et les cycles font 61, 67, 71, 79 et 89
+secondes. **Durées premières entre elles**, pour que les passages ne se
+resynchronisent pas : deux voitures côte à côte au même instant, ça se remarque
+immédiatement et ça trahit la boucle.
+
+### Retirés
+
+Le bandeau d'aperçu (le tampon de build passe en commentaire HTML, invisible
+mais toujours lisible dans le source) et l'emblème voiture→bateau, avec tout
+son système de formes morphables.

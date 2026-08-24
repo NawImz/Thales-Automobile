@@ -1,13 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import Trait from './Trait.astro';
+import logo from '../../assets/marque/logo.png';
 import { garage, tel, lienTel } from '../../lib/garage';
 
-/**
- * ⚠️ Le logo n'est pas encore fourni (voir TODO-CLIENT.md). En attendant, le
- * nom est composé en typographie plutôt qu'illustré par un faux logo : un
- * placeholder graphique finirait par être pris pour la charte.
- * Dès réception du fichier, il remplace ce bloc — et lui seul.
- */
 const liens = [
   { href: '/#reparer', libelle: 'Nos services' },
   { href: '/bateaux-jet-ski', libelle: 'Bateaux' },
@@ -17,9 +13,12 @@ const liens = [
 ---
 <header class="relative z-40 border-b border-gris-trait bg-blanc-atelier">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-    <a href="/" class="cible group flex flex-col justify-center leading-none min-h-[44px]" aria-label={`${garage.nom} — accueil`}>
-      <span class="font-display text-lg font-bold tracking-tight">THALÈS</span>
-      <span class="font-mono text-[0.6rem] tracking-[0.22em] text-gris-texte">AUTOMOBILE</span>
+    <!-- ⚠️ Le logo est carré, avec deux lignes de texte sous le pictogramme :
+         le mot occupe 42 % de sa hauteur. À 44 px il tombait sous 10 px et
+         devenait illisible — mesuré sur le fichier, pas supposé. Il lui faut
+         56 px au minimum, 64 sur grand écran. -->
+    <a href="/" class="cible flex min-h-[44px] items-center" aria-label={`${garage.nom} — accueil`}>
+      <Image src={logo} alt={garage.nom} width={104} height={104} loading="eager" class="h-14 w-auto lg:h-16" />
     </a>
 
     <nav class="hidden lg:block" aria-label="Navigation principale">

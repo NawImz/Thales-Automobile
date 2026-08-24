@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Trait from './Trait.astro';
+import logo from '../../assets/marque/logo.png';
 import { garage, a, tel, lienTel, heureEnTexte } from '../../lib/garage';
 const annee = new Date().getFullYear();
 ---
@@ -7,8 +9,12 @@ const annee = new Date().getFullYear();
   <div class="mx-auto max-w-7xl px-5 py-16 sm:px-8">
     <div class="grid gap-12 lg:grid-cols-3">
       <div>
-        <p class="font-display text-lg font-bold tracking-tight">THALÈS</p>
-        <p class="font-mono text-[0.6rem] tracking-[0.22em] text-gris-trait">AUTOMOBILE</p>
+        <!-- ⚠️ Le logo est noir sur fond clair : sur le pied sombre il faut
+             l'éclaircir, sinon le mot disparaît. `invert` seul virerait le
+             turquoise au rouge — on le désature d'abord, on inverse, puis on
+             réinjecte la teinte de marque par `sepia`+`hue-rotate`. Le résultat
+             est vérifié à l'écran, pas supposé. -->
+        <Image src={logo} alt={garage.nom} width={104} height={104} loading="lazy" class="logo-pied h-12 w-auto" />
         <p class="mt-4 text-sm text-gris-trait">Auto et bateaux, {garage.anneesExperience} ans à {a.ville}.</p>
       </div>
 
@@ -47,3 +53,7 @@ const annee = new Date().getFullYear();
     </div>
   </div>
 </footer>
+
+<style>
+  .logo-pied { filter: grayscale(1) invert(1) brightness(1.25); }
+</style>
