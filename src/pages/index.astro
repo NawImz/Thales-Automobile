@@ -1,32 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import Hero from '../components/contenu/Hero.astro';
-import TraitSignature from '../components/signature/TraitSignature.astro';
-import PoleNautique from '../components/contenu/PoleNautique.astro';
-import GrilleTarifs from '../components/preuve/GrilleTarifs.astro';
-import PreuveEtAcces from '../components/contenu/PreuveEtAcces.astro';
-import { garage } from '../lib/garage';
+import Hero from '../components/blocs/Hero.astro';
+import { garage, a } from '../lib/garage';
 
-const titre = `Garage auto et bateaux à ${garage.adresse.ville} — ${garage.nom}`;
-const description = `Réparation auto et moteurs de bateau à ${garage.adresse.ville}. Prix affichés, devis gratuit, ouvert le samedi. ${garage.telephones.principal.affiche}.`;
-
-/**
- * QUATRE ACTES, pas une pile de bandes.
- *
- * 1. L'arrivée      — la promesse et le téléphone.        (cambouis)
- * 2. Les deux métiers — le trait devient coque, puis le
- *                       nautique enchaîne sans respirer.  (cambouis → bleu-port)
- * 3. Les prix        — le seul moment clair de la page.   (tôle)
- * 4. La confiance    — avis, accès, appel, d'un souffle.  (cambouis)
- *
- * Chaque acte répond à UNE question du visiteur. Les séparateurs et les
- * sections intermédiaires ont sauté : ils diluaient.
- */
+const titre = `Garage auto et bateaux à ${a.ville} — ${garage.nom}`;
+const description =
+  `Réparation auto, hors-bord et jet-ski à ${a.ville}. Prix affichés, devis gratuit. ` +
+  `${garage.anneesExperience} ans d'atelier, ouvert du lundi au samedi.`;
 ---
 <Base titre={titre} description={description}>
   <Hero />
-  <TraitSignature />
-  <PoleNautique />
-  <GrilleTarifs />
-  <PreuveEtAcces />
 </Base>

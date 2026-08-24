@@ -1,79 +1,77 @@
 ---
 import '../styles/global.css';
-import { garage } from '../lib/garage';
 import EnTete from '../components/socle/EnTete.astro';
 import PiedDePage from '../components/socle/PiedDePage.astro';
-import BarreUrgence from '../components/socle/BarreUrgence.astro';
+import BarreAction from '../components/socle/BarreAction.astro';
+import { garage, a, tel } from '../lib/garage';
 
-interface Props {
-  titre: string;
-  description: string;
-  imageOg?: string;
-  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
-  sansBarreUrgence?: boolean;
-}
-const { titre, description, imageOg = '/og/accueil.jpg', jsonLd, sansBarreUrgence = false } = Astro.props;
+interface Props { titre: string; description: string; }
+const { titre, description } = Astro.props;
 const canonique = new URL(Astro.url.pathname, Astro.site).href;
-const urlOg = new URL(imageOg, Astro.site).href;
+
+/**
+ * JSON-LD AutoRepair.
+ * ⚠️ PAS d'aggregateRating : Google interdit de baliser des avis qu'on n'a pas
+ * collectés soi-même — motif de sanction manuelle. La note 4,6 s'affiche
+ * visuellement, attribuée à Google, et rien de plus.
+ */
+const jsonLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'AutoRepair',
+  name: garage.nom,
+  description,
+  url: canonique,
+  telephone: '+33' + tel.numero.replace(/^0/, ''),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: a.rue,
+    postalCode: a.codePostal,
+    addressLocality: a.ville,
+    addressCountry: a.pays,
+  },
+  priceRange: garage.gammePrix,
+  paymentAccepted: garage.paiement.join(', '),
+  areaServed: garage.zonesDesservies.map((v) => ({ '@type': 'City', name: v })),
+  openingHoursSpecification: garage.horaires
+    .filter((h) => h.ouvre)
+    .map((h) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][h.jour],
+      opens: h.ouvre,
+      closes: h.ferme,
+    })),
+};
+// Les coordonnées ne sont ajoutées que si elles existent : pas de geo inventé.
+if (garage.geo.latitude !== null && garage.geo.longitude !== null) {
+  jsonLd.geo = {
+    '@type': 'GeoCoordinates',
+    latitude: garage.geo.latitude,
+    longitude: garage.geo.longitude,
+  };
+}
 ---
 <!doctype html>
-<html lang="fr" class="sans-js">
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline>
-      document.documentElement.classList.remove('sans-js');
-    </script>
-
     <title>{titre}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonique} />
-    <meta name="theme-color" content="#16375F" />
-
-    <!-- Une seule police préchargée : celle du titre du hero, qui porte le LCP. -->
-    <link
-      rel="preload"
-      href="/fonts/archivo-expanded.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-
+    <meta name="theme-color" content="#0E7C7C" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={garage.nom} />
     <meta property="og:title" content={titre} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonique} />
-    <meta property="og:image" content={urlOg} />
     <meta property="og:locale" content="fr_FR" />
     <meta name="twitter:card" content="summary_large_image" />
-
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-
-    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
-
-  <body class="min-h-svh">
-    <a
-      href="#contenu"
-      class="sr-only focus:not-sr-only focus:absolute focus:z-[60] focus:m-3 focus:border focus:border-cambouis focus:bg-tole focus:px-4 focus:py-2 focus:font-semibold"
-    >
-      Aller au contenu
-    </a>
-
+  <body>
+    <a href="#contenu" class="evitement">Aller au contenu</a>
     <EnTete />
-    <main id="contenu" class:list={[!sansBarreUrgence && 'pb-[56px] lg:pb-0']}>
-      <slot />
-    </main>
+    <main id="contenu"><slot /></main>
     <PiedDePage />
-    {!sansBarreUrgence && <BarreUrgence />}
-
-    <script>
-      import '../scripts/horaires';
-      import '../scripts/mouvement';
-    </script>
+    <BarreAction />
   </body>
 </html>

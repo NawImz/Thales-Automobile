@@ -1,0 +1,92 @@
+---
+import Trait from '../socle/Trait.astro';
+import Bouton from '../socle/Bouton.astro';
+import Cliche from '../socle/Cliche.astro';
+import { garage, a, tel, lienTel, statutOuverture } from '../../lib/garage';
+
+const statut = statutOuverture();
+const ouvertSamedi = garage.horaires.find((h) => h.jour === 6)?.ouvre != null;
+---
+<section class="relative isolate overflow-hidden">
+  <div class="mx-auto max-w-7xl px-5 pt-10 pb-16 sm:px-8 lg:grid lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16 lg:pt-16 lg:pb-24">
+    <div class="rideau">
+      <p class="hero-suite font-mono text-xs tracking-widest text-gris-texte uppercase" style="--retard:560ms">
+        Garage Thalès — {a.ville} — depuis {garage.depuis}
+      </p>
+
+      <h1 class="mt-5 text-[length:var(--text-hero)] font-extrabold">
+        <span class="ligne"><span>On vous dit</span></span>
+        <span class="ligne"><span>ce qu'il faut</span></span>
+        <span class="ligne"><span>réparer.</span></span>
+      </h1>
+
+      <p class="hero-suite mt-6 text-lg text-gris-texte" style="--retard:780ms">
+        Et ce qu'il ne faut pas. {garage.anneesExperience} ans d'atelier à {a.ville},
+        pour les voitures <span class="text-encre">et</span> les bateaux.
+      </p>
+
+      <div class="hero-suite mt-8 flex flex-col gap-3 sm:flex-row" style="--retard:820ms">
+        <Bouton href="/#estimateur" variante="accent-desktop" class="inline-flex" data-event="estimateur" data-contexte="hero">
+          Estimer ma réparation
+          <Trait nom="fleche" class="size-4" />
+        </Bouton>
+        <Bouton href={lienTel(tel.numero)} class="inline-flex" data-event="appel" data-contexte="hero">
+          <Trait nom="telephone" class="size-4" />
+          <span class="chiffres whitespace-nowrap">{tel.affiche}</span>
+        </Bouton>
+      </div>
+
+      <!-- Bande de preuve. La note est attribuée à Google et n'est PAS balisée
+           en aggregateRating : on ne balise pas des avis qu'on n'a pas collectés. -->
+      <p class="hero-suite mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gris-texte" style="--retard:860ms">
+        <span class="inline-flex items-center gap-1.5">
+          <Trait nom="etoile" class="size-4 text-encre" />
+          <strong class="chiffres text-encre">{garage.avisGoogle.note.toString().replace('.', ',')}</strong>
+        </span>
+        <span aria-hidden="true">·</span>
+        <span><span class="chiffres">{garage.avisGoogle.nombre}</span> avis Google</span>
+        {ouvertSamedi && (<><span aria-hidden="true">·</span><span>Ouvert <strong class="text-encre">le samedi</strong></span></>)}
+        <span aria-hidden="true">·</span>
+        <!-- Le statut est une information, jamais une action : il ne prend pas l'accent. -->
+        <span class:list={[statut.ouvert ? 'font-semibold text-encre' : 'text-gris-texte']}>{statut.texte}</span>
+      </p>
+    </div>
+
+    <div class="hero-suite mt-12 lg:mt-0" style="--retard:900ms">
+      <Cliche nom="Le hangar : une voiture sur pont et un moteur hors-bord dans le même cadre" ratio="4 / 3" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .ligne { display: block; overflow: hidden; }
+  .ligne > span { display: block; }
+
+  /* ⚠️ La séquence d'arrivée est en CSS PUR, pas en GSAP : GSAP est en import
+     dynamique, attendre son chargement ferait rater le budget de 900 ms.
+     Le rideau monte par paliers nets — c'est un rideau d'atelier, pas un fondu. */
+  @media (prefers-reduced-motion: no-preference) {
+    .rideau {
+      clip-path: inset(0 0 0 0);
+      animation: rideau 520ms steps(4, end) both;
+    }
+    .ligne > span {
+      transform: translateY(110%);
+      animation: monter 240ms steps(3, end) forwards;
+      animation-delay: var(--retard, 560ms);
+    }
+    .ligne:nth-child(1) > span { --retard: 560ms; }
+    .ligne:nth-child(2) > span { --retard: 640ms; }
+    .ligne:nth-child(3) > span { --retard: 720ms; }
+
+    .hero-suite {
+      opacity: 0;
+      animation: apparaitre 200ms steps(2, end) forwards;
+      animation-delay: var(--retard, 820ms);
+    }
+  }
+
+  @keyframes rideau { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+  @keyframes monter { to { transform: translateY(0); } }
+  @keyframes apparaitre { to { opacity: 1; } }
+</style>

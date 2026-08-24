@@ -50,6 +50,15 @@ grep -rhoE '"@(theme|utility|custom-variant|source|variant)"' node_modules/tailw
   (il n'y serait pas traité comme un utilitaire).
 - ⚠️ Tous les `@import` doivent précéder toute autre règle (spec CSS) : les imports
   de polices se placent **avant** `@import 'tailwindcss'`.
+- ⚠️ **`@utility` ne peut pas être imbriqué** — erreur de build littérale :
+  « `@utility` cannot be nested ». Pour une variante responsive, c'est le `@media`
+  qui va **dans** l'utilitaire, jamais l'inverse :
+  ```css
+  @utility section {
+    padding-block: 5rem;
+    @media (min-width: 64rem) { padding-block: 8rem; }
+  }
+  ```
 
 ### GSAP — ScrollTrigger
 

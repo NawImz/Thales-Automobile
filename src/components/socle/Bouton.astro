@@ -1,0 +1,46 @@
+---
+/**
+ * Bouton.
+ *
+ * ⚠️ Le variant `accent` est turquoise PLEIN à libellé BLANC — jamais l'inverse.
+ * Mesuré : blanc sur #0E7C7C = 5,01:1 (ok), encre sur #0E7C7C = 3,69:1 (échec).
+ * Aucun turquoise ne passe AA dans les deux sens ; c'est un choix définitif.
+ *
+ * ⚠️ Le `display` n'est PAS dans la classe de base : un composant qui impose
+ * son display écrase silencieusement celui que l'appelant lui passe (payé deux
+ * fois sur la version précédente). C'est l'appelant qui décide.
+ */
+interface Props {
+  href: string;
+  variante?: 'accent' | 'trait' | 'accent-desktop';
+  class?: string;
+  [k: string]: unknown;
+}
+const { href, variante = 'trait', class: classe = '', ...reste } = Astro.props;
+
+const base =
+  'items-center justify-center gap-2.5 px-6 py-4 font-semibold ' +
+  'min-h-[44px] cliquet transition-colors';
+
+/**
+ * ⚠️ Le turquoise est un scalpel : UNE SEULE apparition par écran.
+ * Sur mobile, c'est la barre d'action fixe qui le porte — elle est toujours
+ * visible et porte la conversion n°1. Le bouton principal du contenu reste
+ * donc au trait sous `lg`, et ne prend l'accent qu'à partir de `lg`, là où la
+ * barre fixe disparaît. D'où cette troisième variante.
+ *
+ * Les variantes vivent toutes dans le même objet : l'ordre des classes dans
+ * l'attribut ne décide de rien, c'est l'ordre de la feuille de style. Passer
+ * un override par `class` depuis l'appelant serait donc un piège.
+ */
+const variantes = {
+  accent: 'bg-turquoise text-white hover:bg-encre',
+  trait: 'cadre text-encre hover:bg-encre hover:text-blanc-atelier',
+  'accent-desktop':
+    'cadre text-encre hover:bg-encre hover:text-blanc-atelier ' +
+    'lg:border-transparent lg:bg-turquoise lg:text-white lg:hover:bg-encre',
+};
+---
+<a href={href} class:list={[base, variantes[variante], classe]} {...reste}>
+  <slot />
+</a>

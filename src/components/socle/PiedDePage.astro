@@ -1,63 +1,50 @@
 ---
-import { garage, lienTel, lienItineraire, heureEnTexte } from '../../lib/garage';
-
-const a = garage.adresse;
-const jours = garage.horaires.filter((h) => h.jour !== 0);
-const ouvertureCommune = jours.every((j) => j.ouvre === jours[0].ouvre && j.ferme === jours[0].ferme);
+import Trait from './Trait.astro';
+import { garage, a, tel, lienTel, heureEnTexte } from '../../lib/garage';
+const annee = new Date().getFullYear();
 ---
-<footer class="sur-sombre bg-cambouis text-tole">
-  <div class="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-4">
-    <div>
-      <p class="font-display text-lg font-extrabold text-tole">{garage.enseigne}</p>
-      <p class="mt-3 text-sm text-beton-clair">
-        Auto et moteurs de bateau à {a.ville}. {garage.anneesExperience} ans d'atelier.
-      </p>
+<footer class="border-t border-gris-trait bg-encre text-blanc-atelier">
+  <div class="mx-auto max-w-7xl px-5 py-16 sm:px-8">
+    <div class="grid gap-12 lg:grid-cols-3">
+      <div>
+        <p class="font-display text-lg font-bold tracking-tight">THALÈS</p>
+        <p class="font-mono text-[0.6rem] tracking-[0.22em] text-gris-trait">AUTOMOBILE</p>
+        <p class="mt-4 text-sm text-gris-trait">Auto et bateaux, {garage.anneesExperience} ans à {a.ville}.</p>
+      </div>
+
+      <div>
+        <h2 class="font-mono text-xs tracking-widest text-gris-trait">ATELIER</h2>
+        <address class="mt-3 not-italic text-sm">
+          {a.rue}<br />{a.codePostal} {a.ville}
+        </address>
+        <a href={lienTel(tel.numero)} data-event="appel" data-contexte="pied"
+           class="mt-3 inline-flex items-center gap-2 text-turquoise">
+          <Trait nom="telephone" class="size-4" />
+          <span class="chiffres">{tel.affiche}</span>
+        </a>
+      </div>
+
+      <div>
+        <h2 class="font-mono text-xs tracking-widest text-gris-trait">HORAIRES</h2>
+        <dl class="mt-3 space-y-1 text-sm">
+          {garage.horaires.map((h) => (
+            <div class="flex justify-between gap-4">
+              <dt class="capitalize">{h.nom}</dt>
+              <dd class="chiffres text-gris-trait">
+                {h.ouvre ? `${heureEnTexte(h.ouvre)} – ${heureEnTexte(h.ferme)}` : 'fermé'}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </div>
 
-    <div>
-      <h2 class="text-xs font-semibold tracking-widest text-beton-clair">NOUS TROUVER</h2>
-      <address class="mt-3 text-sm not-italic">
-        {a.rue}<br />{a.codePostal} {a.ville}
-        <span class="mt-1 block text-beton-clair">{a.repere}</span>
-      </address>
-      <a href={lienItineraire()} rel="noopener" data-event="itineraire" data-contexte="pied-de-page"
-         class="mt-3 inline-block text-sm font-semibold underline underline-offset-4 hover:text-white">
-        Itinéraire
-      </a>
-    </div>
-
-    <div>
-      <h2 class="text-xs font-semibold tracking-widest text-beton-clair">NOUS APPELER</h2>
-      <ul class="mt-3 space-y-2 text-sm">
-        {Object.entries(garage.telephones).map(([cle, t]) => (
-          <li class="flex flex-wrap items-baseline gap-x-2">
-            <a href={lienTel(t.numero)} data-event="appel" data-contexte={`pied-${cle}`}
-               class="donnee font-semibold whitespace-nowrap hover:text-white">{t.affiche}</a>
-            <span class="text-xs text-beton-clair">{t.libelle}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    <div>
-      <h2 class="text-xs font-semibold tracking-widest text-beton-clair">HORAIRES</h2>
-      <p class="donnee mt-3 text-sm">
-        {ouvertureCommune
-          ? `Lundi – samedi · ${heureEnTexte(jours[0].ouvre!)} – ${heureEnTexte(jours[0].ferme!)}`
-          : jours.map((j) => `${j.nom} ${heureEnTexte(j.ouvre!)}–${heureEnTexte(j.ferme!)}`).join(', ')}
-      </p>
-      <p class="mt-1 text-sm text-beton-clair">Fermé le dimanche</p>
-      <h2 class="mt-6 text-xs font-semibold tracking-widest text-beton-clair">PAIEMENT</h2>
-      <p class="mt-2 text-sm">{garage.paiement.join(' · ')}</p>
-    </div>
-  </div>
-
-  <div class="border-t border-tole/12">
-    <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-5 py-6 text-xs text-beton-clair sm:px-8">
-      <span>© {new Date().getFullYear()} {garage.nom}</span>
-      <a href="/mentions-legales" class="underline underline-offset-4 hover:text-tole">Mentions légales</a>
-      <a href="/confidentialite" class="underline underline-offset-4 hover:text-tole">Confidentialité</a>
-      <span class="ml-auto">SIRET <span class="donnee">[À COMPLÉTER]</span></span>
+    <div class="mt-12 flex flex-col gap-3 border-t border-gris-texte pt-6 text-xs text-gris-trait sm:flex-row sm:justify-between">
+      <p>© {annee} {garage.nom}</p>
+      <nav class="flex gap-5" aria-label="Liens légaux">
+        <a href="/mentions-legales" class="hover:text-blanc-atelier">Mentions légales</a>
+        <a href="/confidentialite" class="hover:text-blanc-atelier">Confidentialité</a>
+      </nav>
     </div>
   </div>
 </footer>

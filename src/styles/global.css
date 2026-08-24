@@ -1,213 +1,115 @@
+/* ⚠️ Spec CSS : tous les @import précèdent toute autre règle.
+   Les polices passent donc AVANT tailwindcss. */
+@import '@fontsource-variable/familjen-grotesk';
+@import '@fontsource-variable/public-sans';
+@import '@fontsource-variable/jetbrains-mono';
+@import './tokens.css';
 @import 'tailwindcss';
 
-/* ─────────────────────────────────────────────────────────────────────
-   POLICES — auto-hébergées, instanciées et sous-ensemblées au français.
-   Archivo : chasse figée à 118 % (l'« Expanded »), graisse 600–800
-   conservée en variable. 88 Ko → 15,7 Ko.
-   Les flèches, étoiles et cases à cocher ne sont dans AUCUNE de ces
-   polices : ce sont des SVG inline, jamais des caractères.
-   ───────────────────────────────────────────────────────────────────── */
-@font-face {
-  font-family: 'Archivo Expanded';
-  font-style: normal;
-  font-weight: 600 800;
-  font-display: swap;
-  src: url('/fonts/archivo-expanded.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Instrument Sans';
-  font-style: normal;
-  font-weight: 400 600;
-  font-display: swap;
-  src: url('/fonts/instrument-sans.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Plex Mono';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/plex-mono-400.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Plex Mono';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/fonts/plex-mono-600.woff2') format('woff2');
-}
-
 @theme {
-  /* ── Couleur ────────────────────────────────────────────────────────
-     Tirée de la façade. Deux valeurs corrigées par rapport au brief,
-     teinte préservée, pour cause d'échec WCAG. Détail en §2.1 du
-     DESIGN-PLAN. Ne pas défaire sans recalculer.                      */
-  --color-bleu-port: #16375f;
-  --color-bleu-cadran: #2b5a94;   /* corrigé depuis #2c5b96 */
-  --color-tole: #e9e4d8;
-  --color-tole-ombre: #d6d0c2;
-  --color-cambouis: #131619;
-  --color-beton: #595955;         /* corrigé depuis #8c8c86 (2,67:1) */
-  --color-beton-clair: #9f9f9a;   /* ajouté : secondaire sur fond sombre */
-  --color-rouge-yamaha: #c8102e;
+  --font-display: 'Familjen Grotesk Variable', system-ui, sans-serif;
+  --font-sans: 'Public Sans Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 
-  /* ── Familles ─────────────────────────────────────────────────────── */
-  --font-display: 'Archivo Expanded', 'Arial Black', 'Helvetica Neue', sans-serif;
-  --font-corps: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* Échelle fluide. ⚠️ Les ratios ne s'appliquent que VERS LE HAUT :
+     un ratio naïf fait rétrécir les petites tailles quand l'écran grandit. */
+  --text-xs:   clamp(0.8125rem, 0.803rem + 0.047vw, 0.8438rem);
+  --text-sm:   clamp(0.875rem,  0.856rem + 0.094vw, 0.9375rem);
+  --text-base: clamp(1rem,      0.981rem + 0.094vw, 1.0625rem);
+  --text-lg:   clamp(1.25rem,   1.194rem + 0.282vw, 1.4375rem);
+  --text-xl:   clamp(1.5625rem, 1.475rem + 0.235vw, 1.875rem);
+  --text-2xl:  clamp(1.9375rem, 1.769rem + 0.845vw, 2.5rem);
+  --text-3xl:  clamp(2.4375rem, 2.156rem + 1.408vw, 3.375rem);
+  --text-hero: clamp(2.75rem,   1.941rem + 3.455vw, 5.375rem);
 
-  /* ── Échelle typographique fluide (375 → 1440 px) ──────────────────
-     Les ratios (1,25 mobile / 1,333 desktop) ne s'appliquent que vers
-     le haut : sous la base, croissance douce. Aucun cran ne rétrécit. */
-  --text-xs: clamp(0.75rem, 0.728rem + 0.0939vw, 0.8125rem);      /* 12 → 13 */
-  --text-sm: clamp(0.875rem, 0.853rem + 0.0939vw, 0.9375rem);     /* 14 → 15 */
-  --text-base: clamp(1rem, 0.978rem + 0.0939vw, 1.0625rem);       /* 16 → 17 */
-  --text-lg: clamp(1.25rem, 1.184rem + 0.2817vw, 1.4375rem);      /* 20 → 23 */
-  --text-xl: clamp(1.5625rem, 1.4525rem + 0.4695vw, 1.875rem);    /* 25 → 30 */
-  --text-2xl: clamp(1.9375rem, 1.7394rem + 0.8451vw, 2.5rem);     /* 31 → 40 */
-  --text-3xl: clamp(2.4375rem, 2.1074rem + 1.4085vw, 3.375rem);   /* 39 → 54 */
-  --text-4xl: clamp(3.0625rem, 2.5563rem + 2.1596vw, 4.5rem);     /* 49 → 72 */
-  --text-5xl: clamp(3.8125rem, 3.0643rem + 3.1925vw, 5.9375rem);  /* 61 → 95 */
+  /* Le cliquet : rien ne glisse, tout s'encliquette. */
+  --ease-cliquet: steps(4, end);
+  --duree-cliquet: 120ms;
 
-  /* ── Rythme vertical des sections : trois valeurs, pas davantage ─── */
-  --spacing-section-serree: clamp(2.5rem, 6vw, 4rem);
-  --spacing-section-normal: clamp(4rem, 9vw, 7rem);
-  --spacing-section-ample: clamp(5rem, 12vw, 10rem);
-
-  /* ── Rayons : 0 par défaut, deux exceptions justifiées ───────────── */
-  --radius-0: 0;
-  --radius-1: 2px;        /* boutons, champs — arête de pièce estampée */
-  --radius-plaque: 4px;   /* UNIQUEMENT la plaque d'immatriculation    */
-
-  /* ── Mouvement ───────────────────────────────────────────────────── */
-  --ease-atelier: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Le trait : une épaisseur principale, une seule variante fine. */
+  --trait: 1.5px;
+  --trait-fin: 1px;
 }
 
-@layer base {
-  html {
-    -webkit-text-size-adjust: 100%;
-    scroll-behavior: auto;              /* Lenis pilote, pas le navigateur */
-    background-color: var(--color-tole);
-  }
+/* ── Socle ─────────────────────────────────────────────────── */
 
-  body {
-    background-color: var(--color-tole);
-    color: var(--color-cambouis);
-    font-family: var(--font-corps);
-    font-size: var(--text-base);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  h1, h2, h3 {
-    font-family: var(--font-display);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
-    text-wrap: balance;
-  }
-
-  /* Longueur de ligne plafonnée à 68 caractères : c'est une règle de
-     PROSE. Ne jamais l'étendre aux « li » en bloc — elle briderait les
-     grilles et les listes de mise en page (vécu sur la grille de tarifs,
-     dont les lignes s'arrêtaient au milieu de la page). */
-  p {
-    max-width: 68ch;
-  }
-  :where(.prose) li {
-    max-width: 68ch;
-  }
-
-  /* Focus clavier : double anneau, visible sur crème ET sur bleu marine.
-     Une couleur unique disparaît sur l'un des deux fonds. */
-  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 2px var(--color-tole),
-      0 0 0 4px var(--color-cambouis);
-    border-radius: var(--radius-1);
-  }
-  /* Sur fond sombre, l'anneau intérieur s'inverse pour rester lisible. */
-  :where(.sur-sombre) :where(a, button, input, summary, [tabindex]):focus-visible {
-    box-shadow:
-      0 0 0 2px var(--color-cambouis),
-      0 0 0 4px var(--color-tole);
-  }
-
-  /* Cibles tactiles ≥ 44×44 px */
-  @media (pointer: coarse) {
-    :where(a[href], button, [role='button'], summary, label) {
-      min-height: 44px;
-    }
-  }
-
-  /* Toute donnée vérifiable est en mono tabulaire : prix, horaires,
-     téléphones, références. C'est ce qui fait lire un prix comme un
-     relevé et non comme une promesse. */
-  :where(.donnee) {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
-/* Tailwind 4 : les utilitaires maison passent par @utility. */
-@utility ondulation {
-  /* Le séparateur de section est l'ondulation de la tôle du hangar.
-     Un seul trait, une seule opacité : sous 0,3 sur fond crème il
-     disparaît (tole-ombre sur tole ne fait que 1,2:1). */
-  height: 14px;
-  background-image: repeating-linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--color-beton) 55%, transparent) 0 1px,
-    transparent 1px 10px
-  );
+body {
+  background-color: var(--color-blanc-atelier);
+  color: var(--color-encre);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-@utility tole-nervuree {
-  /* La tôle ondulée du hangar, en surface et non en séparateur.
-     Deux nervures par pas : un creux large, une arête fine. Très basse
-     amplitude — au-delà, ça devient un motif décoratif envahissant. */
-  background-image:
-    repeating-linear-gradient(
-      90deg,
-      rgb(255 255 255 / 0.03) 0 1px,
-      transparent 1px 3px,
-      rgb(0 0 0 / 0.09) 3px 4px,
-      transparent 4px 30px
-    );
+/* ⚠️ La mesure de lecture est une règle de PROSE. Posée sur tous les `li`
+   elle étrangle les grilles de tarifs (vécu sur la version précédente). */
+p { max-width: 68ch; }
+.prose li { max-width: 68ch; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
-@utility grille-hud {
-  /* Filets verticaux de repérage, très basse intensité. Ils structurent
-     le fond comme un plan d'atelier sans jamais devenir un motif. */
-  background-image: repeating-linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--color-tole) 7%, transparent) 0 1px,
-    transparent 1px calc(100% / 6)
-  );
-  background-size: 100% 100%;
+/* ⚠️ Focus visible sur fond clair ET sombre : double anneau.
+   Une couleur unique disparaît toujours sur l'un des deux. Et JAMAIS de
+   steps() ici — un focus qui apparaît par paliers se lit comme un bug. */
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-blanc-atelier),
+    0 0 0 4px var(--color-encre);
+  border-radius: 1px;
 }
 
-@utility ombre-carbone {
-  /* Élévation = décalage plein, comme une copie carbone. Jamais de flou. */
-  box-shadow: 3px 3px 0 var(--color-tole-ombre);
+::selection {
+  background: var(--color-turquoise);
+  color: #fff;
 }
 
-/* État initial des révélations, posé en CSS pour éviter tout flash
-   avant que GSAP ne prenne la main. Neutralisé si JS absent. */
-[data-revele] {
-  opacity: 0;
-  transform: translateY(16px);
+/* ── Utilitaires maison ────────────────────────────────────── */
+/* ⚠️ Tailwind 4 : un utilitaire passe par @utility, jamais par
+   @layer utilities — il n'y serait pas traité comme un utilitaire. */
+
+/* ⚠️ Tailwind 4 : `@utility` ne peut pas être IMBRIQUÉ dans un `@media`
+   (« @utility cannot be nested »). C'est le média qui va dedans. */
+@utility section {
+  padding-block: 5rem;
+  @media (min-width: 64rem) { padding-block: 8rem; }
 }
-html.sans-js [data-revele] {
-  opacity: 1;
-  transform: none;
+
+/** Le cadre au trait — le motif de base de tout le site. */
+@utility cadre {
+  border: var(--trait) solid var(--color-gris-trait);
+}
+
+/** Chiffres alignés en colonne : prix, compteurs, horaires. */
+@utility chiffres {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* ── Le cliquet ────────────────────────────────────────────── */
+
+@utility cliquet {
+  transition-timing-function: var(--ease-cliquet);
+  transition-duration: var(--duree-cliquet);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-revele] {
-    opacity: 1 !important;
-    transform: none !important;
-  }
   *,
   *::before,
   *::after {
@@ -216,4 +118,18 @@ html.sans-js [data-revele] {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Lien d'évitement */
+.evitement {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-encre);
+  color: var(--color-blanc-atelier);
+}
+.evitement:focus {
+  left: 0;
 }

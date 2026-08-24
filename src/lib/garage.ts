@@ -1,138 +1,91 @@
+/**
+ * Accès unique aux données du garage.
+ *
+ * ⚠️ Règle du projet : aucun numéro, horaire ou adresse n'est écrit en dur
+ * ailleurs. Tout passe par ici, qui lit `src/content/config/garage.json`.
+ * Changer le téléphone sur tout le site = une ligne dans le JSON.
+ */
 import donnees from '../content/config/garage.json';
 
 export const garage = donnees;
+export const a = donnees.adresse;
+export const tel = donnees.telephones.principal;
 
-/** Lien tel: à partir du numéro brut. Le numéro n'est jamais en image ni en JS. */
-export const lienTel = (numero: string) => `tel:+33${numero.replace(/^0/, '')}`;
+/** `tel:` en format international — jamais en image, jamais en JavaScript. */
+export function lienTel(numero: string): string {
+  return 'tel:+33' + numero.replace(/\D/g, '').replace(/^0/, '');
+}
 
-/**
- * Lien WhatsApp avec message pré-rempli, correctement encodé.
- * Le message est contextualisé par page ou par sélection de l'estimateur.
- */
+/** Lien wa.me avec message pré-rempli contextuel. */
 export function lienWhatsApp(message: string): string {
-  return `https://wa.me/${garage.whatsapp.numeroInternational}?text=${encodeURIComponent(message)}`;
+  const n = donnees.whatsapp.numeroInternational;
+  return `https://wa.me/${n}?text=${encodeURIComponent(message)}`;
 }
 
 /**
- * Itinéraire. Les coordonnées GPS n'ont pas été fournies et ne sont pas
- * inventées : tant qu'elles sont nulles, on interroge Maps par adresse,
- * ce qui fonctionne parfaitement.
+ * Itinéraire. Tant que les coordonnées GPS ne sont pas fournies, on tombe sur
+ * une recherche par adresse — qui fonctionne — plutôt que d'inventer un point.
  */
 export function lienItineraire(): string {
-  const { latitude, longitude } = garage.geo;
-  if (latitude != null && longitude != null) {
-    return `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
-  }
-  const a = garage.adresse;
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${a.rue}, ${a.codePostal} ${a.ville}`
-  )}`;
+  const g = donnees.geo;
+  const cible =
+    g.latitude !== null && g.longitude !== null
+      ? `${g.latitude},${g.longitude}`
+      : `${a.rue}, ${a.codePostal} ${a.ville}`;
+  return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(cible);
 }
 
-/** « 09:00 » → « 9 h », « 18:30 » → « 18 h 30 ». Jamais de zéro initial. */
-export function heureEnTexte(hhmm: string): string {
-  const [h, m] = hhmm.split(':');
-  return m === '00' ? `${Number(h)} h` : `${Number(h)} h ${m}`;
+export const adresseComplete = `${a.rue}, ${a.codePostal} ${a.ville}`;
+
+/** « 09:00 » → « 9 h ». Format français, sans zéro inutile. */
+export function heureEnTexte(h: string | null): string {
+  if (!h) return 'fermé';
+  const [heures, minutes] = h.split(':');
+  const n = parseInt(heures, 10);
+  return minutes === '00' ? `${n} h` : `${n} h ${minutes}`;
 }
 
-export type Etat = { ouvert: boolean; libelle: string };
+export type Statut = { ouvert: boolean; texte: string };
 
 /**
- * Statut d'ouverture, calculé en Europe/Paris.
- * Rendu côté serveur au build pour que la page soit correcte sans JS,
- * puis rafraîchi côté client. Aucune promesse de délai n'est faite ici.
+ * Ouvert ou fermé, calculé en direct dans le fuseau du garage.
+ * Utilise `Intl` plutôt que l'heure locale du visiteur : un client à
+ * l'étranger doit voir l'état réel de l'atelier, pas le sien.
  */
-export function statutOuverture(maintenant: Date = new Date()): Etat {
+export function statutOuverture(maintenant = new Date()): Statut {
   const fmt = new Intl.DateTimeFormat('fr-FR', {
-    timeZone: garage.fuseau,
+    timeZone: donnees.fuseau,
     weekday: 'short',
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
   });
   const parts = Object.fromEntries(fmt.formatToParts(maintenant).map((p) => [p.type, p.value]));
-  const minutes = Number(parts.hour) * 60 + Number(parts.minute);
+  const jours = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
+  const jourIndex = jours.findIndex((j) => (parts.weekday ?? '').toLowerCase().startsWith(j));
+  const minutesMaintenant = parseInt(parts.hour, 10) * 60 + parseInt(parts.minute, 10);
 
-  // Jour de la semaine en Europe/Paris, indépendant du fuseau du serveur.
-  const jourParis = new Date(maintenant.toLocaleString('en-US', { timeZone: garage.fuseau })).getDay();
-  const aujourdhui = garage.horaires.find((h) => h.jour === jourParis);
-
-  const enMinutes = (hhmm: string) => {
-    const [h, m] = hhmm.split(':').map(Number);
-    return h * 60 + m;
-  };
-
-  const enTexte = heureEnTexte;
+  const aujourdhui = donnees.horaires.find((h) => h.jour === jourIndex);
+  const enMinutes = (t: string) => parseInt(t.slice(0, 2), 10) * 60 + parseInt(t.slice(3), 10);
 
   if (aujourdhui?.ouvre && aujourdhui.ferme) {
     const debut = enMinutes(aujourdhui.ouvre);
     const fin = enMinutes(aujourdhui.ferme);
-    if (minutes >= debut && minutes < fin) {
-      return { ouvert: true, libelle: `Ouvert · ferme à ${enTexte(aujourdhui.ferme)}` };
+    if (minutesMaintenant >= debut && minutesMaintenant < fin) {
+      return { ouvert: true, texte: `Ouvert · ferme à ${heureEnTexte(aujourdhui.ferme)}` };
     }
-    if (minutes < debut) {
-      return { ouvert: false, libelle: `Fermé · ouvre à ${enTexte(aujourdhui.ouvre)}` };
+    if (minutesMaintenant < debut) {
+      return { ouvert: false, texte: `Fermé · ouvre à ${heureEnTexte(aujourdhui.ouvre)}` };
     }
   }
 
-  // Fermé : on cherche la prochaine ouverture, jusqu'à sept jours devant.
-  for (let d = 1; d <= 7; d++) {
-    const j = (jourParis + d) % 7;
-    const suivant = garage.horaires.find((h) => h.jour === j);
+  // Prochain jour ouvré.
+  for (let i = 1; i <= 7; i++) {
+    const suivant = donnees.horaires.find((h) => h.jour === (jourIndex + i) % 7);
     if (suivant?.ouvre) {
-      const quand = d === 1 ? 'demain' : suivant.nom;
-      return { ouvert: false, libelle: `Fermé · ouvre ${quand} à ${enTexte(suivant.ouvre)}` };
+      const quand = i === 1 ? 'demain' : suivant.nom;
+      return { ouvert: false, texte: `Fermé · ouvre ${quand} à ${heureEnTexte(suivant.ouvre)}` };
     }
   }
-  return { ouvert: false, libelle: 'Fermé' };
-}
-
-// ── Barème ────────────────────────────────────────────────────────────
-import bareme from '../content/tarifs/bareme.json';
-
-export const tarifs = bareme;
-
-export type Fourchette = { bas: number; haut: number };
-
-/**
- * Prix de base × coefficient de gabarit, fourchette ±20 %, arrondie à 5 €.
- * Les prestations nautiques ignorent le gabarit (il n'a pas de sens pour
- * un moteur hors-bord).
- *
- * ⚠️ Tous les prix de base sont marqués « À VALIDER » : ce sont des ordres
- * de grandeur destinés à la discussion avec Nabil, pas les prix du garage.
- */
-export function fourchette(idIntervention: string, idGabarit = 'berline'): Fourchette | null {
-  const i = bareme.interventions.find((x) => x.id === idIntervention);
-  if (!i) return null;
-  const coef = i.gabaritIgnore
-    ? 1
-    : (bareme.gabarits.find((g) => g.id === idGabarit)?.coefficient ?? 1);
-  const centre = i.base * coef;
-  const a5 = (n: number) => Math.round(n / 5) * 5;
-  return { bas: a5(centre * 0.8), haut: a5(centre * 1.2) };
-}
-
-/** « 86 – 110 € », en tirets demi-cadratins et espaces insécables. */
-export function fourchetteEnTexte(f: Fourchette): string {
-  return `${f.bas} – ${f.haut} €`;
-}
-
-// ── Avis ──────────────────────────────────────────────────────────────
-import donneesAvis from '../content/avis/avis.json';
-
-export const avis = donneesAvis;
-
-/**
- * Tri par ancienneté de client déclarée, pas par date ni par note :
- * c'est la preuve sociale la plus forte du garage, et aucun concurrent
- * ne l'exploite. Les avis sans ancienneté déclarée suivent, dans l'ordre
- * du fichier — elle n'est jamais devinée.
- */
-export function avisTries() {
-  return [...donneesAvis.avis].sort((a, b) => {
-    const aA = a.ancienneteDite ? 0 : 1;
-    const bA = b.ancienneteDite ? 0 : 1;
-    return aA - bA;
-  });
+  return { ouvert: false, texte: 'Fermé' };
 }

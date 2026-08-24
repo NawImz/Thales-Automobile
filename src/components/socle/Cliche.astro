@@ -1,0 +1,27 @@
+---
+/**
+ * Bloc de remplacement pour une photo pas encore fournie.
+ *
+ * Il porte le NOM du cliché attendu et respecte ses proportions exactes, pour
+ * que la mise en page soit jugeable dès maintenant et que le remplacement ne
+ * déplace rien. Dessiné au trait, comme le reste.
+ *
+ * Chaque `nom` utilisé ici doit figurer dans TODO-CLIENT.md.
+ */
+interface Props { nom: string; ratio?: string; class?: string; }
+const { nom, ratio = '4 / 3', class: classe = '' } = Astro.props;
+---
+<div
+  class:list={['relative grid place-items-center overflow-hidden cadre bg-blanc-atelier', classe]}
+  style={`aspect-ratio: ${ratio}`}
+  role="img"
+  aria-label={`Emplacement réservé : ${nom}`}
+>
+  <!-- Trame au trait : deux diagonales, le signe universel du cliché manquant. -->
+  <svg class="absolute inset-0 size-full text-gris-trait/40" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <path d="M0 0 L100 100 M100 0 L0 100" fill="none" stroke="currentColor" stroke-width="0.4" />
+  </svg>
+  <p class="relative px-6 text-center font-mono text-[0.65rem] leading-relaxed tracking-widest text-gris-texte uppercase">
+    photo à fournir<br /><span class="text-encre">{nom}</span>
+  </p>
+</div>

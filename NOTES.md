@@ -58,3 +58,49 @@ Quatre corrections issues de la question « aurais-je écrit ça pour n'importe 
 garage ? » : compteurs limités aux entiers, trois raisons sans icônes, la ligne
 signature devient l'aiguille du manomètre, hiérarchie à trois arrêts pour tenir
 la lisibilité en dix secondes malgré sept blocs.
+
+---
+
+## Phase 3 · Étape 1 — socle, en-tête, hero
+
+Feu vert reçu : Astro 7, palette à 6. Ancien site démonté (tag
+`avant-reconstruction` posé avant, le retour arrière tient en un `git checkout`).
+
+**Dépendances ramenées au strict nécessaire** : `three`, `@types/three`,
+`@gltf-transform/cli` et les trois anciennes polices sont retirés. Il reste
+astro, tailwind, gsap, lenis, sitemap, trois polices, sharp. Rien d'autre.
+
+**Une seule source de vérité pour les couleurs.** `design/palette.json` est lu à
+la fois par `scripts/generer-tokens.mjs` (qui écrit `src/styles/tokens.css`) et
+par `scripts/contraste.mjs`. Impossible que le CSS et le contrôle d'accessibilité
+divergent — c'est le même fichier.
+
+### Deux pièges payés
+
+1. **`@utility` ne peut pas être imbriqué dans un `@media`.** J'avais écrit
+   `@media { @utility section { … } }` pour la variante desktop : le build échoue
+   sur « `@utility` cannot be nested ». C'est le média qui va **dans**
+   l'utilitaire. Consigné dans le skill `api-verifiees`.
+
+2. **Le turquoise apparaissait trois fois sur le premier écran mobile** :
+   bouton du hero, barre d'action fixe, et le statut « Ouvert ». Le brief dit
+   d'en retirer dès qu'il y en a deux — attrapé par la boucle de Phase 4, pas
+   par relecture du code.
+
+   Règle posée, et elle vaut pour tout le site : **la barre fixe porte l'accent
+   sur mobile** (elle est toujours visible et porte la conversion n°1), donc le
+   bouton principal du contenu reste au trait sous `lg` et ne prend l'accent
+   qu'à partir de `lg`, là où la barre disparaît. D'où la variante
+   `accent-desktop`. Et **un statut n'est jamais accentué** : c'est une
+   information, pas une action.
+
+   ⚠️ Cette variante vit dans l'objet `variantes` du composant, pas dans un
+   override passé par `class` : l'ordre des classes dans l'attribut ne décide de
+   rien, c'est l'ordre de la feuille de style. Piège déjà payé deux fois sur la
+   version précédente.
+
+### Vérifié
+
+Build propre, 390 et 1440 contrôlés. Promesse et moyen d'appeler visibles sans
+défiler aux deux largeurs. Une seule erreur console : le 404 de `favicon.ico`,
+qui viendra du logo.

@@ -1,96 +1,64 @@
 ---
-import { garage, lienTel } from '../../lib/garage';
-import StatutOuverture from './StatutOuverture.astro';
-import Icone from './Icone.astro';
+import Trait from './Trait.astro';
+import { garage, tel, lienTel } from '../../lib/garage';
 
+/**
+ * ⚠️ Le logo n'est pas encore fourni (voir TODO-CLIENT.md). En attendant, le
+ * nom est composé en typographie plutôt qu'illustré par un faux logo : un
+ * placeholder graphique finirait par être pris pour la charte.
+ * Dès réception du fichier, il remplace ce bloc — et lui seul.
+ */
 const liens = [
-  { href: '/entretien-reparation-auto', libelle: 'Réparation auto' },
-  { href: '/bateaux-jet-ski', libelle: 'Bateaux et jet-ski' },
   { href: '/tarifs', libelle: 'Tarifs' },
-  { href: '/vehicules-occasion', libelle: 'Véhicules d\'occasion' },
-  { href: '/pieces-detachees', libelle: 'Pièces détachées' },
-  { href: '/le-garage', libelle: 'Le garage' },
-  { href: '/contact', libelle: 'Contact' },
+  { href: '/bateaux-jet-ski', libelle: 'Bateaux' },
+  { href: '/#confiance', libelle: 'Le garage' },
+  { href: '/#venir', libelle: 'Venir' },
 ];
-const ici = Astro.url.pathname;
-const tel = garage.telephones.principal;
 ---
-<header class="sur-sombre relative z-40 bg-cambouis text-tole">
-  <div class="mx-auto flex max-w-7xl items-center gap-4 px-5 py-3.5 sm:px-8">
-    <a href="/" class="shrink-0 leading-none text-tole">
-      <span class="block font-display text-base font-extrabold tracking-tight whitespace-nowrap sm:text-lg">
-        {garage.nomCourt}
-      </span>
-      <span class="donnee mt-1 block text-[0.625rem] font-semibold tracking-[0.18em] whitespace-nowrap text-beton-clair uppercase">
-        Auto · Bateaux
-      </span>
+<header class="relative z-40 border-b border-gris-trait bg-blanc-atelier">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+    <a href="/" class="group flex flex-col leading-none" aria-label={`${garage.nom} — accueil`}>
+      <span class="font-display text-lg font-bold tracking-tight">THALÈS</span>
+      <span class="font-mono text-[0.6rem] tracking-[0.22em] text-gris-texte">AUTOMOBILE</span>
     </a>
 
-    <!-- Desktop : navigation déployée -->
-    <nav class="ml-8 hidden lg:block" aria-label="Navigation principale">
-      <ul class="flex items-center gap-x-6">
-        {liens.slice(0, 5).map((l) => (
+    <nav class="hidden lg:block" aria-label="Navigation principale">
+      <ul class="flex items-center gap-8">
+        {liens.map((l) => (
           <li>
-            <a
-              href={l.href}
-              aria-current={ici === l.href ? 'page' : undefined}
-              class:list={[
-                'inline-block py-1 text-sm font-semibold transition-colors',
-                ici === l.href ? 'text-white underline underline-offset-4' : 'text-beton-clair hover:text-tole',
-              ]}
-            >
-              {l.libelle}
-            </a>
+            <a href={l.href} class="lien-nav relative py-2 text-sm font-medium">{l.libelle}</a>
           </li>
         ))}
       </ul>
     </nav>
 
-    <div class="ml-auto flex items-center gap-3">
-      <div class="hidden sm:block">
-        <StatutOuverture class="inline-flex" />
-      </div>
+    <div class="flex items-center gap-3">
       <a
         href={lienTel(tel.numero)}
-        data-event="appel"
-        data-contexte="en-tete"
-        class="donnee hidden text-sm font-semibold whitespace-nowrap text-tole hover:text-white lg:inline"
+        data-event="appel" data-contexte="entete"
+        class="hidden items-center gap-2 px-4 py-2.5 text-sm font-semibold cadre cliquet transition-colors hover:bg-encre hover:text-blanc-atelier sm:inline-flex"
       >
-        {tel.affiche}
+        <Trait nom="telephone" class="size-4" />
+        <span class="chiffres whitespace-nowrap">{tel.affiche}</span>
       </a>
 
-      <!-- Mobile : menu en <details>, donc ouvrable sans JavaScript -->
-      <details class="menu-mobile lg:hidden">
+      <details class="menu-mobile relative lg:hidden">
         <summary
-          class="flex size-11 cursor-pointer list-none items-center justify-center border border-tole/30 text-tole"
+          class="flex size-11 cursor-pointer items-center justify-center cadre"
           aria-label="Ouvrir le menu"
         >
           <span class="barres" aria-hidden="true"></span>
         </summary>
-
         <div class="menu-panneau">
-          <nav class="mx-auto max-w-7xl px-5 pt-2 pb-6 sm:px-8" aria-label="Navigation principale">
-            <ul class="flex flex-col">
-              {liens.map((l) => (
-                <li class="border-b border-tole/12">
-                  <a
-                    href={l.href}
-                    aria-current={ici === l.href ? 'page' : undefined}
-                    class:list={[
-                      'flex min-h-[52px] items-center justify-between text-base font-semibold',
-                      ici === l.href ? 'text-white' : 'text-tole',
-                    ]}
-                  >
-                    {l.libelle}
-                    <Icone nom="fleche" class="size-4 text-beton-clair" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div class="mt-5 sm:hidden">
-              <StatutOuverture class="inline-flex" />
-            </div>
-          </nav>
+          <ul class="flex flex-col p-2">
+            {liens.map((l) => (
+              <li>
+                <a href={l.href} class="flex min-h-[44px] items-center px-4 text-base font-medium">
+                  {l.libelle}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </details>
     </div>
@@ -101,50 +69,38 @@ const tel = garage.telephones.principal;
   .menu-mobile > summary::-webkit-details-marker { display: none; }
 
   /* Burger dessiné en CSS : trois traits, pas d'icône importée. */
-  .barres,
-  .barres::before,
-  .barres::after {
-    display: block;
-    width: 18px;
-    height: 1.5px;
+  .barres, .barres::before, .barres::after {
+    display: block; width: 18px; height: var(--trait);
     background: currentColor;
-    transition: transform 200ms var(--ease-atelier), opacity 120ms linear;
+    transition: transform 200ms var(--ease-cliquet);
   }
-  .barres::before,
-  .barres::after {
-    content: '';
-    position: relative;
-  }
+  .barres::before, .barres::after { content: ''; position: relative; }
   .barres::before { top: -5.5px; }
   .barres::after { top: 4px; }
-
   .menu-mobile[open] .barres { background: transparent; }
   .menu-mobile[open] .barres::before { top: 0; transform: translateY(0) rotate(45deg); }
   .menu-mobile[open] .barres::after { top: -1.5px; transform: translateY(0) rotate(-45deg); }
 
-  /* ⚠️ Piège coûteux : un <details> FERMÉ reçoit une containment de
-     layout du navigateur. Il devient alors le bloc conteneur de tout
-     descendant en position absolue — le panneau se retrouvait large de
-     44 px (la taille du burger) avec son contenu débordant hors de
-     l'écran, sans rien de visible. On le retire donc du flux à la
-     fermeture, plutôt que de compter sur le positionnement. */
-  .menu-mobile:not([open]) .menu-panneau {
-    display: none;
-  }
+  /* ⚠️ Un <details> FERMÉ reçoit une containment de layout du navigateur : il
+     devient le bloc conteneur de ses descendants absolus, et le panneau se
+     retrouve large de 44px avec son contenu débordant hors écran, invisible.
+     On le retire donc du flux à la fermeture. */
+  .menu-mobile:not([open]) .menu-panneau { display: none; }
 
-  /* Le panneau sort du flux de l'en-tête pour couvrir toute la largeur. */
   .menu-panneau {
-    position: absolute;
-    top: 100%;
-    inset-inline: 0;
-    z-index: 40;
-    background: var(--color-cambouis);
-    border-top: 1px solid rgb(233 228 216 / 0.12);
-    max-height: calc(100svh - 5rem);
-    overflow-y: auto;
+    position: absolute; top: 100%; right: 0;
+    z-index: 40; min-width: 12rem;
+    background: var(--color-blanc-atelier);
+    border: var(--trait) solid var(--color-gris-trait);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .barres, .barres::before, .barres::after { transition: none; }
+  /* Soulignement qui se pose par paliers, origine gauche. */
+  .lien-nav::after {
+    content: ''; position: absolute; left: 0; bottom: 0;
+    width: 100%; height: var(--trait);
+    background: currentColor;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--duree-cliquet) var(--ease-cliquet);
   }
+  .lien-nav:hover::after, .lien-nav:focus-visible::after { transform: scaleX(1); }
 </style>

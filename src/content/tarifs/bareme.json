@@ -1,26 +1,25 @@
 {
-  "_statut": "À VALIDER",
-  "_avertissement": "AUCUN de ces prix n'est celui de Thalès. Les ordres de grandeur viennent de moyennes publiées par Vroomly et servent uniquement à amorcer la discussion avec Nabil. Publier des prix faux serait pire que ne rien publier. Rien ne part en ligne avant validation ligne par ligne.",
-  "_methode": "prix de base × coefficient de gabarit, puis fourchette ±20 %, arrondie à 5 €.",
+  "_avertissement": "⚠️ TOUS CES PRIX SONT DES PLACEHOLDERS. Aucun n'a été validé par Nabil. Chaque ligne porte statut « À VALIDER ». Un prix faux affiché engage le garage : ne pas mettre en ligne avant validation.",
+  "_methode": "prix = base × coefficient du gabarit. Fourchette affichée à ±20 %.",
 
   "gabarits": [
-    { "id": "citadine", "libelle": "Citadine",          "exemple": "Clio, 208, Polo",      "coefficient": 0.9 },
-    { "id": "berline",  "libelle": "Berline ou break",  "exemple": "308, Mégane, Passat",  "coefficient": 1.0 },
-    { "id": "suv",      "libelle": "SUV ou utilitaire", "exemple": "3008, Kangoo, Trafic", "coefficient": 1.2 }
+    { "id": "citadine", "libelle": "Citadine",        "exemples": "Clio, 208, Polo",        "coefficient": 1 },
+    { "id": "berline",  "libelle": "Berline / break", "exemples": "Mégane, 308, Passat",    "coefficient": 1.15 },
+    { "id": "suv",      "libelle": "SUV / utilitaire","exemples": "3008, Kadjar, Kangoo",   "coefficient": 1.3 }
   ],
 
   "interventions": [
-    { "id": "vidange",       "libelle": "Vidange + filtre à huile",   "categorie": "auto", "base": 96,  "statut": "À VALIDER", "courant": true },
-    { "id": "plaquettes-av", "libelle": "Plaquettes de frein avant",  "categorie": "auto", "base": 140, "statut": "À VALIDER", "courant": true },
-    { "id": "disques-av",    "libelle": "Disques + plaquettes avant", "categorie": "auto", "base": 235, "statut": "À VALIDER", "courant": true },
-    { "id": "distribution",  "libelle": "Kit de distribution",        "categorie": "auto", "base": 600, "statut": "À VALIDER", "courant": true },
-    { "id": "embrayage",     "libelle": "Embrayage",                  "categorie": "auto", "base": 725, "statut": "À VALIDER", "courant": true },
-    { "id": "diagnostic",    "libelle": "Diagnostic électronique",    "categorie": "auto", "base": 52,  "statut": "À VALIDER", "courant": true },
-    { "id": "cardan",        "libelle": "Remplacement de cardan",     "categorie": "auto", "base": 280, "statut": "À VALIDER", "courant": false },
-    { "id": "amortisseurs",  "libelle": "Amortisseurs avant (paire)", "categorie": "auto", "base": 320, "statut": "À VALIDER", "courant": false },
-    { "id": "revision-hb",   "libelle": "Révision moteur hors-bord",  "categorie": "nautique", "base": 260, "statut": "À VALIDER", "courant": true, "gabaritIgnore": true },
-    { "id": "hivernage",     "libelle": "Hivernage bateau",           "categorie": "nautique", "base": 215, "statut": "À VALIDER", "courant": true, "gabaritIgnore": true },
-    { "id": "revision-jet",  "libelle": "Révision jet-ski",           "categorie": "nautique", "base": 190, "statut": "À VALIDER", "courant": false, "gabaritIgnore": true },
-    { "id": "diag-hb",       "libelle": "Diagnostic moteur bateau",   "categorie": "nautique", "base": 70,  "statut": "À VALIDER", "courant": false, "gabaritIgnore": true }
+    { "id": "vidange",       "libelle": "Vidange + filtre à huile",  "base": 69,  "statut": "À VALIDER" },
+    { "id": "plaquettes-av", "libelle": "Plaquettes avant",          "base": 120, "statut": "À VALIDER" },
+    { "id": "disques-av",    "libelle": "Disques avant",             "base": 180, "statut": "À VALIDER" },
+    { "id": "plaquettes-ar", "libelle": "Plaquettes arrière",        "base": 110, "statut": "À VALIDER" },
+    { "id": "distribution",  "libelle": "Kit de distribution",       "base": 420, "statut": "À VALIDER" },
+    { "id": "embrayage",     "libelle": "Embrayage",                 "base": 480, "statut": "À VALIDER" },
+    { "id": "clim",          "libelle": "Recharge climatisation",    "base": 95,  "statut": "À VALIDER" },
+    { "id": "diagnostic",    "libelle": "Diagnostic électronique",   "base": 45,  "statut": "À VALIDER" },
+    { "id": "pneus",         "libelle": "Pneus (montage, la paire)", "base": 40,  "statut": "À VALIDER" },
+    { "id": "revision",      "libelle": "Révision complète",         "base": 190, "statut": "À VALIDER" },
+    { "id": "amortisseurs",  "libelle": "Amortisseurs (la paire)",   "base": 260, "statut": "À VALIDER" },
+    { "id": "batterie",      "libelle": "Batterie",                  "base": 130, "statut": "À VALIDER" }
   ]
 }

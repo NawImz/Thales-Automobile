@@ -1,0 +1,40 @@
+---
+import Trait from './Trait.astro';
+import { tel, lienTel, lienWhatsApp, lienItineraire } from '../../lib/garage';
+
+/**
+ * La barre fixe du bas, sur mobile uniquement.
+ * C'est l'élément qui rapportera le plus au client : la conversion n°1 est
+ * l'appel, et elle ne doit jamais demander de chercher.
+ * Cibles ≥ 44px, et le turquoise n'apparaît QUE sur « Appeler ».
+ */
+const message = "Bonjour, je vous contacte depuis votre site pour une réparation.";
+---
+<div class="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 border-t border-gris-trait bg-blanc-atelier lg:hidden">
+  <a
+    href={lienTel(tel.numero)}
+    data-event="appel" data-contexte="barre-mobile"
+    class="flex min-h-[56px] flex-col items-center justify-center gap-0.5 bg-turquoise text-white"
+  >
+    <Trait nom="telephone" class="size-5" />
+    <span class="text-xs font-semibold">Appeler</span>
+  </a>
+  <a
+    href={lienWhatsApp(message)}
+    data-event="whatsapp" data-contexte="barre-mobile"
+    class="flex min-h-[56px] flex-col items-center justify-center gap-0.5 border-x border-gris-trait"
+  >
+    <Trait nom="whatsapp" class="size-5" />
+    <span class="text-xs font-semibold">WhatsApp</span>
+  </a>
+  <a
+    href={lienItineraire()}
+    data-event="itineraire" data-contexte="barre-mobile"
+    class="flex min-h-[56px] flex-col items-center justify-center gap-0.5"
+  >
+    <Trait nom="itineraire" class="size-5" />
+    <span class="text-xs font-semibold">Y aller</span>
+  </a>
+</div>
+<!-- Réserve la hauteur de la barre pour que rien ne soit masqué en bas de page. -->
+<div class="h-[56px] lg:hidden" aria-hidden="true"></div>
