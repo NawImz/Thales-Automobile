@@ -1,0 +1,233 @@
+---
+import Trait from '../socle/Trait.astro';
+import bareme from '../../content/tarifs/bareme.json';
+import { tel, lienTel, lienWhatsApp } from '../../lib/garage';
+
+/**
+ * Le bloc le plus important du site : l'argument de vente, pas une fonctionnalité.
+ *
+ * Entièrement côté client, AUCUNE requête réseau. Le barème est sérialisé dans
+ * la page, donc l'estimation est instantanée et fonctionne hors ligne.
+ *
+ * ⚠️ Sans JavaScript, le bloc ne disparaît pas : les cases deviennent un
+ * tableau de prix lisible avec le numéro. C'est pour ça que le tableau est dans
+ * le HTML dès le départ et que c'est le script qui l'échange, jamais l'inverse.
+ */
+const { gabarits, interventions } = bareme;
+---
+<section class="section border-t border-gris-trait" id="estimateur" aria-labelledby="titre-estimateur">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <h2 id="titre-estimateur" class="text-[length:var(--text-2xl)] font-extrabold">
+      Combien ça va vous coûter
+    </h2>
+    <p class="mt-4 text-lg text-gris-texte">
+      Cochez ce qu'il y a à faire. Le montant s'affiche tout de suite, sans
+      formulaire et sans laisser vos coordonnées.
+    </p>
+
+    <div
+      class="mt-10 grid gap-px bg-gris-trait lg:grid-cols-[1.1fr_1fr]"
+      data-estimateur
+      data-bareme={JSON.stringify(bareme)}
+    >
+      <!-- ── Le choix ── -->
+      <div class="bg-blanc-atelier p-7 lg:p-9">
+        <fieldset>
+          <legend class="font-mono text-xs tracking-widest text-gris-texte uppercase">
+            Votre véhicule
+          </legend>
+          <div class="mt-4 grid grid-cols-3 gap-3">
+            {gabarits.map((g, i) => (
+              <label class="choix cadre flex min-h-[44px] cursor-pointer flex-col justify-center p-3 text-center">
+                <input
+                  type="radio" name="gabarit" value={g.id}
+                  checked={i === 0} class="sr-only" autocomplete="off"
+                />
+                <span class="text-sm font-semibold">{g.libelle}</span>
+                <span class="mt-0.5 text-xs text-gris-texte">{g.exemples}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="mt-8">
+          <legend class="font-mono text-xs tracking-widest text-gris-texte uppercase">
+            Ce qu'il faut faire
+          </legend>
+          <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+            {interventions.map((it) => (
+              <li>
+                <label class="choix flex min-h-[44px] cursor-pointer items-center gap-3 p-2">
+                  <input
+                    type="checkbox" name="intervention" value={it.id}
+                    data-base={it.base} class="sr-only" autocomplete="off"
+                  />
+                  <span class="case cadre grid size-5 shrink-0 place-items-center" aria-hidden="true">
+                    <Trait nom="coche" class="size-3.5 opacity-0" />
+                  </span>
+                  <span class="text-sm">{it.libelle}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+      </div>
+
+      <!-- ── Le résultat ── -->
+      <div class="bg-blanc-atelier p-7 lg:p-9">
+        <!-- Le manomètre, dessiné au trait comme tout le reste. -->
+        <svg viewBox="0 0 240 150" class="mx-auto w-full max-w-[280px]" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M24 126a96 96 0 0 1 192 0" class="text-gris-trait" />
+            {Array.from({ length: 11 }, (_, i) => {
+              const a = Math.PI - (i / 10) * Math.PI;
+              const [x1, y1] = [120 + Math.cos(a) * 96, 126 - Math.sin(a) * 96];
+              const [x2, y2] = [120 + Math.cos(a) * (i % 5 === 0 ? 78 : 86), 126 - Math.sin(a) * (i % 5 === 0 ? 78 : 86)];
+              return <line x1={x1} y1={y1} x2={x2} y2={y2} class="text-gris-trait" />;
+            })}
+            <path d="M120 126 L120 44" data-aiguille class="text-turquoise" stroke-width="2.5"
+                  style="transform-origin: 120px 126px; transform: rotate(-90deg)" />
+            <circle cx="120" cy="126" r="5" class="text-encre" />
+          </g>
+        </svg>
+
+        <p class="mt-6 text-center">
+          <span class="font-mono text-xs tracking-widest text-gris-texte uppercase">Estimation</span><br />
+          <span class="chiffres text-[length:var(--text-2xl)] font-extrabold" data-fourchette>
+            — €
+          </span>
+        </p>
+
+        <p class="mt-5 text-sm text-gris-texte">
+          Estimation indicative, hors pièces spécifiques.
+          <strong class="font-semibold text-encre">Le devis exact est gratuit et sans engagement.</strong>
+        </p>
+
+        <div class="mt-6 flex flex-col gap-3">
+          <a
+            href={lienWhatsApp('Bonjour, voici mon estimation :')}
+            data-whatsapp data-event="whatsapp" data-contexte="estimateur"
+            class="flex min-h-[44px] cliquet items-center justify-center gap-2.5 px-6 py-4 font-semibold cadre transition-colors hover:bg-encre hover:text-blanc-atelier"
+          >
+            <Trait nom="whatsapp" class="size-4" />
+            Envoyer par WhatsApp
+          </a>
+          <a
+            href={lienTel(tel.numero)}
+            data-event="appel" data-contexte="estimateur"
+            class="flex min-h-[44px] cliquet items-center justify-center gap-2.5 bg-turquoise px-6 py-4 font-semibold text-white transition-colors hover:bg-encre"
+          >
+            <Trait nom="telephone" class="size-4" />
+            <span class="chiffres whitespace-nowrap">{tel.affiche}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repli sans JavaScript : le tableau est dans le HTML dès le départ,
+         c'est le script qui le retire. Jamais l'inverse. -->
+    <div data-repli-estimateur class="mt-px bg-blanc-atelier p-7 cadre">
+      <p class="font-semibold">Prix de départ, par intervention</p>
+      <dl class="mt-4 grid gap-x-10 gap-y-1 sm:grid-cols-2">
+        {interventions.map((it) => (
+          <div class="flex items-baseline gap-3">
+            <dt>{it.libelle}</dt>
+            <dd class="ml-auto chiffres font-semibold whitespace-nowrap">dès {it.base} €</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-4 text-sm text-gris-texte">
+        Appelez le <a href={lienTel(tel.numero)} class="chiffres font-semibold underline">{tel.affiche}</a>
+        pour un devis exact.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .choix { transition: background-color var(--duree-cliquet) var(--ease-cliquet); }
+  .choix:hover { background-color: color-mix(in srgb, var(--color-gris-trait) 16%, transparent); }
+
+  /* L'état coché : le cadre s'épaissit d'un cran, la coche apparaît. */
+  .choix:has(input:checked) { border-color: var(--color-encre); }
+  .choix:has(input:checked) .case { border-color: var(--color-encre); background: var(--color-encre); color: var(--color-blanc-atelier); }
+  .choix:has(input:checked) .case svg { opacity: 1; }
+
+  /* ⚠️ Le focus est instantané et visible sur les deux fonds — jamais de steps() ici. */
+  .choix:has(input:focus-visible) {
+    box-shadow: 0 0 0 2px var(--color-blanc-atelier), 0 0 0 4px var(--color-encre);
+  }
+
+  [data-aiguille] { transition: transform 420ms cubic-bezier(.34,1.4,.64,1); }
+  @media (prefers-reduced-motion: reduce) {
+    [data-aiguille] { transition: none; }
+  }
+</style>
+
+<script>
+  const bloc = document.querySelector<HTMLElement>('[data-estimateur]');
+  const repli = document.querySelector<HTMLElement>('[data-repli-estimateur]');
+
+  if (bloc && repli) {
+    // Le repli n'a de sens que sans JavaScript : on est là, donc on le retire.
+    repli.remove();
+
+    type Bareme = {
+      gabarits: { id: string; libelle: string; coefficient: number }[];
+      interventions: { id: string; libelle: string; base: number }[];
+    };
+    const bareme: Bareme = JSON.parse(bloc.dataset.bareme!);
+    const aiguille = bloc.querySelector<SVGPathElement>('[data-aiguille]')!;
+    const sortie = bloc.querySelector<HTMLElement>('[data-fourchette]')!;
+    const versWhatsApp = bloc.querySelector<HTMLAnchorElement>('[data-whatsapp]')!;
+    const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Plafond de l'aiguille : la somme de tout, au coefficient le plus fort.
+    const maxi =
+      bareme.interventions.reduce((s, i) => s + i.base, 0) *
+      Math.max(...bareme.gabarits.map((g) => g.coefficient));
+
+    const fmt = new Intl.NumberFormat('fr-FR');
+
+    function calculer() {
+      const gabaritId = (bloc!.querySelector<HTMLInputElement>('input[name="gabarit"]:checked'))?.value;
+      const coef = bareme.gabarits.find((g) => g.id === gabaritId)?.coefficient ?? 1;
+      const cochees = [...bloc!.querySelectorAll<HTMLInputElement>('input[name="intervention"]:checked')];
+      const total = cochees.reduce((s, c) => s + Number(c.dataset.base), 0) * coef;
+
+      if (!cochees.length) {
+        sortie.textContent = '— €';
+        aiguille.style.transform = 'rotate(-90deg)';
+        versWhatsApp.dataset.recap = '';
+        return { total: 0, cochees, gabaritId };
+      }
+
+      // Fourchette à ±20 %, arrondie à la dizaine pour ne pas afficher
+      // une précision qu'on n'a pas.
+      const bas = Math.round((total * 0.8) / 10) * 10;
+      const haut = Math.round((total * 1.2) / 10) * 10;
+      sortie.textContent = `${fmt.format(bas)} – ${fmt.format(haut)} €`;
+
+      // L'aiguille balaie de -90° à +90°, plafonnée.
+      const part = Math.min(1, total / maxi);
+      aiguille.style.transform = `rotate(${-90 + part * 180}deg)`;
+
+      const libelles = cochees.map(
+        (c) => bareme.interventions.find((i) => i.id === c.value)?.libelle,
+      );
+      const gabarit = bareme.gabarits.find((g) => g.id === gabaritId)?.libelle;
+      const message =
+        `Bonjour, je voudrais un devis.\n\nVéhicule : ${gabarit}\n` +
+        libelles.map((l) => `• ${l}`).join('\n') +
+        `\n\nEstimation lue sur votre site : ${fmt.format(bas)} – ${fmt.format(haut)} €`;
+      versWhatsApp.href = versWhatsApp.href.split('?')[0] + '?text=' + encodeURIComponent(message);
+
+      return { total, cochees, gabaritId };
+    }
+
+    bloc.addEventListener('change', () => calculer());
+    calculer();
+
+    if (reduit) aiguille.style.transition = 'none';
+  }
+</script>

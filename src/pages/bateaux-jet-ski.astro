@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import Trait from '../components/socle/Trait.astro';
+import Cliche from '../components/socle/Cliche.astro';
+import { garage, a, tel, lienTel, lienWhatsApp } from '../lib/garage';
+
+const titre = `Réparation bateau, hors-bord et jet-ski — ${a.ville} | ${garage.nom}`;
+const description =
+  `Entretien et réparation de moteurs de bateau, hors-bord, in-board et jet-ski ` +
+  `à ${a.ville} (93). Hivernage, dépannage. Le même atelier que pour l'auto.`;
+
+const prestations = [
+  { trait: 'moteur', titre: 'Moteurs hors-bord', texte: "Révision, carburation, allumage, circuit de refroidissement. Toutes cylindrées." },
+  { trait: 'helice', titre: 'Embases et hélices', texte: "Vidange d'embase, joints spi, remplacement et redressage d'hélice." },
+  { trait: 'coque', titre: 'Hivernage', texte: "Préparation, stockage moteur, remise en service au printemps." },
+  { trait: 'valise', titre: 'Diagnostic', texte: "Recherche de panne sur moteur récent, lecture des codes." },
+];
+---
+<Base titre={titre} description={description}>
+  <section class="section">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <nav aria-label="Fil d'ariane" class="font-mono text-xs tracking-widest text-gris-texte uppercase">
+        <a href="/" class="cible hover:text-encre">Accueil</a> / Bateaux et jet-ski
+      </nav>
+
+      <div class="mt-5 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16">
+        <div>
+          <h1 class="text-[length:var(--text-3xl)] font-extrabold">
+            Bateaux,<br />hors-bord,<br />jet-ski
+          </h1>
+          <p class="mt-6 max-w-[46ch] text-lg text-gris-texte">
+            Presque aucun garage d'Île-de-France ne touche aux moteurs marins.
+            Rue du Port, on le fait depuis {garage.anneesExperience} ans, dans le
+            même atelier et avec les mêmes mains que pour les voitures.
+          </p>
+          <a
+            href={lienTel(tel.numero)}
+            data-event="appel" data-contexte="nautique"
+            class="mt-8 inline-flex min-h-[44px] cliquet items-center gap-2.5 bg-turquoise px-6 py-4 font-semibold text-white transition-colors hover:bg-encre"
+          >
+            <Trait nom="telephone" class="size-4" />
+            <span class="chiffres whitespace-nowrap">{tel.affiche}</span>
+          </a>
+        </div>
+        <div class="mt-10 lg:mt-0">
+          <Cliche nom="Un hors-bord ou un jet-ski démonté à l'atelier" ratio="4 / 3" />
+        </div>
+      </div>
+
+      <ul class="mt-16 grid gap-px bg-gris-trait sm:grid-cols-2">
+        {prestations.map((p) => (
+          <li class="bg-blanc-atelier p-7">
+            <Trait nom={p.trait} class="size-7" />
+            <h2 class="mt-5 font-display text-lg font-bold">{p.titre}</h2>
+            <p class="mt-2 text-sm text-gris-texte">{p.texte}</p>
+          </li>
+        ))}
+      </ul>
+
+      <p class="mt-10 max-w-[60ch] text-gris-texte">
+        <strong class="font-semibold text-encre">[À COMPLÉTER]</strong> — le
+        périmètre exact (marques prises en charge, manutention, mise à l'eau)
+        reste à préciser avec Nabil avant mise en ligne.
+      </p>
+
+      <a
+        href={lienWhatsApp("Bonjour, j'ai une question sur un moteur de bateau.")}
+        data-event="whatsapp" data-contexte="nautique"
+        class="mt-6 inline-flex min-h-[44px] cliquet items-center gap-2.5 px-6 py-4 font-semibold cadre transition-colors hover:bg-encre hover:text-blanc-atelier"
+      >
+        <Trait nom="whatsapp" class="size-4" />
+        Poser une question sur WhatsApp
+      </a>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import { garage, tel } from '../lib/garage';
+---
+<Base titre={`Confidentialité — ${garage.nom}`} description="Traitement des données personnelles sur le site du garage Thalès Automobile.">
+  <section class="section">
+    <div class="prose mx-auto max-w-3xl px-5 sm:px-8">
+      <h1 class="text-[length:var(--text-2xl)] font-extrabold">Confidentialité</h1>
+
+      <p class="mt-6">
+        Ce site ne dépose <strong>aucun cookie</strong> et n'utilise aucun
+        traceur publicitaire. Il n'y a donc pas de bandeau à accepter.
+      </p>
+
+      <h2 class="mt-10 font-display text-lg font-bold">Ce que le site ne fait pas</h2>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li>Aucun compte, aucune inscription, aucun mot de passe.</li>
+        <li>Aucun cookie publicitaire ni de mesure d'audience nominative.</li>
+        <li>Aucune donnée n'est revendue ni transmise à un tiers.</li>
+        <li>
+          L'estimateur de prix fonctionne <strong>entièrement dans votre
+          navigateur</strong> : vos choix ne sont envoyés nulle part.
+        </li>
+      </ul>
+
+      <h2 class="mt-10 font-display text-lg font-bold">Ce qui quitte votre appareil, et seulement si vous le décidez</h2>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li>
+          Si vous cliquez sur un lien WhatsApp, le message pré-rempli est
+          transmis à WhatsApp (Meta), selon leurs propres conditions.
+        </li>
+        <li>
+          Si vous cliquez sur l'itinéraire, l'adresse du garage est transmise à
+          votre application de navigation.
+        </li>
+        <li>
+          Si vous appelez, votre opérateur traite l'appel comme n'importe quel
+          autre.
+        </li>
+      </ul>
+
+      <h2 class="mt-10 font-display text-lg font-bold">Mesure d'audience</h2>
+      <p class="mt-3 text-sm">
+        [À COMPLÉTER] — si une mesure sans cookie est mise en place (Plausible
+        ou Umami), elle sera décrite ici. Elle ne pose pas de cookie et ne
+        collecte pas de donnée nominative.
+      </p>
+
+      <h2 class="mt-10 font-display text-lg font-bold">Vos droits</h2>
+      <p class="mt-3 text-sm">
+        Pour toute question relative à vos données, écrivez à
+        {garage.email ?? '[À COMPLÉTER — adresse e-mail]'} ou appelez le
+        <span class="chiffres">{tel.affiche}</span>.
+      </p>
+    </div>
+  </section>
+</Base>

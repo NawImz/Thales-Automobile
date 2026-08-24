@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Trait from '../components/socle/Trait.astro';
+import { tel, lienTel } from '../lib/garage';
+---
+<Base titre="Page introuvable — Thalès Automobile" description="Cette page n'existe pas.">
+  <section class="section">
+    <div class="mx-auto max-w-3xl px-5 text-center sm:px-8">
+      <p class="chiffres text-[length:var(--text-3xl)] font-extrabold">404</p>
+      <h1 class="mt-4 text-[length:var(--text-2xl)] font-extrabold">
+        Cette pièce n'est pas en stock.
+      </h1>
+      <p class="mt-5 text-lg text-gris-texte">
+        La page que vous cherchez n'existe pas, ou plus. Le reste de l'atelier
+        est ouvert.
+      </p>
+      <div class="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+        <a href="/" class="inline-flex min-h-[44px] cliquet items-center justify-center gap-2.5 bg-turquoise px-6 py-4 font-semibold text-white transition-colors hover:bg-encre">
+          Retour à l'accueil
+          <Trait nom="fleche" class="size-4" />
+        </a>
+        <a href={lienTel(tel.numero)} data-event="appel" data-contexte="404"
+           class="inline-flex min-h-[44px] cliquet items-center justify-center gap-2.5 px-6 py-4 font-semibold cadre transition-colors hover:bg-encre hover:text-blanc-atelier">
+          <Trait nom="telephone" class="size-4" />
+          <span class="chiffres whitespace-nowrap">{tel.affiche}</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,149 @@
+---
+/**
+ * La ligne signature — « le plan d'atelier ».
+ *
+ * Un seul <svg> en position fixe dans la gouttière, un seul <path>, qui se
+ * métamorphose au fil du défilement en suivant les objets réels de l'atelier :
+ * voiture → disque de frein → filtre à huile → coque → hélice.
+ *
+ * ⚠️ Elle ne passe JAMAIS derrière du corps de texte : elle vit dans la
+ * gouttière, à droite du contenu, et le contenu est borné à max-w-7xl.
+ * Elle est `aria-hidden` et ne porte aucune information absente du texte.
+ */
+import { FORMES, versChemin, verifierFormes } from './formes';
+
+// Garde-fou de build : une forme non morphable casse la compilation ici,
+// pas silencieusement dans le navigateur.
+verifierFormes();
+
+const cheminInitial = versChemin(FORMES.voiture.points, FORMES.voiture.tension);
+---
+<div class="ligne-signature" aria-hidden="true">
+  <svg viewBox="0 0 112 88" fill="none" data-signature>
+    <!-- Le trait vertical qui relie les états, dessiné au défilement. -->
+    <path
+      d="M56 88 L56 200"
+      stroke="currentColor" stroke-width="1.5"
+      vector-effect="non-scaling-stroke"
+      data-fil
+    />
+    <path
+      d={cheminInitial}
+      stroke="currentColor" stroke-width="1.5"
+      stroke-linecap="round" stroke-linejoin="round"
+      vector-effect="non-scaling-stroke"
+      data-forme
+    />
+  </svg>
+</div>
+
+<style>
+  .ligne-signature {
+    position: fixed;
+    z-index: 10;
+    pointer-events: none;
+    color: var(--color-turquoise);
+    /* Mobile : petit, en bas à droite, au-dessus de la barre d'action. */
+    right: 0.75rem;
+    bottom: calc(56px + 0.75rem);
+    width: 46px;
+    opacity: 0.85;
+  }
+
+  /**
+   * Desktop large : la ligne monte dans la gouttière droite.
+   *
+   * ⚠️ Le seuil se CALCULE, il ne se choisit pas au jugé. Le contenu fait
+   * 80rem centré, l'emblème 96px, et il faut 16px de marge de chaque côté :
+   * la gouttière doit donc faire au moins 128px, soit une fenêtre de
+   *   80rem + 2 × 128px = 96rem.
+   * Réglé d'abord à 88rem, l'emblème mordait de 8px sur le contenu — mesuré,
+   * pas supposé. En dessous de 96rem il reste en coin, ce qui ne gêne rien.
+   */
+  @media (min-width: 96rem) {
+    .ligne-signature {
+      right: calc((100vw - 80rem) / 2 - 7rem);
+      bottom: auto;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 96px;
+      opacity: 1;
+    }
+  }
+
+  /* Sur desktop la barre d'action n'existe pas : l'emblème descend d'autant. */
+  @media (min-width: 64rem) {
+    .ligne-signature { bottom: 1.5rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ligne-signature [data-fil] { display: none; }
+  }
+</style>
+
+<script>
+  import { FORMES, melanger } from './formes';
+
+  const svg = document.querySelector<SVGSVGElement>('[data-signature]');
+  const forme = svg?.querySelector<SVGPathElement>('[data-forme]');
+  const fil = svg?.querySelector<SVGPathElement>('[data-fil]');
+
+  if (svg && forme && fil) {
+    const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /**
+     * Les étapes, dans l'ordre du récit de la page.
+     * La progression 0→1 du document les traverse.
+     */
+    const etapes = [
+      FORMES.voiture, FORMES.disque, FORMES.filtre,
+      FORMES.coque, FORMES.helice, FORMES.voiture,
+    ];
+
+    function dessiner(progression: number) {
+      const p = Math.max(0, Math.min(0.999, progression)) * (etapes.length - 1);
+      const i = Math.floor(p);
+      const t = p - i;
+      // Adoucissement : la forme se stabilise entre deux étapes au lieu de
+      // muter en permanence — sinon la page entière a l'air de frétiller.
+      const lisse = t < 0.35 ? 0 : t > 0.75 ? 1 : (t - 0.35) / 0.4;
+      forme.setAttribute('d', melanger(etapes[i], etapes[i + 1], lisse));
+    }
+
+    if (reduit) {
+      // Pas de version « réduite » : une version SANS mouvement. La forme
+      // reste celle du départ, le fil est masqué par le CSS.
+      dessiner(0);
+    } else {
+      const longueur = fil.getTotalLength();
+      fil.style.strokeDasharray = String(longueur);
+      fil.style.strokeDashoffset = String(longueur);
+
+      (async () => {
+        try {
+          const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+            import('gsap'),
+            import('gsap/ScrollTrigger'),
+          ]);
+          gsap.registerPlugin(ScrollTrigger);
+
+          ScrollTrigger.create({
+            trigger: document.body,
+            start: 'top top',
+            end: 'bottom bottom',
+            // ⚠️ scrub: 1, pas `true` : le nombre donne l'inertie, `true`
+            // colle à la molette et rend le mouvement nerveux.
+            scrub: 1,
+            onUpdate: (self) => {
+              dessiner(self.progress);
+              fil.style.strokeDashoffset = String(longueur * (1 - self.progress));
+            },
+          });
+        } catch {
+          // GSAP indisponible : la forme initiale reste, rien ne casse.
+          dessiner(0);
+        }
+      })();
+    }
+  }
+</script>

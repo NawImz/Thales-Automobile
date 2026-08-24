@@ -3,6 +3,7 @@ import '../styles/global.css';
 import EnTete from '../components/socle/EnTete.astro';
 import PiedDePage from '../components/socle/PiedDePage.astro';
 import BarreAction from '../components/socle/BarreAction.astro';
+import LigneSignature from '../components/signature/LigneSignature.astro';
 import { garage, a, tel } from '../lib/garage';
 
 interface Props { titre: string; description: string; }
@@ -70,6 +71,7 @@ if (garage.geo.latitude !== null && garage.geo.longitude !== null) {
   <body>
     <a href="#contenu" class="evitement">Aller au contenu</a>
     <EnTete />
+    <LigneSignature />
     <main id="contenu"><slot /></main>
     <PiedDePage />
     <BarreAction />

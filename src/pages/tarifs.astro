@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import Trait from '../components/socle/Trait.astro';
+import bareme from '../content/tarifs/bareme.json';
+import { garage, a, tel, lienTel } from '../lib/garage';
+
+const titre = `Tarifs garage auto — ${a.ville} | ${garage.nom}`;
+const description =
+  `La grille de prix complète du garage Thalès à ${a.ville} : vidange, freinage, ` +
+  `distribution, embrayage. Prix de départ affichés, devis gratuit.`;
+---
+<Base titre={titre} description={description}>
+  <section class="section">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <nav aria-label="Fil d'ariane" class="font-mono text-xs tracking-widest text-gris-texte uppercase">
+        <a href="/" class="cible hover:text-encre">Accueil</a> / Tarifs
+      </nav>
+
+      <h1 class="mt-5 text-[length:var(--text-3xl)] font-extrabold">Nos tarifs</h1>
+      <p class="mt-5 max-w-[52ch] text-lg text-gris-texte">
+        Aucun garage du 93 ne publie ses prix. Nous, si. Ce sont des prix de
+        départ, main-d'œuvre comprise, hors pièces spécifiques.
+      </p>
+
+      <!-- Le tableau, en lignes de conduite : libellé · pointillés · prix. -->
+      <div class="mt-12 cadre">
+        {bareme.interventions.map((it, i) => (
+          <div class:list={['flex items-baseline gap-4 px-6 py-4', i > 0 && 'border-t border-gris-trait']}>
+            <span class="shrink-0">{it.libelle}</span>
+            <span class="min-w-6 flex-1 border-b border-dotted border-gris-trait" aria-hidden="true"></span>
+            <span class="chiffres shrink-0 font-semibold whitespace-nowrap">dès {it.base} €</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-10 grid gap-6 lg:grid-cols-2">
+        <div class="cadre p-6">
+          <h2 class="font-display text-lg font-bold">Le coefficient par véhicule</h2>
+          <dl class="mt-4 space-y-2 text-sm">
+            {bareme.gabarits.map((g) => (
+              <div class="flex items-baseline gap-4">
+                <dt>{g.libelle} <span class="text-gris-texte">— {g.exemples}</span></dt>
+                <dd class="ml-auto chiffres font-semibold">× {g.coefficient.toString().replace('.', ',')}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <div class="cadre p-6">
+          <h2 class="font-display text-lg font-bold">Ce que le prix comprend</h2>
+          <ul class="mt-4 space-y-2 text-sm">
+            {[
+              "La main-d'œuvre et le contrôle après intervention.",
+              'Un appel avant toute intervention non prévue au devis.',
+              'La pièce déposée, montrée ou rendue si vous le souhaitez.',
+            ].map((t) => (
+              <li class="flex items-start gap-2.5">
+                <Trait nom="coche" class="mt-1 size-3.5" />
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <p class="mt-10 text-gris-texte">
+        Un doute sur ce qu'il faut faire ? Appelez, on regarde ensemble.
+      </p>
+      <a
+        href={lienTel(tel.numero)}
+        data-event="appel" data-contexte="tarifs"
+        class="mt-4 inline-flex min-h-[44px] cliquet items-center gap-2.5 bg-turquoise px-6 py-4 font-semibold text-white transition-colors hover:bg-encre"
+      >
+        <Trait nom="telephone" class="size-4" />
+        <span class="chiffres whitespace-nowrap">{tel.affiche}</span>
+      </a>
+    </div>
+  </section>
+</Base>

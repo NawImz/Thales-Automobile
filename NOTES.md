@@ -261,3 +261,76 @@ s'étendra sans toucher au code.
 ### Vérifié à 390 px
 
 Aucun débordement, aucun débordement interne, aucune cible sous 44 px.
+
+---
+
+## Phase 3 · Étape 5 — estimateur, ligne signature, pages internes, artefact
+
+La v1 est complète : six pages, l'estimateur, la ligne signature.
+
+### L'estimateur
+
+Entièrement côté client, aucune requête réseau, barème sérialisé dans la page.
+Vérifié : 120 + 180 = 300 × 1,3 (SUV) = 390 → fourchette 310-470 €, et le
+message WhatsApp part avec le récapitulatif encodé.
+
+⚠️ Le repli sans JavaScript est **dans le HTML dès le départ**, et c'est le
+script qui le retire. L'inverse — l'injecter quand JS manque — ne marche jamais,
+puisqu'il n'y a alors personne pour l'injecter. Vérifié dans le HTML livré : le
+tableau des 12 prix et le numéro y sont.
+
+### La ligne signature — ce que la mesure a imposé
+
+Les cinq formes partagent la signature `M` + 12×`C`, **par construction** : chacune
+est décrite par 12 points et convertie par le même code. La structure ne peut pas
+diverger, elle n'a pas à être surveillée.
+
+Trois corrections, toutes venues d'un rendu, jamais d'une intuition :
+
+1. **La voiture se lisait comme un nuage.** La tension classique de
+   Catmull-Rom (6) arrondit tout. Portée à 11, et le profil redessiné avec une
+   vraie « serre » (capot bas, montant incliné, pavillon court), elle se lit.
+2. **Le disque devenait alors un hexagone** — un écrou, pas un disque de frein.
+   Une tension unique ne peut pas servir les deux extrêmes.
+   → **La tension est propre à chaque forme**, et interpolée avec les points
+   pendant le morph. La signature de commandes reste identique.
+3. **L'emblème mordait de 8 px sur le contenu.** Le seuil de bascule vers la
+   gouttière avait été choisi au jugé (88rem). Il se calcule : contenu 80rem +
+   2 × (96px d'emblème + 16px de marge) = **96rem**. Écart vérifié après
+   correction : 16 px exactement.
+
+### L'artefact
+
+⚠️ **Le HTML des pages contient des `</script>`** — Astro y inline les petits
+scripts. Une chaîne JSON qui les embarque referme le script du routeur au
+milieu : 187 erreurs console, aucune parlante. Échapper `</` en `<\/` suffit.
+
+⚠️ **Republier depuis le même chemin de fichier redéploie sur la MÊME URL.**
+L'artefact est reparti sur celle du site rejeté. Pour en créer un nouveau, il
+faut un chemin différent.
+
+`inlineStylesheets: 'never'` dans la config supprime par ailleurs, **par
+configuration**, le piège des styles cachés dans le `<head>` qui avait coûté
+le bug « ON VOUS DITCE » sur la version précédente.
+
+### Contrôles finaux
+
+| Contrôle | Résultat |
+|---|---|
+| JSON-LD parsé depuis la page rendue | `AutoRepair`, 11 champs, 6 horaires, 9 zones |
+| `aggregateRating` | **absent** — correct, Google l'interdit sur des avis non collectés |
+| `geo` inventé | absent — les GPS ne sont pas fournis |
+| `null`/`undefined` sérialisés | aucun |
+| Liens `tel:` | 6, tous au format `tel:+33XXXXXXXXX` |
+| `<h1>` par page | 1 |
+| Images sans `alt` | 0 |
+| Liens sans intitulé accessible | 0 |
+| Cibles tactiles < 44 px | 0 |
+| Débordement horizontal à 390 px | aucun |
+| Turquoise par section | 1 au maximum |
+| JS initial (gzip) | **1,6 Ko** + 44 Ko de GSAP à la demande — plafond 60 |
+| CSS (gzip) | **14,6 Ko** — plafond 25 |
+| Poids initial de l'accueil | **151 Ko** — plafond 600 |
+
+⚠️ Lighthouse et les FPS **ne sont pas mesurables ici** (SwiftShader, pas de GPU).
+Ils restent à relever sur une vraie machine avant de figurer au README.
