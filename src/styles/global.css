@@ -1,13 +1,13 @@
 /* ⚠️ Spec CSS : tous les @import précèdent toute autre règle.
    Les polices passent donc AVANT tailwindcss. */
-@import '@fontsource-variable/familjen-grotesk';
+@import '@fontsource-variable/roboto-slab';
 @import '@fontsource-variable/public-sans';
 @import '@fontsource-variable/jetbrains-mono';
 @import './tokens.css';
 @import 'tailwindcss';
 
 @theme {
-  --font-display: 'Familjen Grotesk Variable', system-ui, sans-serif;
+  --font-display: 'Roboto Slab Variable', Rockwell, Georgia, serif;
   --font-sans: 'Public Sans Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 

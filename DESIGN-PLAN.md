@@ -24,15 +24,13 @@ le crédibiliser, le nautique pour élargir. Je construirai dans cet ordre.
 
 ## 2. Analyse du logo
 
-### ⚠️ Ce que je n'ai pas pu faire, et pourquoi
+### ✅ Logo reçu et échantillonné le 24/08/2026
 
-`/public/brand/` **n'existe pas dans le dépôt.** Le logo est visible dans votre
-message, mais une image de conversation n'est pas un fichier sur disque : je ne
-peux pas la pipetter. J'ai cherché (`/mnt/attach` vide, `uploads/` ne contient que
-les trois GLB de la session précédente).
+Fichier : `public/brand/logo.webp`, **100 × 100 px**, WebP sans couche alpha.
+Arrivé par un push direct sur la branche — les images collées dans la
+conversation n'atteignent jamais le disque du conteneur.
 
-Le brief dit « ne devine pas les hex ». **Je n'ai donc rien deviné.** Ce qui suit
-sépare strictement l'observé du provisoire.
+Les hex ci-dessous sont **mesurés**, pas estimés.
 
 ### Ce que j'observe, et qui ne dépend pas d'une pipette
 
@@ -50,119 +48,97 @@ sépare strictement l'observé du provisoire.
 c'est **une ligne d'épaisseur constante**. Tout le vocabulaire du site en découle,
 et c'est déjà décidable aujourd'hui.
 
-### Ce qui attend le fichier
+### Comment l'accent a été mesuré
 
-Uniquement les **valeurs numériques** de l'accent et de l'encre. Dès réception :
+Le tri par fréquence n'a **pas** trouvé le turquoise : le trait de la voiture est
+fin, il pèse à peine 3 % des pixels et se fait écraser par le lettrage et par
+l'anticrénelage. Il a fallu trier par **chromie** plutôt que par fréquence.
 
-```bash
-node scripts/echantillonner-logo.mjs public/brand/logo.png
-node scripts/contraste.mjs
-```
+L'accent est la moyenne des **30 pixels les plus chromatiques** — le cœur du
+trait, là où la couleur n'est pas mélangée au blanc du fond. L'encre est la
+moyenne des 200 pixels les plus sombres et peu chromatiques, soit le lettrage.
 
-Le script quantifie par pas de 16 pour regrouper, puis **re-moyenne les pixels de
-chaque cluster** — sans cette seconde passe on obtient un hex arrondi, donc faux.
+| | Valeur mesurée |
+|---|---|
+| Accent (trait de la voiture) | **`#2A7687`** — un bleu-canard, pas le turquoise vif attendu |
+| Encre (lettrage et clé) | **`#0E1015`** — un noir très légèrement froid |
+
+⚠️ **Le fichier ne fait que 100 × 100 px.** C'est suffisant pour la couleur, qui
+est un fait par pixel. Ce n'est pas suffisant pour juger le détail des
+empattements — voir §4.
 
 ---
 
-## 3. Palette — 5 rôles, contrastes mesurés
+## 3. Palette — 5 tokens, contrastes mesurés
 
-`design/palette.json` porte la palette. Il est marqué `"_echantillonne": false`
-tant que le logo n'est pas là.
+`design/palette.json` est la source unique : `generer-tokens.mjs` en écrit le
+CSS, `contraste.mjs` le vérifie. Il porte désormais `"_echantillonne": true`.
 
-| Token | Valeur | Rôle | Statut |
-|---|---|---|---|
-| `--encre` | `#111417` | titres, corps, traits porteurs de sens | provisoire |
-| `--turquoise` | `#0E7C7C` | **l'unique accent** : action principale, liens | dérivé, voir ci-dessous |
-| `--turquoise-signature` | `#17A2A2` | ligne signature **uniquement** (décorative) | provisoire |
-| `--blanc-atelier` | `#F7F7F5` | le fond | arrêté |
-| `--gris-texte` | `#5A605E` | texte secondaire | arrêté |
-| `--gris-trait` | `#7E847F` | cadres et filets de composants | arrêté |
+| Token | Valeur | Rôle |
+|---|---|---|
+| `--encre` | `#0E1015` | titres, corps, traits porteurs de sens |
+| `--turquoise` | `#2A7687` | **l'unique accent** : action principale, liens |
+| `--blanc-atelier` | `#F7F7F5` | le fond |
+| `--gris-texte` | `#5A605E` | texte secondaire |
+| `--gris-trait` | `#7E847F` | cadres et filets de composants |
 
-### La contrainte que la mesure a révélée
+### Le sixième token n'existe plus
 
-En partant d'un turquoise de travail à `#17A2A2`, **quatre paires sur neuf
-échouaient**. En cherchant la profondeur qui les sauve, un fait dur apparaît :
+J'avais proposé de scinder l'accent en deux — une teinte de marque et une teinte
+conforme — en écrivant : « si l'échantillonnage montre que le turquoise du logo
+passe déjà les seuils, les deux tokens fusionnent et on revient à cinq ».
 
-| Turquoise | texte sur clair | blanc dessus | encre dessus |
-|---|---|---|---|
-| `#17A2A2` | 2,91 ✗ | 3,12 ✗ | 5,92 ✓ |
-| `#128F8F` | 3,66 ✗ | 3,92 ✗ | 4,71 ✓ |
-| **`#0E7C7C`** | **4,67 ✓** | **5,01 ✓** | 3,69 ✗ |
-| `#0C6E6E` | 5,64 ✓ | 6,05 ✓ | 3,05 ✗ |
+**C'est exactement ce qui s'est passé.** L'accent réel `#2A7687` est nettement
+plus profond que ma valeur de travail, et il passe seul :
 
-> **Aucun turquoise unique ne peut à la fois porter du texte blanc et du texte
-> encre en AA.** Il faut ≥ `#0E7C7C` pour le blanc, ≤ `#128F8F` pour l'encre. Les
-> deux plages ne se croisent pas.
+| Usage | Ratio | Seuil |
+|---|---|---|
+| accent en texte sur fond clair | **4,85** | 4,5 ✓ |
+| libellé blanc sur bouton accent | **5,20** | 4,5 ✓ |
+| libellé encre sur bouton accent | 3,66 | 4,5 ✗ |
 
-Décision : **`#0E7C7C`, et le bouton principal est turquoise plein à libellé
-blanc.** Jamais d'encre sur turquoise. Une seule règle, pas d'exception à retenir.
+La dernière ligne échoue, mais on ne fait jamais d'encre sur accent : le bouton
+principal est turquoise plein à libellé blanc, règle unique et sans exception.
 
-### Pourquoi six tokens et non cinq
+**Palette finale : 5 tokens, 9 paires, 0 échec.** Conforme au brief d'origine.
 
-Le brief plafonne à cinq. J'en propose six, et je veux que ce soit un choix
-conscient, pas une dérive.
-
-Le turquoise du logo est une couleur de **marque**, pas nécessairement une couleur
-d'**interface**. S'il s'avère clair (comme ma valeur de travail), il ne pourra pas
-porter de sens sans échouer en AA. D'où la scission :
-
-- `--turquoise-signature` = la teinte exacte du logo, réservée à la ligne
-  signature, qui est **décorative et `aria-hidden`** — donc hors du champ du
-  critère 1.4.11.
-- `--turquoise` = la variante conforme, pour tout usage porteur de sens.
-
-**Si l'échantillonnage montre que le turquoise du logo passe déjà les seuils, les
-deux tokens fusionnent et on revient à cinq.** Je le saurai en une commande.
-
-### Contrôle, tel qu'il sort du script
-
-```
-titres et corps sur clair        #111417  #F7F7F5   17,23  ≥4,5  ok
-texte secondaire sur clair       #5A605E  #F7F7F5    5,99  ≥4,5  ok
-lien turquoise sur clair         #0E7C7C  #F7F7F5    4,67  ≥4,5  ok
-icone porteuse de sens           #0E7C7C  #F7F7F5    4,67  ≥3    ok
-libelle blanc sur bouton accent  #FFFFFF  #0E7C7C    5,01  ≥4,5  ok
-cadre de composant               #7E847F  #F7F7F5    3,56  ≥3    ok
-texte clair sur encre (pied)     #F7F7F5  #111417   17,23  ≥4,5  ok
-turquoise sur encre (pied)       #0E7C7C  #111417    3,69  ≥3    ok
-anneau de focus                  #111417  #F7F7F5   17,23  ≥3    ok
-                                          9 paires, 0 echec
-```
 
 ---
 
 ## 4. Typographie
 
-### Le choix, et ce qui reste à confirmer
+### ⚠️ Correction : le lettrage n'est pas un grotesque
+
+Mon plan annonçait « grotesque géométrique » et retenait Familjen Grotesk. Je
+reprenais la caractérisation du brief, confirmée par ma lecture d'une petite
+image. **Le fichier montre autre chose : le lettrage est un slab serif** — des
+empattements rectangulaires francs, un contraste marqué entre les fûts et les
+barres.
+
+Vérifié par calage : le mot du logo rendu côte à côte avec quatre candidats.
+Familjen Grotesk n'a aucun empattement — l'écart saute aux yeux.
 
 | Emploi | Police | Graisses |
 |---|---|---|
-| Affichage | **Familjen Grotesk Variable** | 600–700 |
+| Affichage | **Roboto Slab Variable** | 700–800 |
 | Corps | **Public Sans Variable** | 400–600 |
 | Données, prix, horaires, compteurs | **JetBrains Mono Variable** | 400–700 |
 
-Les trois existent sur Fontsource en variable (vérifié : `5.3.0`), donc
-auto-hébergeables en woff2 sous-ensemblé au latin.
+**Roboto Slab** retenu après comparaison avec Bitter et Rokkitt : c'est celui
+dont la chasse et la graisse correspondent le mieux au « AUTOMOBILE » du logo,
+large et lourd. Rokkitt a des empattements plus fins mais une chasse trop
+resserrée ; Bitter est intermédiaire.
 
-**Familjen Grotesk** pour l'affichage : grotesque géométrique, capitales à
-terminaisons plates, et — c'est le point décisif — une **chasse naturellement plus
-serrée qu'Archivo à graisse égale**, ce que le lettrage du logo demande. Archivo,
-que le brief cite, est le choix par défaut de tout le monde ; c'est aussi celui du
-site que vous venez de rejeter. Familjen Grotesk s'en approche autant et n'a pas
-cette empreinte.
+⚠️ **Limite honnête de ce calage** : à 100 × 100 px, le mot du logo ne fait que
+~84 × 36 px. C'est assez pour trancher « slab, lourd, large » — pas pour
+identifier la fonte exacte. Un logo en vectoriel ou en haute définition
+permettrait d'affiner. Consigné en « important » dans `TODO-CLIENT.md`, pas en
+bloquant : Roboto Slab tient parfaitement le rôle.
 
-**Public Sans** pour le corps : neutre par conception (elle vient d'un système de
-design d'État, où la personnalité est un défaut). Elle doit disparaître pour que
-l'affichage et la ligne portent seuls le caractère.
-
-**JetBrains Mono** pour les données : chiffres tabulaires, `0` barré, `1` à
-empattement — trois chiffres qu'on ne confond pas dans une molette d'odomètre qui
-tourne. C'est le point où une mono choisie pour le style échouerait.
-
-> ⚠️ **Confirmation nécessaire.** Un appariement typographique avec un logo se
-> tranche par **superposition**, pas au jugé. Sans le fichier je ne peux pas
-> comparer les formes. Ce choix est donc argumenté mais provisoire : je vérifierai
-> par calage dès réception, et si Familjen Grotesk ne tient pas, je le dirai.
+**Public Sans** pour le corps : neutre par conception, elle doit disparaître
+derrière l'affichage. **JetBrains Mono** pour les données : chiffres tabulaires,
+`0` barré, `1` à empattement — trois chiffres qu'on ne confond pas dans une
+molette d'odomètre qui tourne.
 
 ### Échelle — fluide, et jamais décroissante
 

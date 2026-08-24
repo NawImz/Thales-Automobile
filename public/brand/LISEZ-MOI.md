@@ -1,36 +1,26 @@
-# /public/brand/ — le logo va ici
+# /public/brand/
 
-**Ce dossier est vide, et c'est bloquant.**
+| Fichier | Contenu | État |
+|---|---|---|
+| `logo.webp` | le logo, 100 × 100 px | ✅ reçu le 24/08/2026, échantillonné |
+| `facade-portail-bleu.webp` | la devanture, 1360 × 765 px | ✅ reçue |
 
-Le logo n'a pas pu être récupéré : collé dans un message de conversation, il
-m'est montré mais n'est **jamais écrit sur le disque** du conteneur. Les trois
-modèles 3D de la session précédente, eux, étaient bien arrivés — ils avaient été
-joints **en tant que fichiers**, pas collés dans le texte.
+## Ce qui a été extrait du logo
 
-## Comment le fournir
-
-Joignez-le **en pièce jointe / fichier** (comme un `.glb` ou un `.pdf`), pas en
-image collée dans le message. Format : PNG haute définition ou SVG.
-
-## Ce qui se débloque à ce moment-là
-
-```bash
-node scripts/echantillonner-logo.mjs public/brand/logo.png   # les hex exacts
-# reporter les valeurs dans design/palette.json, puis :
-node scripts/generer-tokens.mjs                              # régénère le CSS
-node scripts/contraste.mjs                                   # revalide les paires
+```
+accent (trait de la voiture) : #2A7687
+encre  (lettrage et clé)     : #0E1015
 ```
 
-1. **La palette réelle.** Les valeurs actuelles sont provisoires et marquées
-   `"_echantillonne": false` dans `design/palette.json`.
-2. **Le calage typographique.** L'appariement avec Familjen Grotesk se tranche
-   par superposition, pas au jugé.
-3. **Le mot-symbole de l'en-tête**, aujourd'hui composé en typographie.
-4. **Les favicons et l'image Open Graph**, dérivés de l'élément signature.
-5. **La forme de fermeture de la ligne signature**, qui doit retomber sur le logo.
+Mesurés par `scripts/echantillonner-logo.mjs`, puis propagés dans
+`design/palette.json` → `scripts/generer-tokens.mjs` → `src/styles/tokens.css`.
 
-## Pourquoi il n'y a pas de faux logo ici
+⚠️ Le tri par fréquence ne trouve **pas** le turquoise : le trait est fin, il
+pèse ~3 % des pixels. Il faut trier par **chromie**. Si vous refaites la mesure
+un jour, c'est le piège.
 
-Un placeholder graphique finit toujours par être pris pour la charte. Le nom est
-donc composé en typographie dans l'en-tête — c'est honnête, ça tient visuellement,
-et le remplacement ne touchera qu'un seul composant.
+## Ce qui manque encore
+
+**Un logo en vectoriel ou en haute définition.** 100 × 100 px suffit pour la
+couleur, pas pour les favicons, l'image Open Graph, ni pour dessiner la forme sur
+laquelle la ligne signature doit se refermer.

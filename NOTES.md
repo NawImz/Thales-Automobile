@@ -145,3 +145,63 @@ la raison n°2 porte un vrai prix tiré du barème.
 
 Un seul `<h1>`, hiérarchie de titres sans saut de niveau (H1 › H2 › H3 › H2),
 aucun débordement horizontal.
+
+---
+
+## Phase 3 · Étape 3 — le logo arrive, et il corrige le plan
+
+Reçu par push direct sur la branche, après trois tentatives infructueuses par la
+conversation. **Constat à retenir : une image collée dans un message n'atteint
+jamais le disque du conteneur** ; un fichier joint, si. Les trois GLB de la
+session précédente le prouvaient, ils étaient bien arrivés.
+
+### L'échantillonnage a demandé une autre méthode
+
+Le tri par fréquence — celui que le starter recommande — **n'a pas trouvé le
+turquoise**. Le trait de la voiture est fin : il pèse ~3 % des pixels et se fait
+écraser par le lettrage et par l'anticrénelage. Les huit clusters dominants
+étaient tous des gris.
+
+Il a fallu trier par **chromie** et prendre la moyenne des 30 pixels les plus
+chromatiques — le cœur du trait, là où la couleur n'est pas mélangée au fond.
+
+```
+accent : #2A7687   (bleu-canard, pas le turquoise vif attendu)
+encre  : #0E1015
+```
+
+### Le sixième token est mort de sa belle mort
+
+J'avais fait valider une palette à 6 en écrivant que si l'accent réel passait les
+seuils, on reviendrait à 5. **C'est ce qui est arrivé** : `#2A7687` donne 4,85 en
+texte sur fond clair et 5,20 en libellé blanc. Le token de secours est supprimé.
+Palette finale : **5 tokens, 9 paires, 0 échec** — conforme au brief d'origine.
+
+### ⚠️ La vraie correction : le lettrage n'est pas un grotesque
+
+Mon plan disait « grotesque géométrique » et retenait Familjen Grotesk. Je
+reprenais la caractérisation du brief, que ma lecture d'une petite image
+confirmait. **Le fichier montre un slab serif.**
+
+Vérifié par calage plutôt que par intuition : le mot du logo rendu côte à côte
+avec Roboto Slab, Bitter, Rokkitt et Familjen. L'absence totale d'empattement de
+Familjen saute aux yeux. Retenu : **Roboto Slab**, dont la chasse et la graisse
+collent le mieux au « AUTOMOBILE » large et lourd du logo.
+
+Limite assumée : à 100 × 100 px le mot ne fait que ~84 × 36 px. Assez pour
+trancher « slab, lourd, large », pas pour identifier la fonte exacte. Un
+vectoriel est demandé en « important », pas en bloquant.
+
+### `<Image>` n'accepte pas `formats`
+
+Écrit `formats={['avif','webp']}` sur `<Image>` : ignoré en silence, seul du WebP
+sortait. `formats` est une prop de **`<Picture>`**, pas de `<Image>`. Vérifié
+dans `astro/components/Picture.astro:35`. Après bascule : 3 AVIF + 4 WebP
+générés, `type="image/avif"` présent dans le HTML.
+
+### Une incohérence que la photo révèle
+
+La banderole de la devanture porte **09 86 36 04 01**. Le site affiche
+**06 69 68 63 84**. Un visiteur qui voit les deux ne sait pas lequel appeler —
+et c'est la conversion n°1. Passé en tête des points bloquants de
+`TODO-CLIENT.md`.

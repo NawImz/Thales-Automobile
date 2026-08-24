@@ -3,15 +3,9 @@
    La source est design/palette.json.
    ───────────────────────────────────────────────────────────── */
 
-  /* ⚠️ Palette NON échantillonnée : le fichier du logo manque encore.
-     Voir TODO-CLIENT.md. Regénérer après réception :
-       node scripts/echantillonner-logo.mjs public/brand/<logo>
-       node scripts/generer-tokens.mjs && node scripts/contraste.mjs */
-
 @theme {
-  --color-encre: #111417;
-  --color-turquoise: #0E7C7C;
-  --color-turquoise-signature: #17A2A2;
+  --color-encre: #0E1015;
+  --color-turquoise: #2A7687;
   --color-blanc-atelier: #F7F7F5;
   --color-gris-texte: #5A605E;
   --color-gris-trait: #7E847F;

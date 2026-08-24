@@ -1,23 +1,68 @@
 {
-  "_avertissement": "L'accent n'a PAS été échantillonné : le fichier du logo n'est pas dans le dépôt. `turquoise-signature` porte une valeur de travail. Dès réception : node scripts/echantillonner-logo.mjs public/brand/<logo>, reporter les hex ici, relancer node scripts/contraste.mjs.",
-  "_echantillonne": false,
+  "_echantillonne": true,
   "couleurs": {
-    "encre":               "#111417",
-    "turquoise":           "#0E7C7C",
-    "turquoise-signature": "#17A2A2",
-    "blanc-atelier":       "#F7F7F5",
-    "gris-texte":          "#5A605E",
-    "gris-trait":          "#7E847F"
+    "encre": "#0E1015",
+    "turquoise": "#2A7687",
+    "blanc-atelier": "#F7F7F5",
+    "gris-texte": "#5A605E",
+    "gris-trait": "#7E847F"
   },
   "usages": [
-    { "nom": "titres et corps sur clair",        "devant": "encre",        "derriere": "blanc-atelier", "type": "corps" },
-    { "nom": "texte secondaire sur clair",       "devant": "gris-texte",   "derriere": "blanc-atelier", "type": "corps" },
-    { "nom": "lien turquoise sur clair",         "devant": "turquoise",    "derriere": "blanc-atelier", "type": "corps" },
-    { "nom": "icone porteuse de sens sur clair", "devant": "turquoise",    "derriere": "blanc-atelier", "type": "interface" },
-    { "nom": "libelle blanc sur bouton accent",  "devant": "#FFFFFF",      "derriere": "turquoise",     "type": "corps" },
-    { "nom": "cadre de composant sur clair",     "devant": "gris-trait",   "derriere": "blanc-atelier", "type": "interface" },
-    { "nom": "texte clair sur encre (pied)",     "devant": "blanc-atelier","derriere": "encre",         "type": "corps" },
-    { "nom": "turquoise sur encre (pied)",       "devant": "turquoise",    "derriere": "encre",         "type": "interface" },
-    { "nom": "anneau de focus sur clair",        "devant": "encre",        "derriere": "blanc-atelier", "type": "interface" }
-  ]
+    {
+      "nom": "titres et corps sur clair",
+      "devant": "encre",
+      "derriere": "blanc-atelier",
+      "type": "corps"
+    },
+    {
+      "nom": "texte secondaire sur clair",
+      "devant": "gris-texte",
+      "derriere": "blanc-atelier",
+      "type": "corps"
+    },
+    {
+      "nom": "lien turquoise sur clair",
+      "devant": "turquoise",
+      "derriere": "blanc-atelier",
+      "type": "corps"
+    },
+    {
+      "nom": "icone porteuse de sens sur clair",
+      "devant": "turquoise",
+      "derriere": "blanc-atelier",
+      "type": "interface"
+    },
+    {
+      "nom": "libelle blanc sur bouton accent",
+      "devant": "#FFFFFF",
+      "derriere": "turquoise",
+      "type": "corps"
+    },
+    {
+      "nom": "cadre de composant sur clair",
+      "devant": "gris-trait",
+      "derriere": "blanc-atelier",
+      "type": "interface"
+    },
+    {
+      "nom": "texte clair sur encre (pied)",
+      "devant": "blanc-atelier",
+      "derriere": "encre",
+      "type": "corps"
+    },
+    {
+      "nom": "turquoise sur encre (pied)",
+      "devant": "turquoise",
+      "derriere": "encre",
+      "type": "interface"
+    },
+    {
+      "nom": "anneau de focus sur clair",
+      "devant": "encre",
+      "derriere": "blanc-atelier",
+      "type": "interface"
+    }
+  ],
+  "_source": "Échantillonné depuis public/brand/logo.webp le 24/08/2026 par scripts/echantillonner-logo.mjs. L'accent est la moyenne des 30 pixels les plus chromatiques (le cœur du trait, non contaminé par l'anticrénelage) ; l'encre celle des 200 pixels les plus sombres et peu chromatiques (le lettrage).",
+  "_cinqTokens": "L'accent échantillonné passe AA seul (4,85 sur fond clair, 5,20 en blanc dessus) : le token `turquoise-signature` prévu en secours devient inutile. La palette revient à 5 valeurs, comme le brief le demandait."
 }

@@ -9,18 +9,37 @@ Mis à jour à chaque phase.
 
 | # | Élément | Pourquoi ça bloque |
 |---|---|---|
-| 1 | **Le fichier du logo**, dans `/public/brand/` (PNG haute définition ou SVG) | Tout le langage visuel en découle. Sans le fichier je ne peux pas pipetter les hex, et le brief interdit — à raison — de les deviner. La palette entière et le calage typographique en dépendent. |
-| 2 | **Arbitrage : Astro 7 ou Astro 5** | Le brief dit 5, la 7.2.4 est installée et vous m'aviez dit de la garder. Ma recommandation : rester en 7 (voir `SETUP.md` §5). |
-| 3 | **Arbitrage : palette à 6 valeurs** | Aucun turquoise unique ne passe WCAG AA à la fois en libellé blanc et en libellé encre. Détail chiffré dans `DESIGN-PLAN.md` §3. |
+| # | Élément | Pourquoi ça bloque |
+|---|---|---|
+| 1 | **Quel numéro affiche-t-on ?** | La banderole de la devanture porte **09 86 36 04 01**, le site affiche **06 69 68 63 84**. Un visiteur qui voit les deux ne sait pas lequel appeler — et c'est la conversion n°1. Les deux sont dans `garage.json`, dites-moi lequel est le principal. |
+
+**Résolus depuis :** le logo est reçu et échantillonné (`#2A7687` / `#0E1015`) ;
+Astro 7 et la palette sont arbitrés. La palette est d'ailleurs **revenue à
+5 tokens** : l'accent réel passe AA seul, le sixième est devenu inutile.
 
 ## 🟠 IMPORTANT — le site fonctionnera, mais incomplet ou juridiquement exposé
+
+### Le logo en haute définition ou en vectoriel
+
+Le fichier reçu fait **100 × 100 px**. C'est suffisant pour la couleur — un pixel
+est un fait — mais pas pour le reste :
+
+- le mot du logo n'y fait que ~84 × 36 px, trop grossier pour identifier la fonte
+  exacte du lettrage (j'ai retenu Roboto Slab par comparaison, voir
+  `DESIGN-PLAN.md` §4) ;
+- il est inexploitable pour les favicons, l'image Open Graph et l'en-tête en
+  écran haute densité ;
+- la ligne signature doit se refermer sur la forme du logo : il me faut un tracé
+  net pour la dessiner.
+
+**Un SVG serait idéal.** À défaut, un PNG d'au moins 1000 px de côté.
 
 ### Photos (le site vit ou meurt dessus)
 
 | Cliché | Usage |
 |---|---|
-| **Le hangar : une voiture sur pont ET un moteur hors-bord dans le même cadre** | **le hero.** C'est le cliché qui raconte tout le positionnement en une image. Le plus important des sept. |
-| La façade avec le portail bleu | bloc « Venir », repère pour trouver l'entrée |
+| **Le hangar : une voiture sur pont ET un moteur hors-bord dans le même cadre** | **le hero.** C'est le cliché qui raconte tout le positionnement en une image. Le plus important des sept. ⚠️ En attendant, le hero affiche la façade — ce n'est pas le bon cliché, il tient la place. |
+| ~~La façade avec le portail bleu~~ | ✅ **reçue**, en place dans le hero à titre provisoire |
 | Nabil au travail | bloc « Pourquoi on nous fait confiance » |
 | Plan serré de mains sur un moteur | bloc « Ce qu'on répare » |
 | Le mur de pièces détachées | page `/tarifs` |
