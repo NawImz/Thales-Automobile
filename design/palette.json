@@ -5,7 +5,9 @@
     "turquoise": "#2A7687",
     "blanc-atelier": "#F7F7F5",
     "gris-texte": "#5A605E",
-    "gris-trait": "#7E847F"
+    "gris-trait": "#7E847F",
+    "or": "#F5A800",
+    "or-trait": "#B87A0A"
   },
   "usages": [
     {
@@ -61,8 +63,15 @@
       "devant": "encre",
       "derriere": "blanc-atelier",
       "type": "interface"
+    },
+    {
+      "nom": "contour des étoiles sur clair",
+      "devant": "or-trait",
+      "derriere": "blanc-atelier",
+      "type": "interface"
     }
   ],
   "_source": "Échantillonné depuis public/brand/logo.webp le 24/08/2026 par scripts/echantillonner-logo.mjs. L'accent est la moyenne des 30 pixels les plus chromatiques (le cœur du trait, non contaminé par l'anticrénelage) ; l'encre celle des 200 pixels les plus sombres et peu chromatiques (le lettrage).",
-  "_cinqTokens": "L'accent échantillonné passe AA seul (4,85 sur fond clair, 5,20 en blanc dessus) : le token `turquoise-signature` prévu en secours devient inutile. La palette revient à 5 valeurs, comme le brief le demandait."
+  "_cinqTokens": "L'accent échantillonné passe AA seul (4,85 sur fond clair, 5,20 en blanc dessus) : le token `turquoise-signature` prévu en secours devient inutile. La palette revient à 5 valeurs, comme le brief le demandait.",
+  "_etoiles": "L'or #F5A800 ne fait que 1,87:1 sur le fond clair. Il est utilisé en REMPLISSAGE d'étoiles DÉCORATIVES : la note « 4,6 » et le nombre d'avis sont toujours écrits en toutes lettres à côté, donc les étoiles ne portent aucune information exclusive et le critère 1.4.11 ne s'applique pas. Leur lisibilité vient du contour #B87A0A (3,36:1), qui lui passe le seuil. Un or assez foncé pour passer seul ne serait plus jaune."
 }

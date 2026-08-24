@@ -12,22 +12,18 @@ const services = (await getCollection('services'))
       <h2 id="titre-reparer" class="text-[length:var(--text-2xl)] font-extrabold">
         Ce qu'on répare
       </h2>
-      <a href="/#devis" class="lien-trait cible inline-flex items-center gap-2 text-sm font-semibold">
+      <a href="/#venir" class="lien-trait cible inline-flex items-center gap-2 text-sm font-semibold">
         Demander un devis
         <Trait nom="fleche" class="size-4" />
       </a>
     </div>
 
-    <ul class="mt-10 grid gap-px bg-gris-trait sm:grid-cols-2 lg:grid-cols-3">
+    <ul class="grille-trait mt-10 grid sm:grid-cols-2 lg:grid-cols-3">
       {services.map((s) => (
-        <li class="carte group relative bg-blanc-atelier p-7">
+        <li class="carte group relative p-7">
           <Trait nom={s.data.trait} class="size-7 text-encre" />
           <h3 class="mt-5 font-display text-lg font-bold">{s.data.titre}</h3>
           <p class="mt-2 text-sm text-gris-texte">{s.data.phrase}</p>
-          <p class="mt-5 flex items-baseline gap-2">
-            <span class="font-mono text-xs tracking-widest text-gris-texte uppercase">durée</span>
-            <span class="chiffres font-display text-lg font-bold">{s.data.duree}</span>
-          </p>
           <!-- Le cadre qui se resserre d'un cran au survol : pas d'ombre,
                pas d'élévation, pas d'agrandissement. -->
           <span class="cadre-cran" aria-hidden="true"></span>

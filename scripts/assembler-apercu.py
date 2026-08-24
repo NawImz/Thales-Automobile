@@ -28,7 +28,6 @@ SP = pathlib.Path('.apercu'); SP.mkdir(exist_ok=True)
 PAGES = [
     ('/',                 'dist/index.html'),
     ('/bateaux-jet-ski',  'dist/bateaux-jet-ski/index.html'),
-    ('/mentions-legales', 'dist/mentions-legales/index.html'),
     ('/confidentialite',  'dist/confidentialite/index.html'),
 ]
 

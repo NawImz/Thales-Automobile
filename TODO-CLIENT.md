@@ -5,7 +5,14 @@ Mis à jour à chaque phase.
 
 ---
 
-## 🔴 BLOQUANT — la Phase 3 ne peut pas démarrer sans
+## 🔴 BLOQUANT — avant toute mise en ligne
+
+| # | Élément | Pourquoi |
+|---|---|---|
+| 0 | **Les mentions légales ont été retirées du site à votre demande.** | Elles restent **juridiquement obligatoires** : SIRET, forme juridique, TVA, assurance RC pro et médiateur de la consommation (art. L.612-1 du code de la consommation). Le site ne peut pas être publié sans. Dites-moi quand vous avez les informations, je remets la page en dix minutes. |
+| 0b | **Quel numéro affiche-t-on ?** | La banderole dit 09 86 36 04 01, le site affiche 06 69 68 63 84. Sur la photo du hero, un visiteur voit littéralement les deux. |
+
+## 🔴 Anciennement bloquant — la Phase 3 ne pouvait pas démarrer sans
 
 | # | Élément | Pourquoi ça bloque |
 |---|---|---|

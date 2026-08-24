@@ -90,6 +90,25 @@ h1, h2, h3 {
   @media (min-width: 64rem) { padding-block: 8rem; }
 }
 
+/**
+ * Grille en filets, à cellules TRANSPARENTES.
+ *
+ * ⚠️ La technique précédente — `gap-px` sur le parent, fond plein sur chaque
+ * cellule — exigeait des cellules opaques : le filet n'était que le fond du
+ * parent vu à travers l'écart. C'est ce qui recouvrait le décor d'aplats
+ * blancs. Ici le trait vient de vraies bordures, et les cellules ne peignent
+ * plus rien.
+ */
+@utility grille-trait {
+  border-top: var(--trait) solid var(--color-gris-trait);
+  border-left: var(--trait) solid var(--color-gris-trait);
+
+  & > * {
+    border-right: var(--trait) solid var(--color-gris-trait);
+    border-bottom: var(--trait) solid var(--color-gris-trait);
+  }
+}
+
 /** Le cadre au trait — le motif de base de tout le site. */
 @utility cadre {
   border: var(--trait) solid var(--color-gris-trait);

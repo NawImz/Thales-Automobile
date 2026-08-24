@@ -1,0 +1,67 @@
+---
+/**
+ * Les étoiles de la note Google.
+ *
+ * ⚠️ Elles sont DÉCORATIVES : la note et le nombre d'avis sont toujours écrits
+ * en toutes lettres à côté. Elles ne portent donc aucune information exclusive,
+ * ce qui autorise l'or vif (1,87:1 seulement sur le fond clair). Leur
+ * lisibilité vient du contour, plus foncé, qui passe le seuil de 3:1.
+ *
+ * ⚠️ La note n'est PAS balisée en aggregateRating — Google interdit de marquer
+ * des avis qu'on n'a pas collectés soi-même.
+ */
+interface Props { note: number; class?: string; }
+const { note, class: classe = '' } = Astro.props;
+
+// La dernière étoile se remplit partiellement : 4,6 → quatre pleines et 60 %.
+const parts = Array.from({ length: 5 }, (_, i) => Math.max(0, Math.min(1, note - i)));
+const D = 'M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3.1-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z';
+---
+<span class:list={['etoiles inline-flex items-center gap-0.5', classe]} data-etoiles>
+  {parts.map((part, i) => (
+    <svg viewBox="0 0 24 24" class="etoile" style={`--part:${part}; --rang:${i}`} aria-hidden="true">
+      <defs>
+        <linearGradient id={`remplissage-${i}`} x1="0" x2="1" y1="0" y2="0">
+          <stop offset={`${part * 100}%`} stop-color="var(--color-or)" />
+          <stop offset={`${part * 100}%`} stop-color="transparent" />
+        </linearGradient>
+      </defs>
+      <path d={D} fill={`url(#remplissage-${i})`} stroke="var(--color-or-trait)" stroke-width="1.4" stroke-linejoin="round" />
+    </svg>
+  ))}
+</span>
+
+<style>
+  .etoile { width: 1.15em; height: 1.15em; display: block; }
+
+  /* ⚠️ `transform` et `opacity` seulement — comme partout ailleurs sur ce site. */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-etoiles][data-anime] .etoile {
+      opacity: 0;
+      transform: scale(0.4) rotate(-40deg);
+      animation: poser-etoile 460ms cubic-bezier(.34, 1.4, .64, 1) forwards;
+      animation-delay: calc(var(--rang) * 90ms);
+    }
+  }
+  @keyframes poser-etoile {
+    to { opacity: 1; transform: none; }
+  }
+</style>
+
+<script>
+  /**
+   * Les étoiles ne se posent qu'une fois, à l'entrée dans le viewport.
+   * ⚠️ L'état animé n'est ACTIVÉ qu'à ce moment : si on posait l'opacité à 0
+   * d'avance, des étoiles jamais atteintes resteraient invisibles — la même
+   * faute que celle qui affichait « 00 » sur les compteurs.
+   */
+  document.querySelectorAll<HTMLElement>('[data-etoiles]').forEach((groupe) => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const guetteur = new IntersectionObserver((entrees) => {
+      if (!entrees.some((e) => e.isIntersecting)) return;
+      guetteur.disconnect();
+      groupe.setAttribute('data-anime', '');
+    }, { threshold: 0.6 });
+    guetteur.observe(groupe);
+  });
+</script>

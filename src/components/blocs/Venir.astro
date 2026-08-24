@@ -14,17 +14,13 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
   <div class="mx-auto max-w-7xl px-5 sm:px-8">
     <h2 id="titre-venir" class="text-[length:var(--text-2xl)] font-extrabold">Venir</h2>
 
-    <div class="mt-10 grid gap-px bg-gris-trait lg:grid-cols-3">
+    <div class="grille-trait mt-10 grid lg:grid-cols-3">
       <!-- Adresse et repère -->
-      <div class="bg-blanc-atelier p-7">
+      <div class="p-7">
         <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">L'atelier</h3>
         <address class="mt-4 text-lg not-italic">
           {a.rue}<br />{a.codePostal} {a.ville}
         </address>
-        <p class="mt-4 flex items-start gap-2.5 text-sm text-gris-texte">
-          <Trait nom="itineraire" class="mt-0.5 size-4" />
-          <span>{a.repere}</span>
-        </p>
         <a
           href={lienItineraire()}
           data-event="itineraire" data-contexte="venir"
@@ -36,7 +32,7 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
       </div>
 
       <!-- Horaires, avec l'état calculé en direct -->
-      <div class="bg-blanc-atelier p-7">
+      <div class="p-7">
         <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">Horaires</h3>
         <p class="mt-4 flex items-center gap-2 font-semibold">
           <Trait nom="horloge" class="size-4" />
@@ -55,7 +51,7 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
       </div>
 
       <!-- Contact -->
-      <div class="bg-blanc-atelier p-7">
+      <div class="p-7">
         <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">Nous joindre</h3>
         <div class="mt-4 flex flex-col gap-3">
           <Bouton href={lienTel(tel.numero)} variante="accent-desktop" class="flex" data-event="appel" data-contexte="venir">
@@ -74,25 +70,6 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
       </div>
     </div>
 
-    <!--
-      ⚠️ Pas d'iframe Google Maps (le brief l'interdit, et c'est justifié :
-      c'est un tiers qui pose des cookies, ralentit la page et casse le score
-      Lighthouse). Un vrai plan statique demande les coordonnées GPS, qui ne
-      sont pas fournies — je ne dessine donc AUCUNE géométrie de rue, ce serait
-      inventer. Ce bandeau porte le repère réel et ouvre l'itinéraire.
-    -->
-    <a
-      href={lienItineraire()}
-      data-event="itineraire" data-contexte="plan"
-      class="plan group mt-px flex items-center justify-between gap-6 bg-blanc-atelier p-7 cadre"
-    >
-      <span>
-        <span class="font-mono text-xs tracking-widest text-gris-texte uppercase">Le repère</span>
-        <span class="mt-2 block text-lg font-semibold">{a.repere}</span>
-        <span class="mt-1 block text-sm text-gris-texte">Ouvrir dans l'application de navigation</span>
-      </span>
-      <Trait nom="fleche" class="size-6 shrink-0 transition-transform group-hover:translate-x-1" />
-    </a>
   </div>
 </section>
 

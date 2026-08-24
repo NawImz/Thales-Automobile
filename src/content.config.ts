@@ -16,8 +16,11 @@ const services = defineCollection({
     // ⚠️ AUCUN PRIX sur ce site. Le client n'en a communiqué aucun, et un prix
     // inventé engage le garage. Le champ est explicitement interdit : toute
     // réintroduction casse le build au lieu de passer en production.
+    // ⚠️ Ni prix ni durée sur ce site : le client n'a communiqué aucun des
+    // deux, et les annoncer l'engagerait. Les deux champs sont explicitement
+    // interdits — toute réintroduction casse le build.
     prixDepart: z.never().optional(),
-    duree: z.string(),
+    duree: z.never().optional(),
     trait: z.string(),
   }),
 });

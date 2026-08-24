@@ -1,97 +1,52 @@
 ---
 /**
- * Compteur en molettes d'odomètre.
+ * Compteur qui monte progressivement depuis zéro.
  *
- * ⚠️ ENTIERS UNIQUEMENT. Un odomètre compte des entiers : le voir s'arrêter
- * sur « 4,6 » est un contresens mécanique, et une décimale qui tourne est
- * illisible. La note Google s'affiche donc fixe, ailleurs.
- *
- * ⚠️ Jamais sur un chiffre inventé : la valeur vient toujours de garage.json
- * ou du barème.
+ * ⚠️ ENTIERS UNIQUEMENT — une décimale qui défile est illisible, et la note
+ * Google s'affiche fixe à côté de ses étoiles.
+ * ⚠️ Jamais sur un chiffre inventé : la valeur vient de garage.json.
  */
 interface Props { valeur: number; class?: string; }
 const { valeur, class: classe = '' } = Astro.props;
 
 if (!Number.isInteger(valeur)) {
-  throw new Error(`Compteur : ${valeur} n'est pas un entier. Voir le commentaire du composant.`);
+  throw new Error(`Compteur : ${valeur} n'est pas un entier.`);
 }
-const chiffres = String(valeur).split('');
 ---
-<span class:list={['compteur chiffres inline-flex', classe]} data-compteur aria-label={String(valeur)}>
-  {chiffres.map((c) => (
-    <span class="molette" aria-hidden="true">
-      <span class="ruban" data-cible={c}>
-        {Array.from({ length: 10 }, (_, i) => <span class="cran">{i}</span>)}
-      </span>
-    </span>
-  ))}
-</span>
-
-<style>
-  .molette {
-    display: inline-block;
-    height: 1em;
-    overflow: hidden;
-    vertical-align: baseline;
-  }
-  .ruban {
-    display: flex;
-    flex-direction: column;
-    /* Position finale par défaut : sans JS, ou en mouvement réduit,
-       le bon chiffre est déjà affiché. */
-    transform: translateY(calc(var(--cible, 0) * -1em));
-  }
-  .cran {
-    display: block;
-    height: 1em;
-    line-height: 1;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .compteur[data-anime] .ruban {
-      transition: transform 900ms steps(10, end);
-    }
-  }
-</style>
+<span class:list={['chiffres tabular-nums', classe]} data-compteur data-cible={valeur}>{valeur}</span>
 
 <script>
   /**
-   * Les molettes ne roulent qu'une fois, à l'entrée dans le viewport.
-   * En mouvement réduit : rien ne roule, la valeur finale est déjà en place
-   * par le CSS ci-dessus.
+   * ⚠️ La valeur finale est celle rendue par le serveur, et elle RESTE tant
+   * que le compteur n'est pas atteint. On ne remet à zéro qu'au moment
+   * d'animer — sinon un compteur sous le pli reste figé sur « 0 », et un
+   * garage qui annonce « 0 an d'ancienneté » est pire que pas d'animation.
+   * (Faute déjà commise et corrigée : elle ne doit pas revenir.)
    */
   const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  document.querySelectorAll<HTMLElement>('[data-compteur]').forEach((compteur) => {
-    const rubans = compteur.querySelectorAll<HTMLElement>('.ruban');
-    const poser = (anime: boolean) => {
-      if (anime) compteur.setAttribute('data-anime', '');
-      rubans.forEach((r, i) => {
-        const cible = Number(r.dataset.cible ?? 0);
-        // Départ décalé d'une molette à l'autre : c'est ce décalage qui fait
-        // « mécanique » plutôt que « chiffre qui change ».
-        setTimeout(() => r.style.setProperty('--cible', String(cible)), anime ? i * 90 : 0);
-      });
-    };
+  document.querySelectorAll<HTMLElement>('[data-compteur]').forEach((el) => {
+    const cible = Number(el.dataset.cible ?? 0);
+    if (reduit || !cible) return;
 
-    if (reduit) { poser(false); return; }
-
-    /**
-     * ⚠️ Ne JAMAIS poser le zéro à l'avance.
-     * Première version : je remettais tous les compteurs à 0 au chargement puis
-     * j'attendais l'observateur. Résultat, tout compteur sous le pli restait
-     * figé sur « 00 » — un garage qui affiche « depuis 00 ans ». Et si le
-     * script échoue entre les deux, le faux chiffre est définitif.
-     *
-     * Le zéro n'est donc posé qu'au moment d'animer, et la valeur cible est
-     * rétablie dans la foulée : aucune image ne montre un chiffre faux.
-     */
     const guetteur = new IntersectionObserver((entrees) => {
       if (!entrees.some((e) => e.isIntersecting)) return;
       guetteur.disconnect();
-      rubans.forEach((r) => r.style.setProperty('--cible', '0'));
-      requestAnimationFrame(() => requestAnimationFrame(() => poser(true)));
+
+      const duree = 900;
+      let debut = 0;
+      function pas(t: number) {
+        if (!debut) debut = t;
+        const p = Math.min(1, (t - debut) / duree);
+        // Sortie en douceur : rapide au départ, ralentit sur la fin.
+        const e = 1 - Math.pow(1 - p, 3);
+        el.textContent = String(Math.round(cible * e));
+        if (p < 1) requestAnimationFrame(pas);
+        else el.textContent = String(cible); // jamais d'arrondi faux à l'arrivée
+      }
+      requestAnimationFrame(pas);
     }, { threshold: 0.6 });
-    guetteur.observe(compteur);
+
+    guetteur.observe(el);
   });
 </script>

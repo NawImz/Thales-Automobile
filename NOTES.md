@@ -455,3 +455,78 @@ que le plan initial annonçait Familjen Grotesk. Vérification faite dans
 `DESIGN-PLAN.md` §4 : c'est une **correction documentée**, prise après réception
 du logo — le lettrage est un slab serif, pas un grotesque. Rien à réparer.
 Le réflexe reste bon : vérifier avant de « corriger ».
+
+---
+
+## Retour client — hero saccadé, épuration, étoiles
+
+### La cause de la saccade du hero
+
+Deux fautes cumulées, toutes deux dans l'entrée :
+
+1. **`clip-path` n'est pas composé par le GPU.** Le « rideau d'atelier »
+   l'animait, ce qui forçait le navigateur à **repeindre tout le hero — photo
+   de 126 Ko comprise — à chaque palier**. C'était la cause principale.
+2. **`steps()` produit un mouvement haché par construction.** C'était l'idée du
+   « cliquet », mais à l'arrivée sur la page ça ne se lit pas comme une
+   intention : ça se lit comme un bug. Le client l'a signalé trois fois.
+
+**Refait en `transform` et `opacity` uniquement**, en courbe lisse
+(`cubic-bezier(.22,.61,.36,1)`), avec `will-change` posé le temps de l'entrée.
+Ce sont les deux seules propriétés que le navigateur anime sans repeindre.
+
+⚠️ Leçon : le cliquet reste valable au survol, où l'utilisateur provoque le
+mouvement et le lit comme une texture. **À l'arrivée sur une page, il n'a rien
+provoqué : tout hachage est interprété comme une panne.**
+
+### Épuration demandée
+
+Retirés : durées de réparation (champ interdit dans le schéma, comme les prix),
+bloc « Préparez votre passage », page mentions légales, bandeau du repère,
+outils flottants.
+
+⚠️ **Les mentions légales sont retirées à la demande du client. Elles restent
+juridiquement obligatoires avant une mise en ligne** — c'est consigné en tête de
+`TODO-CLIENT.md`, ce n'est pas un oubli.
+
+### Les fonds blancs qui masquaient la route
+
+La grille en filets reposait sur `gap-px` + fond plein : le trait n'était que le
+fond du parent vu à travers un écart d'un pixel. Les cellules **devaient** donc
+être opaques — et c'est exactement ce qui recouvrait le décor d'aplats blancs.
+
+Remplacé par un utilitaire `grille-trait` à vraies bordures. Le trait est
+identique, les cellules ne peignent plus rien, la route passe derrière.
+
+### Deux routes, cinq voitures
+
+Les outils sont remplacés par une seconde route, à gauche, qui serpente en sens
+inverse. Cinq voitures désormais, réparties sur les deux gouttières.
+
+### Étoiles or et compteurs progressifs
+
+⚠️ **Arbitrage de contraste.** Mesuré : l'or vif `#F5A800` ne fait que **1,87:1**
+sur le fond clair. Un or assez foncé pour passer seul (`#B87A0A`, 3,36:1) n'est
+plus jaune.
+
+Résolu par le statut : la note « 4,6 » et le nombre d'avis sont **toujours
+écrits en toutes lettres à côté**, donc les étoiles ne portent aucune
+information exclusive — elles sont décoratives, et le critère 1.4.11 ne
+s'applique pas. Leur lisibilité vient d'un **contour** `#B87A0A`, qui lui passe
+le seuil. Les deux tokens sont dans la palette, la vérification passe 10 paires
+sur 10.
+
+La cinquième étoile se remplit à 60 % pour représenter 4,6 — dégradé à deux
+arrêts, pas une demi-étoile approximative.
+
+Les molettes d'odomètre sont remplacées par une **montée progressive depuis 0**,
+en `requestAnimationFrame` avec sortie en douceur. ⚠️ Même précaution que
+précédemment : **le zéro n'est posé qu'au moment d'animer**, la valeur rendue
+par le serveur reste affichée tant que le compteur n'est pas atteint.
+
+### Un bug d'espace, de la même famille que « DITCE »
+
+Astro minifie l'espace entre un mot et un composant placé à la ligne suivante :
+« depuis\n<Compteur/> » sortait **« depuis20 ans »**. Corrigé par des entités
+insécables explicites — qui sont de toute façon la bonne typographie française
+devant un nombre.

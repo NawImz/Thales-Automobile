@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import Trait from '../socle/Trait.astro';
+import Etoiles from '../socle/Etoiles.astro';
 import Compteur from '../socle/Compteur.astro';
 import Cliche from '../socle/Cliche.astro';
 import { garage } from '../../lib/garage';
@@ -22,8 +22,7 @@ const note = garage.avisGoogle.note.toString().replace('.', ',');
           Pourquoi on nous<br />fait confiance
         </h2>
         <p class="mt-5 text-gris-texte">
-          Nabil Bendjeddou tient l'atelier de la rue du Port depuis
-          <Compteur valeur={garage.anneesExperience} /> ans. La plupart des
+          Nabil Bendjeddou tient l'atelier de la rue du Port depuis&nbsp;<Compteur valeur={garage.anneesExperience} />&nbsp;ans. La plupart des
           clients qui écrivent parlent de la même chose : on leur a dit ce qui
           n'était pas à changer.
         </p>
@@ -32,7 +31,7 @@ const note = garage.avisGoogle.note.toString().replace('.', ',');
              aggregateRating : on ne balise pas des avis qu'on n'a pas
              collectés soi-même. -->
         <div class="mt-8 flex items-center gap-4 cadre p-5">
-          <Trait nom="etoile" class="size-8" />
+          <Etoiles note={garage.avisGoogle.note} class="text-2xl" />
           <p>
             <span class="chiffres text-2xl font-bold">{note}</span>
             <span class="text-gris-texte"> sur </span>
@@ -49,9 +48,9 @@ const note = garage.avisGoogle.note.toString().replace('.', ',');
         </div>
       </div>
 
-      <ul class="mt-12 grid gap-px bg-gris-trait lg:mt-0">
+      <ul class="grille-trait mt-12 grid lg:mt-0">
         {avis.map((a) => (
-          <li class="bg-blanc-atelier p-7">
+          <li class="p-7">
             <blockquote>
               <p class="text-lg">« {a.data.extrait} »</p>
             </blockquote>
