@@ -7,7 +7,6 @@ import facade from '../../assets/photos/facade-portail-bleu.webp';
 import { garage, a, tel, lienTel, statutOuverture } from '../../lib/garage';
 
 const statut = statutOuverture();
-const ouvertSamedi = garage.horaires.find((h) => h.jour === 6)?.ouvre != null;
 ---
 <section class="relative isolate overflow-hidden">
   <div class="mx-auto max-w-7xl px-5 pt-10 pb-16 sm:px-8 lg:grid lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16 lg:pt-16 lg:pb-24">
@@ -47,7 +46,6 @@ const ouvertSamedi = garage.horaires.find((h) => h.jour === 6)?.ouvre != null;
         </span>
         <span aria-hidden="true">·</span>
         <span><span class="chiffres">{garage.avisGoogle.nombre}</span> avis Google</span>
-        {ouvertSamedi && (<><span aria-hidden="true">·</span><span>Ouvert <strong class="text-encre">le samedi</strong></span></>)}
         <span aria-hidden="true">·</span>
         <!-- Le statut est une information, jamais une action : il ne prend pas l'accent. -->
         <span class:list={[statut.ouvert ? 'font-semibold text-encre' : 'text-gris-texte']}>{statut.texte}</span>

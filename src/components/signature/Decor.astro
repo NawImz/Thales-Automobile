@@ -56,14 +56,6 @@
     </svg>
   ))}
 
-  <!-- Le garagiste, sa caisse à outils à la main. -->
-  <svg class="garagiste" viewBox="0 0 30 46" fill="none">
-    <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="14" cy="6" r="4" />
-      <path d="M14 10v13 M14 13h-6 M14 13h6 M14 23l-4 10 M14 23l4 10" class="jambes" />
-      <rect x="17" y="16" width="9" height="7" rx="1" class="caisse" />
-    </g>
-  </svg>
 </div>
 
 <style>
@@ -155,36 +147,9 @@
     100%  { transform: translate3d(0, 112vh, 0) rotate(0deg);      opacity: 0; }
   }
 
-  /* ── Le garagiste ──────────────────────────────────────────────────── */
-  .garagiste {
-    position: absolute;
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    left: -34px; bottom: 14vh;
-    width: 34px;
-    color: var(--color-gris-texte);
-    opacity: 0;
-    animation: marcher 83s linear infinite;
-  }
-  .garagiste .jambes { animation: pas 0.7s steps(2, end) infinite alternate; transform-origin: 14px 23px; }
-
-  /* Il traverse la marge gauche seulement — jamais la colonne de texte. */
-  /* Il traverse la marge gauche seulement — jamais la colonne de texte. */
-  @keyframes marcher {
-    0%    { transform: translate3d(0, 0, 0);   opacity: 0; }
-    2%    { opacity: 0.4; }
-    16%   { opacity: 0.4; }
-    19%   { transform: translate3d(7vw, 0, 0); opacity: 0; }
-    100%  { transform: translate3d(7vw, 0, 0); opacity: 0; }
-  }
-  @keyframes pas {
-    from { transform: skewX(-7deg); }
-    to   { transform: skewX(7deg); }
-  }
 
   /* ── Sous 64rem : pas de décor latéral, il n'y a pas de marge pour lui ── */
   @media (max-width: 63.99rem) {
-    .garagiste { display: none; }
     .route { width: 40vw; right: -18vw; opacity: 0.16; }
 
   }
@@ -195,7 +160,7 @@
    * une texture fixe.
    */
   @media (prefers-reduced-motion: reduce) {
-    .voiture, .garagiste { display: none; }
+    .voiture { display: none; }
     .route { animation: none; }
   }
 </style>

@@ -579,3 +579,41 @@ immédiatement et ça trahit la boucle.
 Le bandeau d'aperçu (le tampon de build passe en commentaire HTML, invisible
 mais toujours lisible dans le source) et l'emblème voiture→bateau, avec tout
 son système de formes morphables.
+
+---
+
+## Retour client — épuration et voiture seule sur l'onglet
+
+Retirés : le badge « Ouvert le samedi » du hero, le garagiste qui marche, la
+page confidentialité et son lien.
+
+⚠️ Deux occurrences de « samedi » subsistent volontairement : la ligne de
+l'horaire réel dans le tableau, et la description SEO « ouvert du lundi au
+samedi ». Le client visait le badge, pas le fait d'ouvrir le samedi — le
+supprimer partout aurait caché une information commerciale utile.
+
+### La voiture seule pour l'onglet
+
+Le favicon portait la voiture ET la clé. Pour n'isoler que la voiture, j'ai
+détecté les pixels turquoise (bleu et vert nettement au-dessus du rouge) : la
+carrosserie occupe **x 28-69, y 22-47**, alors que la clé, neutre et sombre,
+est entièrement à gauche de x=28.
+
+Le découpage se borne donc sur cette mesure, en descendant sous y=47 pour
+garder les roues, qui sont sombres et n'apparaissent pas dans la boîte
+turquoise. Le manche de la clé mordait encore dans le coin haut-gauche : effacé
+sur un triangle de 10 × 10 px, zone où la voiture n'a aucun pixel — vérifié sur
+le rendu avant d'effacer quoi que ce soit.
+
+### PROMPTS-IMAGES.md
+
+Prompts fournis pour les deux emplacements vides, avec les réglages communs
+(désaturé, lumière naturelle, aspect reportage) qui évitent qu'une image
+générée jure avec un site aussi blanc.
+
+⚠️ **Un avertissement inscrit dans le document** : l'emplacement « Nabil au
+travail » ne doit pas recevoir un visage généré. Présenter un inconnu
+synthétique comme le gérant à des clients qui viendront le rencontrer se
+retourne mal. Deux options honnêtes proposées — un cadrage sur les mains, sans
+visage, ou une vraie photo prise au téléphone. Si le cadrage mains est retenu,
+l'emplacement sera renommé pour que le site ne prétende rien.
