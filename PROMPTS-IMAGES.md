@@ -62,7 +62,13 @@ arrière-plan, sol béton, lumière naturelle latérale. Format 4:3.
 
 ---
 
-## 2. Le mécanicien au travail — `3 / 2`
+## 2. Le mécanicien au travail — *emplacement retiré*
+
+⚠️ **Cet emplacement n'existe plus sur le site** : le cadre a été supprimé à
+votre demande. Le prompt reste ici si vous voulez le réintroduire un jour — il
+faudra alors me le dire, je remets le bloc.
+
+### Si vous le réintroduisez — `3 / 2`
 
 ⚠️ **Un avertissement, et il compte.**
 

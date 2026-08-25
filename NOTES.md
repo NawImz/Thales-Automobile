@@ -617,3 +617,42 @@ synthétique comme le gérant à des clients qui viendront le rencontrer se
 retourne mal. Deux options honnêtes proposées — un cadrage sur les mains, sans
 visage, ou une vraie photo prise au téléphone. Si le cadrage mains est retenu,
 l'emplacement sera renommé pour que le site ne prétende rien.
+
+---
+
+## Retour client — apparitions au défilement
+
+Cadre « Nabil au travail » retiré.
+
+### Les apparitions, sans rien qui rame
+
+Ce site a saccadé trois fois de suite, toujours pour la même raison : du
+travail exécuté à chaque image de défilement. Les apparitions sont donc bâties
+pour n'en produire **aucun**.
+
+Un IntersectionObserver pose un attribut **une seule fois**, puis
+`unobserve()` décroche l'élément. Le CSS fait le reste en `transform` et
+`opacity`. Après le premier passage, plus rien ne tourne.
+
+Mesuré : **0 mutation du DOM en 2,5 s page immobile**, 0 script externe,
+22 éléments apparus, aucun resté invisible.
+
+### Le garde-fou qui compte
+
+⚠️ L'état masqué n'est appliqué **que si le script a démarré** —
+`html[data-anime]`, posé par le script lui-même. Vérifié dans le CSS compilé :
+l'unique règle qui pose `opacity: 0` sur `[data-apparition]` est bien préfixée.
+
+Sans JavaScript, ou si le script échoue, **rien n'est jamais caché**. C'est la
+leçon des compteurs figés à « 00 », appliquée d'avance cette fois : une
+animation ne doit jamais poser son état de départ avant d'être certaine de
+pouvoir jouer.
+
+Le tout vit sous `prefers-reduced-motion: no-preference` : en mouvement réduit,
+la règle n'existe pas du tout.
+
+### Un défaut de mise en page attrapé au passage
+
+L'encadré de la note Google se disloquait à 390 px — étoiles en `text-2xl` et
+ligne « 4,6 sur 61 avis » côte à côte, le lien passant à la ligne mot par mot.
+Passé en colonne sous `sm`, étoiles réduites. Vérifié : aucun débordement.

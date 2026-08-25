@@ -1,0 +1,79 @@
+---
+/**
+ * Les apparitions au défilement.
+ *
+ * ⚠️ CONTRAINTE ABSOLUE : ce site a saccadé trois fois de suite, et à chaque
+ * fois pour la même raison — du travail exécuté à chaque image de défilement.
+ * Ici, il n'y en a AUCUN. Un IntersectionObserver pose une fois un attribut,
+ * le CSS fait le reste en `transform` et `opacity`. Après le passage, plus une
+ * ligne de JavaScript ne s'exécute pour ces éléments.
+ *
+ * ⚠️ L'état masqué n'est appliqué QUE si le script a démarré (`data-anime` sur
+ * <html>). Sans JavaScript, ou s'il échoue, rien n'est jamais caché : le
+ * contenu reste visible. C'est la même leçon que les compteurs figés à « 00 ».
+ */
+---
+<style is:global>
+  @media (prefers-reduced-motion: no-preference) {
+    html[data-anime] [data-apparition] {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    html[data-anime] [data-apparition][data-vu] {
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 620ms cubic-bezier(.22, .61, .36, 1),
+        transform 620ms cubic-bezier(.22, .61, .36, 1);
+      transition-delay: calc(var(--rang, 0) * 85ms);
+    }
+
+    /* Variante latérale, pour les blocs qui arrivent d'un côté. */
+    html[data-anime] [data-apparition="gauche"] { transform: translateX(-26px); }
+    html[data-anime] [data-apparition="droite"] { transform: translateX(26px); }
+
+    /* Variante « au trait » : le cadre se dessine avant que le contenu entre. */
+    html[data-anime] [data-apparition="cadre"] {
+      opacity: 0;
+      transform: scale(0.985);
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Un seul observateur pour toute la page, et il se détache élément par
+   * élément une fois le passage fait : rien ne reste branché.
+   */
+  const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduit) {
+    document.documentElement.setAttribute('data-anime', '');
+
+    const cibles = document.querySelectorAll<HTMLElement>('[data-apparition]');
+
+    // Le rang sert au décalage en cascade, calculé par groupe de frères.
+    const parGroupe = new Map<Element, number>();
+    cibles.forEach((el) => {
+      const parent = el.parentElement!;
+      const rang = parGroupe.get(parent) ?? 0;
+      el.style.setProperty('--rang', String(Math.min(rang, 6)));
+      parGroupe.set(parent, rang + 1);
+    });
+
+    const guetteur = new IntersectionObserver(
+      (entrees) => {
+        for (const e of entrees) {
+          if (!e.isIntersecting) continue;
+          e.target.setAttribute('data-vu', '');
+          guetteur.unobserve(e.target); // une fois vu, on décroche
+        }
+      },
+      // Déclenche un peu avant l'entrée réelle : l'élément est déjà en place
+      // quand l'œil arrive dessus, au lieu d'être surpris en train de bouger.
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.05 },
+    );
+
+    cibles.forEach((el) => guetteur.observe(el));
+  }
+</script>

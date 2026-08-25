@@ -2,14 +2,11 @@
 import { getCollection } from 'astro:content';
 import Etoiles from '../socle/Etoiles.astro';
 import Compteur from '../socle/Compteur.astro';
-import Cliche from '../socle/Cliche.astro';
 import { garage } from '../../lib/garage';
 
 /**
- * ⚠️ Le brief demande quatre avis. Je n'en ai que TROIS de réels.
- * Aucun quatrième n'est inventé, et la grille est dimensionnée pour trois.
- * Le jour où Nabil en fournit d'autres, ils s'ajoutent au JSON, sans toucher
- * au code.
+ * ⚠️ Le brief demande quatre avis. Je n'en ai que TROIS de réels, et aucun
+ * quatrième n'est inventé. La grille est dimensionnée pour trois.
  */
 const avis = (await getCollection('avis')).sort((x, y) => x.data.ordre - y.data.ordre);
 const note = garage.avisGoogle.note.toString().replace('.', ',');
@@ -18,7 +15,7 @@ const note = garage.avisGoogle.note.toString().replace('.', ',');
   <div class="mx-auto max-w-7xl px-5 sm:px-8">
     <div class="lg:grid lg:grid-cols-[1fr_1.3fr] lg:items-start lg:gap-16">
       <div>
-        <h2 id="titre-confiance" class="text-[length:var(--text-2xl)] font-extrabold">
+        <h2 data-apparition id="titre-confiance" class="text-[length:var(--text-2xl)] font-extrabold">
           Pourquoi on nous<br />fait confiance
         </h2>
         <p class="mt-5 text-gris-texte">
@@ -30,8 +27,11 @@ const note = garage.avisGoogle.note.toString().replace('.', ',');
         <!-- La note est ATTRIBUÉE à Google et n'est pas balisée en
              aggregateRating : on ne balise pas des avis qu'on n'a pas
              collectés soi-même. -->
-        <div class="mt-8 flex items-center gap-4 cadre p-5">
-          <Etoiles note={garage.avisGoogle.note} class="text-2xl" />
+        <!-- ⚠️ En colonne sous `sm` : à 390 px, les étoiles en text-2xl et la
+             ligne « 4,6 sur 61 avis » côte à côte se disloquaient, le lien
+             passant à la ligne mot par mot. Mesuré à l'écran, pas supposé. -->
+        <div data-apparition="cadre" class="mt-8 flex flex-col items-start gap-3 cadre p-5 sm:flex-row sm:items-center sm:gap-5">
+          <Etoiles note={garage.avisGoogle.note} class="text-lg sm:text-2xl" />
           <p>
             <span class="chiffres text-2xl font-bold">{note}</span>
             <span class="text-gris-texte"> sur </span>
@@ -39,18 +39,15 @@ const note = garage.avisGoogle.note.toString().replace('.', ',');
             <span class="text-gris-texte"> avis</span><br />
             {garage.avisGoogle.url
               ? <a href={garage.avisGoogle.url} rel="noopener" class="cible text-sm text-turquoise">Voir la fiche Google</a>
-              : <span class="text-sm text-gris-texte">sur Google <span class="font-mono text-xs">[LIEN À FOURNIR]</span></span>}
+              : <span class="block text-sm whitespace-nowrap text-gris-texte">sur Google <span class="font-mono text-xs">[LIEN À FOURNIR]</span></span>}
           </p>
         </div>
 
-        <div class="mt-8">
-          <Cliche nom="Nabil au travail dans l'atelier" ratio="3 / 2" />
-        </div>
       </div>
 
       <ul class="grille-trait mt-12 grid lg:mt-0">
         {avis.map((a) => (
-          <li class="p-7">
+          <li data-apparition class="p-7">
             <blockquote>
               <p class="text-lg">« {a.data.extrait} »</p>
             </blockquote>

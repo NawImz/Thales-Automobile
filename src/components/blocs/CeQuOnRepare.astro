@@ -9,7 +9,7 @@ const services = (await getCollection('services'))
 <section class="section border-t border-gris-trait" id="reparer" aria-labelledby="titre-reparer">
   <div class="mx-auto max-w-7xl px-5 sm:px-8">
     <div class="flex flex-wrap items-end justify-between gap-4">
-      <h2 id="titre-reparer" class="text-[length:var(--text-2xl)] font-extrabold">
+      <h2 data-apparition id="titre-reparer" class="text-[length:var(--text-2xl)] font-extrabold">
         Ce qu'on répare
       </h2>
       <a href="/#venir" class="lien-trait cible inline-flex items-center gap-2 text-sm font-semibold">
@@ -20,7 +20,7 @@ const services = (await getCollection('services'))
 
     <ul class="grille-trait mt-10 grid sm:grid-cols-2 lg:grid-cols-3">
       {services.map((s) => (
-        <li class="carte group relative p-7">
+        <li data-apparition class="carte group relative p-7">
           <Trait nom={s.data.trait} class="size-7 text-encre" />
           <h3 class="mt-5 font-display text-lg font-bold">{s.data.titre}</h3>
           <p class="mt-2 text-sm text-gris-texte">{s.data.phrase}</p>

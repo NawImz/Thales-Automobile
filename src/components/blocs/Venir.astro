@@ -12,11 +12,11 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
 ---
 <section class="section border-t border-gris-trait" id="venir" aria-labelledby="titre-venir">
   <div class="mx-auto max-w-7xl px-5 sm:px-8">
-    <h2 id="titre-venir" class="text-[length:var(--text-2xl)] font-extrabold">Venir</h2>
+    <h2 data-apparition id="titre-venir" class="text-[length:var(--text-2xl)] font-extrabold">Venir</h2>
 
     <div class="grille-trait mt-10 grid lg:grid-cols-3">
       <!-- Adresse et repère -->
-      <div class="p-7">
+      <div data-apparition class="p-7">
         <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">L'atelier</h3>
         <address class="mt-4 text-lg not-italic">
           {a.rue}<br />{a.codePostal} {a.ville}
@@ -32,7 +32,7 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
       </div>
 
       <!-- Horaires, avec l'état calculé en direct -->
-      <div class="p-7">
+      <div data-apparition class="p-7">
         <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">Horaires</h3>
         <p class="mt-4 flex items-center gap-2 font-semibold">
           <Trait nom="horloge" class="size-4" />
@@ -51,7 +51,7 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
       </div>
 
       <!-- Contact -->
-      <div class="p-7">
+      <div data-apparition class="p-7">
         <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">Nous joindre</h3>
         <div class="mt-4 flex flex-col gap-3">
           <Bouton href={lienTel(tel.numero)} variante="accent-desktop" class="flex" data-event="appel" data-contexte="venir">

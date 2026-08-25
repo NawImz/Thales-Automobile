@@ -42,14 +42,14 @@ const prestations = [
             <span class="chiffres whitespace-nowrap">{tel.affiche}</span>
           </a>
         </div>
-        <div class="mt-10 lg:mt-0">
+        <div data-apparition="droite" class="mt-10 lg:mt-0">
           <Cliche nom="Un hors-bord ou un jet-ski démonté à l'atelier" ratio="4 / 3" />
         </div>
       </div>
 
       <ul class="grille-trait mt-16 grid sm:grid-cols-2">
         {prestations.map((p) => (
-          <li class="p-7">
+          <li data-apparition class="p-7">
             <Trait nom={p.trait} class="size-7" />
             <h2 class="mt-5 font-display text-lg font-bold">{p.titre}</h2>
             <p class="mt-2 text-sm text-gris-texte">{p.texte}</p>
