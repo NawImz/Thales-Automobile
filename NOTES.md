@@ -656,3 +656,34 @@ la règle n'existe pas du tout.
 L'encadré de la note Google se disloquait à 390 px — étoiles en `text-2xl` et
 ligne « 4,6 sur 61 avis » côte à côte, le lien passant à la ligne mot par mot.
 Passé en colonne sous `sm`, étoiles réduites. Vérifié : aucun débordement.
+
+---
+
+## Retour client — lien des avis, comptes par auteur
+
+Les nombres d'avis de chaque auteur sont retirés (« Local Guide · 29 avis » →
+« Local Guide »). Le total de 61 reste : c'est une donnée différente, et c'est
+elle qui fait la preuve sociale.
+
+⚠️ Sonia A. n'a pas la qualité « Local Guide » : son champ devient vide. Un
+`<span>` vide aurait laissé une gouttière orpheline dans la ligne d'auteur —
+il est donc conditionné.
+
+### Le lien Google, et pourquoi il est fragile
+
+L'URL fournie est posée telle quelle, sans retouche, dans `garage.json`.
+
+⚠️ **C'est une adresse de recherche liée à la session du client** : elle porte
+`sxsrf` (un horodatage), `ved`, `si`, `uds`, `rlz`, et jusqu'à la taille de son
+écran (`biw`, `bih`, `dpr`). **Ces liens expirent.** Je ne l'ai pas « nettoyée »
+de moi-même : retirer des paramètres au jugé risquait de la casser tout de
+suite, et fabriquer une autre URL aurait été inventer.
+
+Le lien durable s'obtient depuis la fiche Google Business (bouton Partager →
+`g.page/…`). Consigné en tête des points importants de `TODO-CLIENT.md`.
+
+Contrôlé au passage : `aggregateRating` reste **absent** du JSON-LD. Ajouter un
+lien vers les avis ne change rien à l'interdiction de baliser des notes qu'on
+n'a pas collectées soi-même.
+
+Le lien s'ouvre dans un nouvel onglet avec `rel="noopener noreferrer"`.

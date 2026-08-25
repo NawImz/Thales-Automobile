@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Etoiles from '../socle/Etoiles.astro';
+import Trait from '../socle/Trait.astro';
 import Compteur from '../socle/Compteur.astro';
 import { garage } from '../../lib/garage';
 
@@ -38,8 +39,16 @@ const note = garage.avisGoogle.note.toString().replace('.', ',');
             <Compteur valeur={garage.avisGoogle.nombre} class="font-bold" />
             <span class="text-gris-texte"> avis</span><br />
             {garage.avisGoogle.url
-              ? <a href={garage.avisGoogle.url} rel="noopener" class="cible text-sm text-turquoise">Voir la fiche Google</a>
-              : <span class="block text-sm whitespace-nowrap text-gris-texte">sur Google <span class="font-mono text-xs">[LIEN À FOURNIR]</span></span>}
+              ? <a
+                  href={garage.avisGoogle.url}
+                  target="_blank" rel="noopener noreferrer"
+                  data-event="avis-google" data-contexte="confiance"
+                  class="lien-avis cible mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-turquoise"
+                >
+                  Lire les avis sur Google
+                  <Trait nom="fleche" class="size-3.5" />
+                </a>
+              : <span class="block text-sm text-gris-texte">sur Google <span class="font-mono text-xs">[LIEN À FOURNIR]</span></span>}
           </p>
         </div>
 
@@ -53,7 +62,11 @@ const note = garage.avisGoogle.note.toString().replace('.', ',');
             </blockquote>
             <p class="mt-4 flex flex-wrap items-baseline gap-x-3 text-sm">
               <span class="font-semibold">{a.data.auteur}</span>
-              <span class="font-mono text-xs text-gris-texte">{a.data.profil}</span>
+              {/* Sonia A. n'a pas la qualité « Local Guide » : son profil est
+                  vide, et un <span> vide laisserait une gouttière orpheline. */}
+              {a.data.profil && (
+                <span class="font-mono text-xs text-gris-texte">{a.data.profil}</span>
+              )}
             </p>
             {a.data.ancienneteDite && (
               <p class="mt-1 text-sm font-semibold">{a.data.ancienneteDite}</p>
@@ -64,3 +77,15 @@ const note = garage.avisGoogle.note.toString().replace('.', ',');
     </div>
   </div>
 </section>
+
+<style>
+  .lien-avis { position: relative; padding-bottom: 2px; }
+  .lien-avis::after {
+    content: ''; position: absolute; left: 0; bottom: 0;
+    width: 100%; height: var(--trait);
+    background: currentColor;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--duree-cliquet) var(--ease-cliquet);
+  }
+  .lien-avis:hover::after, .lien-avis:focus-visible::after { transform: scaleX(1); }
+</style>

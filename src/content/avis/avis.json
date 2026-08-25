@@ -6,12 +6,13 @@
     "Le champ note reste null quand l'auteur n'annonce pas de note dans son texte : elle n'est pas devinée. À compléter depuis l'export Google.",
     "Les noms sont réduits au prénom + initiale par prudence. Les avis Google sont publics : à Nabil de décider s'il préfère le nom complet."
   ],
-  "_motTarifs": "L'avis de Pierre F. contient le mot « tarifs » (« ni par leurs connaissances ni par leurs tarifs »). Il est CONSERVÉ TEL QUEL : ce sont ses mots, il ne publie aucun montant, et retoucher un avis réel serait une falsification. À supprimer seulement sur demande explicite de Nabil.", "_tri": "Champ `ordre` explicite. ⚠️ getCollection trie par IDENTIFIANT, pas par ordre du fichier : sans ce champ, Pierre F. — « client depuis 4 ou 5 ans », la preuve la plus forte du garage — passait derrière Brahh par simple ordre alphabétique.",
+  "_motTarifs": "L'avis de Pierre F. contient le mot « tarifs » (« ni par leurs connaissances ni par leurs tarifs »). Il est CONSERVÉ TEL QUEL : ce sont ses mots, il ne publie aucun montant, et retoucher un avis réel serait une falsification. À supprimer seulement sur demande explicite de Nabil.",
+  "_tri": "Champ `ordre` explicite. ⚠️ getCollection trie par IDENTIFIANT, pas par ordre du fichier : sans ce champ, Pierre F. — « client depuis 4 ou 5 ans », la preuve la plus forte du garage — passait derrière Brahh par simple ordre alphabétique.",
   "avis": [
     {
       "id": "pierre-f",
       "auteur": "Pierre F.",
-      "profil": "Local Guide · 29 avis",
+      "profil": "Local Guide",
       "note": null,
       "_noteACompleter": true,
       "date": "2025",
@@ -26,7 +27,7 @@
     {
       "id": "brahh",
       "auteur": "Brahh",
-      "profil": "Local Guide · 15 avis",
+      "profil": "Local Guide",
       "note": 5,
       "_noteSource": "L'auteur écrit explicitement donner une note parfaite.",
       "date": "2025",
@@ -40,7 +41,7 @@
     {
       "id": "sonia-a",
       "auteur": "Sonia A.",
-      "profil": "16 avis",
+      "profil": "",
       "note": null,
       "_noteACompleter": true,
       "date": "2026",
@@ -51,5 +52,6 @@
       "misEnAvant": true,
       "ordre": 2
     }
-  ]
+  ],
+  "_profils": "Le nombre d'avis de chaque auteur a été retiré à la demande du client. Seule la qualité « Local Guide » subsiste quand elle existe."
 }

@@ -24,7 +24,24 @@ Mis à jour à chaque phase.
 Astro 7 et la palette sont arbitrés. La palette est d'ailleurs **revenue à
 5 tokens** : l'accent réel passe AA seul, le sixième est devenu inutile.
 
-## 🟠 IMPORTANT — le site fonctionnera, mais incomplet ou juridiquement exposé
+## 🟠 IMPORTANT — à remplacer avant la mise en ligne
+
+### Le lien des avis Google va expirer
+
+L'URL fournie est une **adresse de recherche liée à votre session** : elle
+contient `sxsrf` (un horodatage), `ved`, `si`, `uds`, `rlz`, ainsi que la taille
+de votre écran (`biw`, `bih`, `dpr`). Ces liens cessent de fonctionner au bout
+d'un moment.
+
+Elle est en place et fonctionne aujourd'hui, mais il faut la remplacer par un
+lien durable :
+
+1. Ouvrez votre **fiche Google Business** (depuis votre compte, pas depuis une
+   recherche).
+2. Bouton **« Partager »** → vous obtenez un lien court du type `g.page/…`.
+3. Envoyez-le-moi, je le remplace dans `garage.json` — une ligne.
+
+## 🟠 AUTRES POINTS IMPORTANTS — le site fonctionnera, mais incomplet ou juridiquement exposé
 
 ### Le logo en haute définition ou en vectoriel
 
