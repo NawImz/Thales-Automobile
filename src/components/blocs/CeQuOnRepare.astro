@@ -1,4 +1,5 @@
 ---
+import { lien } from '../../lib/garage';
 import { getCollection } from 'astro:content';
 import Trait from '../socle/Trait.astro';
 
@@ -12,7 +13,7 @@ const services = (await getCollection('services'))
       <h2 data-apparition id="titre-reparer" class="text-[length:var(--text-2xl)] font-extrabold">
         Ce qu'on répare
       </h2>
-      <a href="/#venir" class="lien-trait cible inline-flex items-center gap-2 text-sm font-semibold">
+      <a href={lien('/#venir')} class="lien-trait cible inline-flex items-center gap-2 text-sm font-semibold">
         Demander un devis
         <Trait nom="fleche" class="size-4" />
       </a>

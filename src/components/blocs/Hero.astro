@@ -4,7 +4,7 @@ import Etoiles from '../socle/Etoiles.astro';
 import Bouton from '../socle/Bouton.astro';
 import { Picture } from 'astro:assets';
 import facade from '../../assets/photos/facade-portail-bleu.webp';
-import { garage, a, tel, lienTel, statutOuverture } from '../../lib/garage';
+import { garage, a, tel, lienTel, statutOuverture, lien } from '../../lib/garage';
 
 const statut = statutOuverture();
 ---
@@ -27,7 +27,7 @@ const statut = statutOuverture();
       </p>
 
       <div class="hero-suite mt-8 flex flex-col gap-3 sm:flex-row" style="--retard:400ms">
-        <Bouton href="/#venir" variante="accent-desktop" class="inline-flex" data-event="devis" data-contexte="hero">
+        <Bouton href={lien('/#venir')} variante="accent-desktop" class="inline-flex" data-event="devis" data-contexte="hero">
           Nous contacter
           <Trait nom="fleche" class="size-4" />
         </Bouton>

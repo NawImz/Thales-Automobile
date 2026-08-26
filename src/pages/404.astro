@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Trait from '../components/socle/Trait.astro';
-import { tel, lienTel } from '../lib/garage';
+import { tel, lienTel, lien } from '../lib/garage';
 ---
 <Base titre="Page introuvable — Thalès Automobile" description="Cette page n'existe pas.">
   <section class="section">
@@ -15,7 +15,7 @@ import { tel, lienTel } from '../lib/garage';
         est ouvert.
       </p>
       <div class="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-        <a href="/" class="inline-flex min-h-[44px] cliquet items-center justify-center gap-2.5 bg-turquoise px-6 py-4 font-semibold text-white transition-colors hover:bg-encre">
+        <a href={lien('/')} class="inline-flex min-h-[44px] cliquet items-center justify-center gap-2.5 bg-turquoise px-6 py-4 font-semibold text-white transition-colors hover:bg-encre">
           Retour à l'accueil
           <Trait nom="fleche" class="size-4" />
         </a>

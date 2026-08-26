@@ -2,13 +2,13 @@
 import { Image } from 'astro:assets';
 import Trait from './Trait.astro';
 import logo from '../../assets/marque/logo.png';
-import { garage, tel, lienTel } from '../../lib/garage';
+import { garage, tel, lienTel, lien } from '../../lib/garage';
 
 const liens = [
-  { href: '/#reparer', libelle: 'Nos services' },
-  { href: '/bateaux-jet-ski', libelle: 'Bateaux' },
-  { href: '/#confiance', libelle: 'Le garage' },
-  { href: '/#venir', libelle: 'Venir' },
+  { href: lien('/#reparer'), libelle: 'Nos services' },
+  { href: lien('/bateaux-jet-ski'), libelle: 'Bateaux' },
+  { href: lien('/#confiance'), libelle: 'Le garage' },
+  { href: lien('/#venir'), libelle: 'Venir' },
 ];
 ---
 <header class="relative z-40 border-b border-gris-trait bg-blanc-atelier">
@@ -17,7 +17,7 @@ const liens = [
          le mot occupe 42 % de sa hauteur. À 44 px il tombait sous 10 px et
          devenait illisible — mesuré sur le fichier, pas supposé. Il lui faut
          56 px au minimum, 64 sur grand écran. -->
-    <a href="/" class="cible flex min-h-[44px] items-center" aria-label={`${garage.nom} — accueil`}>
+    <a href={lien('/')} class="cible flex min-h-[44px] items-center" aria-label={`${garage.nom} — accueil`}>
       <Image src={logo} alt={garage.nom} width={104} height={104} loading="eager" class="h-14 w-auto lg:h-16" />
     </a>
 

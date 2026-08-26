@@ -35,6 +35,23 @@ export function lienItineraire(): string {
   return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(cible);
 }
 
+/**
+ * Préfixe un lien interne par la base du site.
+ *
+ * ⚠️ Indispensable dès que le site est servi ailleurs qu'à la racine d'un
+ * domaine — GitHub Pages le sert sous `/Thales-Automobile/`. Astro réécrit
+ * tout seul les URL d'assets qu'il gère (`<Image>`, CSS, scripts), mais PAS
+ * les `href` écrits à la main : ceux-là pointeraient sur la racine du domaine
+ * et donneraient des 404. Toute navigation interne passe donc par ici.
+ */
+export function lien(chemin: string): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  if (chemin === '/') return base + '/';
+  // Les ancres de la page d'accueil : « /#venir » → « <base>/#venir »
+  if (chemin.startsWith('/#')) return base + '/' + chemin.slice(1);
+  return base + chemin;
+}
+
 export const adresseComplete = `${a.rue}, ${a.codePostal} ${a.ville}`;
 
 /** « 09:00 » → « 9 h ». Format français, sans zéro inutile. */

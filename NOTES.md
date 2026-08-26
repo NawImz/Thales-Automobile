@@ -687,3 +687,38 @@ lien vers les avis ne change rien à l'interdiction de baliser des notes qu'on
 n'a pas collectées soi-même.
 
 Le lien s'ouvre dans un nouvel onglet avec `rel="noopener noreferrer"`.
+
+---
+
+## Mise en ligne sur GitHub Pages — préparation
+
+⚠️ **Le dépôt n'est PAS privé.** Vérifié via l'API : `"visibility": "public"`.
+Le client le croyait privé. Conséquence heureuse ici : GitHub Pages est gratuit
+sur un dépôt public, alors qu'il demanderait un compte payant sur un privé.
+
+### Le piège du sous-chemin
+
+GitHub Pages sert le site sous `/Thales-Automobile/`, pas à la racine. Astro
+réécrit tout seul les URL qu'il gère (`<Image>`, CSS, scripts), mais **pas les
+`href` écrits à la main** : ceux-là pointeraient sur la racine du domaine et
+donneraient des 404 sur toute la navigation.
+
+Six liens en dur ont été relevés, plus ceux de la navigation. Tous passent
+désormais par un helper `lien()` dans `src/lib/garage.ts`. Contrôle automatisé
+ajouté au journal : **plus aucun `href="/…"` en dur dans les sources.**
+
+`astro.config.mjs` bascule sur `DEPLOIEMENT=pages` : `base` devient le nom du
+dépôt, sinon il reste `/`.
+
+### Vérifié pour de bon
+
+Le build en mode Pages a été servi sous `/Thales-Automobile/` et parcouru :
+accueil 200, page bateaux 200, CSS 200, favicon 200, **0 ressource en erreur**,
+navigation interne correcte, logo affiché.
+
+### Le workflow est volontairement manuel
+
+`.github/workflows/pages.yml` n'a **que** `workflow_dispatch` : aucune
+publication automatique à chaque commit. La mise en ligne est une décision, pas
+un effet de bord — et le site n'est pas prêt à être public (mentions légales
+absentes, numéro de téléphone non tranché, une photo manquante).

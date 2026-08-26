@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Trait from '../components/socle/Trait.astro';
 import Cliche from '../components/socle/Cliche.astro';
-import { garage, a, tel, lienTel, lienWhatsApp } from '../lib/garage';
+import { garage, a, tel, lienTel, lienWhatsApp, lien } from '../lib/garage';
 
 const titre = `Réparation bateau, hors-bord et jet-ski — ${a.ville} | ${garage.nom}`;
 const description =
@@ -20,7 +20,7 @@ const prestations = [
   <section class="section">
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
       <nav aria-label="Fil d'ariane" class="font-mono text-xs tracking-widest text-gris-texte uppercase">
-        <a href="/" class="cible hover:text-encre">Accueil</a> / Bateaux et jet-ski
+        <a href={lien('/')} class="cible hover:text-encre">Accueil</a> / Bateaux et jet-ski
       </nav>
 
       <div class="mt-5 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16">

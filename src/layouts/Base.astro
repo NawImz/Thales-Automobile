@@ -5,7 +5,7 @@ import PiedDePage from '../components/socle/PiedDePage.astro';
 import BarreAction from '../components/socle/BarreAction.astro';
 import Decor from '../components/signature/Decor.astro';
 import Apparition from '../components/socle/Apparition.astro';
-import { garage, a, tel } from '../lib/garage';
+import { garage, a, tel, lien } from '../lib/garage';
 
 interface Props { titre: string; description: string; }
 const { titre, description } = Astro.props;
@@ -61,9 +61,9 @@ if (garage.geo.latitude !== null && garage.geo.longitude !== null) {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonique} />
     <meta name="theme-color" content="#0E7C7C" />
-    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
-    <link rel="icon" href="/favicon-512.png" sizes="512x512" type="image/png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href={lien('/favicon-32.png')} sizes="32x32" type="image/png" />
+    <link rel="icon" href={lien('/favicon-512.png')} sizes="512x512" type="image/png" />
+    <link rel="apple-touch-icon" href={lien('/apple-touch-icon.png')} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={titre} />
     <meta property="og:description" content={description} />
