@@ -722,3 +722,47 @@ navigation interne correcte, logo affiché.
 publication automatique à chaque commit. La mise en ligne est une décision, pas
 un effet de bord — et le site n'est pas prêt à être public (mentions légales
 absentes, numéro de téléphone non tranché, une photo manquante).
+
+---
+
+## Les photos d'atelier
+
+Deux images fournies, générées. Les deux portaient un **filigrane de
+génération** — une étoile à quatre branches dans le quart bas-droit. Repéré en
+agrandissant les coins avant toute intégration.
+
+⚠️ Ma détection automatique du filigrane (recherche de pixels clairs peu
+saturés) a ramassé les reflets du métal et le béton : inexploitable. Les
+positions ont donc été relevées **à l'œil sur agrandissement**, puis les images
+**recadrées pour les exclure** — pas de masquage, pas de flou : on coupe. Le
+recadrage sert en même temps le ratio du bloc de destination. Vérifié après
+coup en réextrayant les coins.
+
+### Réorganisation qui s'imposait
+
+Le hangar — hors-bord au premier plan, **voiture sur pont au fond** — devient
+le **hero**. C'est le cliché que le brief réclamait dès le départ : il prouve
+« auto et nautique dans le même atelier » en une seule image, ce qu'aucun texte
+ne fait aussi vite.
+
+La façade descend sur le bloc « Venir », où elle sert vraiment : c'est ce qu'on
+cherche des yeux en arrivant rue du Port. En ouverture, elle ne racontait rien
+du métier.
+
+Les mains sur le moteur vont au bloc nautique et à la page bateaux.
+
+**Plus aucun emplacement vide sur le site.**
+
+## Le 404 de GitHub Pages — diagnostic
+
+Vérifié par l'API : le workflow existe mais compte **0 exécution**. Rien n'a
+donc jamais été construit ni publié — le 404 est normal, pas un bug.
+
+Deux causes, dans cet ordre :
+1. **Pages n'est pas activé** dans les réglages du dépôt (`has_pages: false`).
+   Seul le propriétaire peut le faire.
+2. Le workflow, volontairement manuel, n'a jamais été déclenché.
+
+⚠️ Tant que (1) n'est pas fait, déclencher le workflow ne produirait qu'une
+exécution en échec : `actions/deploy-pages` refuse de publier si la source
+n'est pas réglée sur « GitHub Actions ».

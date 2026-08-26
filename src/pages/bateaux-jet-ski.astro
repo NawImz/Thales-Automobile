@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Trait from '../components/socle/Trait.astro';
-import Cliche from '../components/socle/Cliche.astro';
+import { Image } from 'astro:assets';
+import mains from '../assets/photos/mains-sur-moteur.webp';
 import { garage, a, tel, lienTel, lienWhatsApp, lien } from '../lib/garage';
 
 const titre = `Réparation bateau, hors-bord et jet-ski — ${a.ville} | ${garage.nom}`;
@@ -43,7 +44,14 @@ const prestations = [
           </a>
         </div>
         <div data-apparition="droite" class="mt-10 lg:mt-0">
-          <Cliche nom="Un hors-bord ou un jet-ski démonté à l'atelier" ratio="4 / 3" />
+          <Image
+            src={mains}
+            alt="Les mains d'un mécanicien serrant un raccord sur un moteur hors-bord, clé plate en main"
+            widths={[520, 800, 1120]}
+            sizes="(min-width: 64rem) 46vw, 92vw"
+            loading="lazy"
+            class="w-full cadre"
+          />
         </div>
       </div>
 

@@ -1,7 +1,8 @@
 ---
 import { lien } from '../../lib/garage';
 import Trait from '../socle/Trait.astro';
-import Cliche from '../socle/Cliche.astro';
+import { Image } from 'astro:assets';
+import mains from '../../assets/photos/mains-sur-moteur.webp';
 
 /**
  * La bascule vers le nautique.
@@ -49,7 +50,14 @@ import Cliche from '../socle/Cliche.astro';
       </div>
 
       <div data-apparition="droite" class="mt-12 lg:mt-0">
-        <Cliche nom="Un hors-bord ou un jet-ski démonté à l'atelier" ratio="4 / 3" class="border-gris-texte" />
+        <Image
+          src={mains}
+          alt="Les mains d'un mécanicien serrant un raccord sur un moteur hors-bord, clé plate en main"
+          widths={[520, 800, 1120]}
+          sizes="(min-width: 64rem) 44vw, 92vw"
+          loading="lazy"
+          class="w-full cadre border-gris-texte"
+        />
       </div>
     </div>
   </div>

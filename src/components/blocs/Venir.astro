@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Trait from '../socle/Trait.astro';
+import facade from '../../assets/photos/facade-portail-bleu.webp';
 import Bouton from '../socle/Bouton.astro';
 import {
   garage, a, tel, lienTel, lienWhatsApp, lienItineraire,
@@ -15,6 +17,20 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
     <h2 data-apparition id="titre-venir" class="text-[length:var(--text-2xl)] font-extrabold">Venir</h2>
 
     <div class="grille-trait mt-10 grid lg:grid-cols-3">
+      <!-- La façade : ce qu'on cherche des yeux en arrivant rue du Port.
+           Elle vient du hero, où le hangar la remplace désormais — c'est ici
+           qu'elle est utile, pas en ouverture. -->
+      <div data-apparition class="col-span-full">
+        <Image
+          src={facade}
+          alt="La façade du garage rue du Port, reconnaissable à son portail bleu"
+          widths={[640, 1000, 1360]}
+          sizes="(min-width: 64rem) 78vw, 92vw"
+          loading="lazy"
+          class="w-full"
+        />
+      </div>
+
       <!-- Adresse et repère -->
       <div data-apparition class="p-7">
         <h3 class="font-mono text-xs tracking-widest text-gris-texte uppercase">L'atelier</h3>
