@@ -766,3 +766,47 @@ Deux causes, dans cet ordre :
 ⚠️ Tant que (1) n'est pas fait, déclencher le workflow ne produirait qu'une
 exécution en échec : `actions/deploy-pages` refuse de publier si la source
 n'est pas réglée sur « GitHub Actions ».
+
+---
+
+## Première publication sur GitHub Pages
+
+### L'échec n°1 : le logo n'était pas versionné
+
+`Module not found: src/assets/marque/logo.png`.
+
+⚠️ **Cause : mon propre `.gitignore`.** Il contenait `*.png` — posé pour tenir
+les captures d'écran hors du dépôt — avec une seule exception,
+`!public/**/*.png`. Le logo vit dans `src/assets/`, il était donc **ignoré en
+silence**. Le build passait chez moi parce que le fichier était sur mon disque,
+et ne pouvait pas passer ailleurs.
+
+C'est la classe de bug qu'on ne voit jamais en local. Correctif : exception
+`!src/assets/**/*.png`, et le logo versionné.
+
+**La vérification qui valait le coup** : plutôt que de re-déclencher et
+d'espérer, j'ai fait un `git clone` du dépôt dans un dossier neuf et lancé
+`npm ci && DEPLOIEMENT=pages npm run build` dedans — exactement ce que fait le
+runner. Le build est passé, *ensuite* j'ai relancé.
+
+**Exécution n°2 : `success`.** Le site est en ligne.
+
+### Le conteneur ne peut pas vérifier le site publié
+
+`curl https://nawimz.github.io/…` renvoie `000` : le proxy de sortie bloque le
+domaine. Et `curl https://api.github.com/…` renvoie **403** — la session n'a pas
+d'accès GitHub authentifié en direct.
+
+⚠️ **Le seul chemin qui fonctionne est le MCP GitHub.** Un moniteur bâti sur
+`curl` vers l'API tournait donc à vide et rapportait un statut nul. Consigné
+pour ne pas le refaire : pour suivre une exécution, interroger le MCP, pas curl.
+
+### La façade repositionnée
+
+Elle occupait toute la largeur au-dessus des colonnes d'information. Elle
+devient la **quatrième cellule** de la même grille, à hauteur des trois autres.
+
+⚠️ `object-cover` sur toute la hauteur de la cellule : sans lui, une photo 16/9
+dans une colonne étroite laisse deux grandes bandes vides. C'est la cellule qui
+donne la hauteur, l'image s'y adapte. Vérifié à 1600 px et à 390 px — aucun
+débordement.

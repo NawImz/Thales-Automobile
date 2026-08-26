@@ -16,20 +16,7 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
   <div class="mx-auto max-w-7xl px-5 sm:px-8">
     <h2 data-apparition id="titre-venir" class="text-[length:var(--text-2xl)] font-extrabold">Venir</h2>
 
-    <div class="grille-trait mt-10 grid lg:grid-cols-3">
-      <!-- La façade : ce qu'on cherche des yeux en arrivant rue du Port.
-           Elle vient du hero, où le hangar la remplace désormais — c'est ici
-           qu'elle est utile, pas en ouverture. -->
-      <div data-apparition class="col-span-full">
-        <Image
-          src={facade}
-          alt="La façade du garage rue du Port, reconnaissable à son portail bleu"
-          widths={[640, 1000, 1360]}
-          sizes="(min-width: 64rem) 78vw, 92vw"
-          loading="lazy"
-          class="w-full"
-        />
-      </div>
+    <div class="grille-trait mt-10 grid lg:grid-cols-[1fr_1fr_1fr_0.85fr]">
 
       <!-- Adresse et repère -->
       <div data-apparition class="p-7">
@@ -83,6 +70,21 @@ const message = `Bonjour, je voudrais un devis pour ma voiture. Je vous ai trouv
           On répond pendant les heures d'atelier. Le devis est gratuit et sans
           engagement.
         </p>
+      </div>
+
+      <!-- La façade, à hauteur des infos plutôt qu'en bandeau au-dessus.
+           ⚠️ `object-cover` sur toute la hauteur de la cellule : sans lui, une
+           photo 16/9 dans une colonne étroite laisserait deux grandes bandes
+           vides. C'est la cellule qui donne la hauteur, l'image s'y adapte. -->
+      <div data-apparition class="relative min-h-[240px]">
+        <Image
+          src={facade}
+          alt="La façade du garage rue du Port, reconnaissable à son portail bleu"
+          widths={[400, 640, 900]}
+          sizes="(min-width: 64rem) 22vw, 92vw"
+          loading="lazy"
+          class="absolute inset-0 size-full object-cover"
+        />
       </div>
     </div>
 
