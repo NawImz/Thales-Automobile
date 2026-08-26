@@ -10,6 +10,11 @@ npm-debug.log*
 .netlify
 .playwright-mcp/
 .apercu/
+# ⚠️ `*.png` sert à tenir les captures d'écran hors du dépôt, mais il avalait
+# aussi les fichiers de MARQUE. Le logo n'était donc pas versionné : le build
+# passait en local — le fichier était sur le disque — et échouait sur un clone
+# neuf. Toute source d'image doit être exemptée explicitement.
 *.png
 !public/**/*.png
+!src/assets/**/*.png
 .modeles-src/
